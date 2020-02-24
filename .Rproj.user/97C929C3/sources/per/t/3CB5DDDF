@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1582512336010.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3213244813",
+    "id" : "3CB5DDDF",
+    "lastKnownWriteTime" : 1582514155,
+    "last_content_update" : 1582514155817,
+    "path" : "C:/Users/cavap/Desktop/Cava/monografiaRandomForest/R/Scripts/analiseExploratoria.R",
+    "project_path" : "R/Scripts/analiseExploratoria.R",
+    "properties" : {
+        "cursorPosition" : "33,46",
+        "scrollLine" : "6",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
