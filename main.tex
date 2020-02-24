@@ -1,0 +1,130 @@
+%------------------------------------------------------------------------------
+% Exemplo de documento para auxiliar a padronização das monografias da 
+% Faculdade de Economia - UFF
+%------------------------------------------------------------------------------
+
+
+\documentclass[12pt, openright, chapter=TITLE]{economia} %---------------------
+% Estão disponíveis opções de impressão como frente e verso, papel A4, outras
+% linguagens e ets...
+%------------------------------------------------------------------------------ 
+
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{mathdots}
+\usepackage{yhmath}
+\usepackage{cancel}
+\usepackage{color}
+\usepackage{siunitx}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{amssymb}
+\usepackage{gensymb}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usetikzlibrary{fadings}
+
+
+
+\newtheorem{defi}{Definição}
+\newtheorem{teo}{Teorema}
+\newtheorem{prop}{Proposição}
+\newtheorem{prova}{Demonstração}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathcal{C}}
+\newcommand{\I}{\mathcal{I}}
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\X}{\mathbf{X}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\1}{\mathds{1}}
+%------------------------------------------------------------------------------
+% INFORMAÇÕES E DADOS PARA A CAPA
+%------------------------------------------------------------------------------
+
+\titulo{Efeitos Marginais em Florestas Aleatórias: Teoria, Estimação e uma Aplicação nos Acidentes em Rodovias Federais}
+\autor{Pedro Cavalcante Oliveira}
+\data{2019} 
+\orientador{Prof. Dr. Jesus Alexei Luizar Obregon}
+\coorientador{Prof. Dr. Bruno Santiago}
+
+
+%------------------------------------------------------------------------------
+%	FOLHA DE ROSTO E PREAMBULO
+%------------------------------------------------------------------------------
+
+\preambulo{Monografia apresentada ao curso de Bacharelado em Ciências Econômicas da Universidade Federal Fluminense como requisito parcial para conclusão do curso.}
+
+%------------------------------------------------------------------------------
+% INÍCIO DO DOCUMENTO
+%------------------------------------------------------------------------------
+
+\makeindex
+
+\begin{document}
+
+%------------------------------------------------------------------------------
+% ELEMENTOS PRÉ-TEXTUAIS E CAPA
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+% Aqui iremos inserir, em ordem, a capa '\imprimircapa', a folha de rosto
+% '\imprimirfolhaderosto*', as figuras da monografia '\figuras' e as tabelas
+% 'tabelas'. É possível também a inserção de quadros, por exemplo, com o 
+% comando 'quadros'. Sempre pulando uma linha entre as opções de ''listas''
+%------------------------------------------------------------------------------
+
+\imprimircapa 						
+\imprimirfolhaderosto*	  					
+
+\include{aprovacao}	
+\clearpage
+
+\input{capitulos/resumo.tex}	
+
+\input{capitulos/dedicatoria}		
+					
+\figuras
+
+\tabelas
+
+\sumario
+
+
+% -----------------------------------------------------------------------------
+% ELEMENTOS TEXTUAIS
+% -----------------------------------------------------------------------------
+
+\textual
+
+
+
+\input{capitulos/introducao.tex}
+
+%\input{capitulos/graficos.tex}
+
+\input{capitulos/tabelas.tex}
+
+\input{capitulos/comocitar.tex}
+
+\input{capitulos/conclusao.tex}
+
+
+
+
+% ----------------------------------------------------------
+% ELEMENTOS PÓS-TEXTUAIS
+% ----------------------------------------------------------
+\postextual
+
+% ----------------------------------------------------------
+% Referências bibliográficas
+% ----------------------------------------------------------
+
+\nocite{abntexmanual, 
+		abntex2modelo} % aqui citamos os autores que não foram citados no texto.
+
+\bibliography{referencias}
+
+
+\end{document}

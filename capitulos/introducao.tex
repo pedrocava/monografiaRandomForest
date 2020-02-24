@@ -1,0 +1,145 @@
+% ------------------------------------------------------------------
+% Exemplo de introdução gerada por textos dummys a partir do
+% lipsum
+%-------------------------------------------------------------------
+
+
+\chapter{Introdução}
+\label{cap:intro} % faço a referência na bibliografia
+\section{Motivação e Estado da Literatura}
+
+O modelo descrito em \cite{breiman2001random} apresenta um procedimento de estimação de uma sequência de Árvores de Decisão a partir de subamostras independentes e identicamente distribuídas de um conjunto de dados. O nome da técnica vem do algorítimo consistir em montar uma coleção de Árvores de Decisão e empregar procedimentos de amostragem para que cada árvore individual seja exposta a uma subamostra aleatoriamente encontrada dos dados.
+
+Modelos de Floresta Aleatória (no original, \texit{Random Forest}) têm aplicações em áreas variadas. Pesquisa biomédica, identificação de padrões em visão computacional, finanças e microeconomia aplicada são áreas que já difundiram seu uso. Um entendimento próprio de efeitos marginais não é importante somente para aplicações econométricas, mas também para trabalho aplicado no geral. 
+
+Em revisões de literatura (\cite{siroky2009navigating}; \cite{biau2016random}) costuma-se enfatizar alguns resultados sobre a performance da técnica - que geralmente entrega performance preditiva elevada \citep{gu2018empirical}. Geralmente falando, com o crescimento do número de árvores o erro de previsão fora da amostra converge a zero, sua variância diminui e o custo computacional cresce com derivada decrescente. O procedimento de estimação original de Breiman fornece um estimador (i) não-viesado, (ii) consistente e (iii) factível, todas propriedades centrais na aplicabilidade dessa técnica. 
+
+Assim como em modelos lineares, também é possível decompor variância explicada do modelo. \cite{stijven2011separating} introduziram algumas ferramentas de regressão simbólica no modelo original de Breiman para explicar importância relativa de regressores e há maneiras de abordar o mesmo problema usando Valores de Shapley, vindos da Teoria dos Jogos Cooperativos \citep{cohen2007feature}.
+
+Avanços recentes na literatura focam em frentes diversas. Uma que dialoga com o problema a ser estudado nesta monografia é como conciliar os modelos com bancos de dados com uma quantidade crescente de variáveis e, portanto, alta dimensionalidade. Uma direção de pesquisa foca em adequar a teoria que fundamenta a técnica ao contexto em alta dimensão \citep{athey2019generalized}, outra em seleção de variáveis e redução de dimensionalidade \citep{hastie2015statistical}. 
+
+Esse esforço de pesquisa gerou um princípio de entendimento melhor de efeitos de tratamento. \cite{ikonen2016machine} desenvolveu uma tećnica (rudimentar) de estimação de efeitos de tratamento sintéticos - uma extensão da técnica de Controles Sintéticos \citep{abadie2010synthetic}. A dupla Athey e Wager, particularmente ativa neste debate, deixou algumas contribuições importantes. Primeiro em contexto de alta dimensão \citep{athey2018approximate}. e depois em contexto de tratamentos heterogêneos \citep{wager2018estimation}. 
+
+Em modelos lineares sabemos ser possível acomodar não-linearidades arbitrárias imputando no modelo funções não-lineares dos regressores originais. O que se mantém inalterado é a linearidade dos efeitos marginais. Em Florestas Aleatórias sabemos que por desenho não é necessário inserir funções não-lineares dos regressores para acomodar não-linearidades, então essa ponte já está estabelecida, no entanto pouco é sabido sobre o comportamento dos efeitos marginais - apesar da prolífica pesquisa no campo.
+
+O objetivo desta monografia é propor um procedimento sistemático de estimação de efeitos marginais de tratamento, avaliar o quão (in)constantes são os efeitos marginais e o quão sensíveis aos outros regressores eles são. A metodologia empregada será estimar um modelo de Floresta Aleatória, computar suas previsões na observação mediana dos dados e em observações medianas com perturbações controladas em cada regressor. O resultado é uma curva relacionando valor predito com valores dos regressores, cuja derivada - se computável - entrega os efeitos marginais.
+
+O cronograma esperado do trabalho segue:
+
+\begin{table}[h]
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+Atividade / Mês                                         & 1 & 2 & 3 & 4 & 5 & 6 \\ \hline
+Revisão Bibliográfica                                   & x & x & x & x &   &   \\ \hline
+Desenvolvimento Teórico do Modelo e Abordagem           & x & x &   &   &   &   \\ \hline
+Preparação das rotinas e programas                      &   & x & x &   &   &   \\ \hline
+Análise, Interpretação e Visualização dos Resultados    &   &   & x & x &   &   \\ \hline
+Redação da Monografia                                   &   &   &   &   & x & x \\ \hline
+Revisão do Projeto, Reprodução e Entrega &   &   &   &   &   & x \\ \hline
+\end{tabular}
+\end{table}
+
+\section{Teoria Preeliminar}
+
+A unidade mais simples de uma Floresta Aleatória é uma Árvore de Decisão \cite{breiman2017classification} então a exposição precisa partir dessa unidade mais básica. Vamos construir uma árvore de decisão.
+
+Uma \textbf{observação} de $k$ variáveis é um vetor $x \in \R^k$ onde cada dimensão representa uma variável diferente. Variáveis binárias podem ser representadas por pares $0$ e $1$. Definimos o \textbf{Espaço de Mensuração} $\mathbf{X}$ como sendo o conjunto de todos os vetores $x$ possíveis para os suportes definidos. Por exemplo: se um vetor representa idade, entendemos que seu suporte está nos inteiros positivos entre $0$ e, digamos, $120$. Se uma variável é uma categoria binária como sim e não, então seu suporte está em $0$ e $1$. 
+
+As observações podem ser entendidas como pertencendo a \textbf{classes}, estando a cargo do modelador definir exatamente quais classes são essas. Dizemos que o problema é de \textbf{Classificação} quando nossas observações tem suas classes em um conjunto discreto e que o problema é de \textbf{Regressão} quando há um conjunto infinito e não-enumerável - isto é, não há um isomorfismo entre o conjunto de classes e os naturais - de classes disponíveis. Classificar um paciente como sendo portador de uma doença ou não é claramente um problema de classificação. Estimar o preço de um imóvel com base em suas características é um problema de regressão. Suponha que temos um conjunto de classes $\C = \{1,2,...,J\}$ com $J$ classes. Usaremos $\C(x)$ como a classe da observação $x$. 
+
+\begin{defi}
+Um \textbf{Classificador} é uma função $\math{C} : \mathbf{X} \to \C$.
+\end{defi}
+
+Podemos entender um Classificador de outra maneira. Defina o conjunto $A_i = \{ x \in \mathbf{X} \,\, ; \,\, \C(x) = i\}$. Então a união $\bigcup_{i = 1}^J A_i$ é o próprio conjunto $\mathbf{X}$ e cada $A_i$ é disjunto de todos os outros $A_{j \neq i}$.
+
+\begin{defi}
+Um \textbf{Classificador} é uma partição disjunta de $\mathbf{X}$.
+\end{defi}
+
+Estimar uma Floresta Aleatória (ou Árvore de Decisão, modelo de regressão linear, o que quer que seja) é fundamentalmente escolher entre as inúmeras possibilidades de Classificadores o mais apropriado para os \textbf{dados}. Os procedimentos estatísticos que empregamos para encontrar alguma aproximação desde "classificador ideal" são aplicados em algum tipo de amostra.
+
+\begin{defi}
+Uma \textbf{Amostra} de tamanho $N$ consiste de um conjunto $ A = \bigcup_{i=1}^N (x_i, \C(x_i))$ de observações empíricas.
+\end{defi}
+
+Por fim, precisamos entender a estrutura dos dados. Dizemos que se toda observação assume um vetor no $\R^k$ então dizemos que os dados têm estrutura \textbf{padrão} ou \textbf{\textit{tidy}} \cite{tidyr}. Dados não-padrão são aqueles em que há um número variável de dimensões nas observações.
+
+\section{Construindo uma Árvore de Decisão}
+
+Um classificador Árvore de Decisão é qualquer classificador que admita uma representação como um Grafo que é uma Árvore. Um Grafo qualquer é dito árvore se todos os seus vértices têm a propriedade de que sua remoção do grafo gera dois componentes disjuntos.
+
+Cada divisão $D_i$ carrega duas informações: (i) um teste lógico factível para todas as observações passarem ou não (e.g. ao classificar a classe de um navio militar, nenhum com mais de $100m$ de comprimento pode ser um destróier) e (ii) uma posição na árvore.
+
+\includegraphics[scale = .45] {avore.png}
+
+Cada divisão quebra todas as observações que chegaram nela em exatamente dois grupos. Então toda divisão posterior gera apenas subconjuntos. Uma divisão pode ser de dois tipos: terminal e não-terminal. Se uma divisão implica classificação perfeita (todas as observações que atendem ao critério são da mesma classe), então não há por que continuar a dividir os dados e esta divisão termina seu "galho" da árvore. 
+
+\section{Noções de Estimação de uma Árvore de Decisão}
+
+Como podemos traduzir uma amostra $A$ em uma árvore de decisão $\A$? Um dos procedimentos mais consagrados, apresentado na primeira edição de \cite{breiman2017classification} será apresentado.
+
+Primeiro definimos a \textbf{Proporção} de um vértice como um vetor contendo a proporção de cada classe observada nos dados que chegaram ao vértice. Depois, a \textbf{Impureza} do nodo. A função $\I(\cdot)$ mapeia um nodo em um número positivo limitado superiormente por um real $I$ de forma que a impureza de um nodo cuja proporção seja igual para todas as classes seja $0$ e a impureza de um nodo cuja proporção seja unitária para alguma classe seja $I$. Precisamos impor apenas que $\I(\cdot)$ seja monotonamente crescente em relação à probabilidade de cada classe. O valor específico da impureza não é relevante, desde que aumente monotonamente em relação à heterogeneidade de proporções observadas.
+
+Tome uma divisão $D_i$ qualquer. Ela rende duas subamostras/divisões que podem ou não serem terminais, $D_{iA}$ e $D_{iB}$. Defina $P_A (D_i)$ como a proporção de casos que chegam em $D_i$ e vão para $D_{iA}$ e o mesmo para $P_B (D_i)$.
+
+\begin{defi}
+A \textbf{Qualidade} da divisão é dada pela variação na impureza: $\mathcal{Q} (D_i) := \I(D_i) - P_A(D_i) \I (D_{iA}) - P_B(D_i) \I (D_{iB})$.
+\end{defi}
+
+ Escolher a divisão adequada envolve muitos recursos computacionais e selecionar a divisão que maximize a qualidade dentre as potenciais. Qualquer regra computável pode ser usada: um valor ser maior ou menor que um certo patamar, estar em uma certa faixa, etc. Os aspectos algorítmicos deste problema são interessantes porém fogem ao escopo desta monografia, discussões podem ser encontradas em \cite{de1991distance}.
+ 
+ \section{Construindo uma Floresta Aleatória}
+ 
+ A agregação das predições de árvores construídas a partir de pedaços diferentes da amostra é um passo seguinte e natural à modelagem anteriormente apresentada. Como os procedimentos de escolha de nodos/divisões são largamente estocásticos, árvores individuais de decisão podem apresentar vieses ou baixa performance ao acaso. Se um número grande de árvores é agregado e não há relação sistemática do erro de predição com alguma variável preditiva, então os erros devem se anular com o aumento do número de árvores.
+ 
+ \begin{defi}
+ Uma \textbf{Floresta Aleatória} é um conjunto $\F = \{\A_1, \A_2,...,\A_k\}$ de árvores de decisão de forma que dada uma amostra $A$ existe um conjunto de subamostras únicas $B = \{ B_1, B_2, ..., B_k\}$ independentes e $\A_i$ foi treinada na amostra $B_i$.
+  \end{defi}
+  
+  \begin{defi}
+  A \textbf{Margem} de uma floresta, dada uma observação $\X$ e um vetor aleatório de amostragem $Y$ é a função $M(\F, \X, Y)= \sum_{i=1}^k \1 ( \A_i (\X) = \C(\X) ) - \sum_{i=1}^k \1  ( \A_i (\X) \neq \C(\X) )  $ onde $\1(\cdot)$ é a função indicadora.
+  \end{defi}
+  
+  A margem provê uma medida do quão precisa é a floresta em votar corretamente na classe verdadeira da observação. Uma margem maior sinaliza uma maior capacidade da floresta de discriminar observações. Note que a Margem de uma floresta é uma variável aleatória hierárquica. Idealmente a variância condicional ao vetor de amostragem é aproximadamente constante e averiguar se não há mudanças sistemáticas nos resultados para vetores de amostragem diferentes é parte do trabalho de avaliação de qualquer floresta estimada. Definimos o \textbf{Erro de Generalização} como $G(\F, \X, Y) := \Prob (M(\F, \X, Y)) < 0)$, a probabilidade de que a margem seja negativa, a previsão da floresta esteja errada. 
+ 
+ Um resultado fundamental sobre Florestas Aleatórias é de que não há aumento do erro de generalização com a adição de árvores. O comportamento é de limitação do erro de generalização.
+ 
+ \begin{teo}[Convergência do Erro de Generalização]
+ Defina a sequência $E_k = \{ G(\F_k, \X, Y) \}$ de forma que $\F_k$ seja apenas $\F_{k-1}$ com a $k$-ésima árvore adicionada. Tome as classes possíveis $\C = \{1,2,3,..,i,j,...,J \}$. Suponha que $\C(\X) = i$. Então $E_k \to \sum_{i=1}^k \1 ( \A_i (\X) = i ) - \underset{i \neq j}{\text{Max}} \sum_{i=1}^k \1  ( \A_i (\X) = j ) $
+ 
+ \end{teo}
+ 
+ \begin{prova}
+ Ver o Apêndice 1 de \cite{breiman2001random}. \blacksquare
+ \end{prova}
+ 
+ \section{Organização da Monografia}
+ 
+ Vimos como uma árvore de decisão pode distinguir observações e captar não-linearidades no processo gerador. Depois, que agregar árvores pode produzir uma espécie de mitigação de viés que uma árvore individual possa ter, construímos uma maneira de medir o quão bem o processo de voto democrático de cada árvore da floresta discrimina observações com sua Margem e que a partir dela podemos computar uma medida da performance preditiva em dados que não foram apresentados ao modelo em sua fase de treinamento. Por fim, vimos que o erro de generalização com dados desconhecidos tem um limite superior dado um aumento do tamanho da floresta. Estes são os fatos básicos do funcionamento do modelo.
+ 
+ O capítulo 2 desenvolve mais a teoria por trás das principais propriedades de Florestas Aleatórias, o capítulo 3 apresenta o algorítimo de computação dos efeitos marginais e o desenho da simulação. O capítulo 4 apresenta algumas estatísticas descritivas dos dados e as estimativas da Floresta. O capítulo 5 mostra as simulações e a computação dos efeitos marginais em si. O capítulo 6 conclui com alguns fatos estilizados.
+
+
+
+\chapter{Florestas Aleatórias}
+
+\section{Propriedades}
+
+\section{(Quase-)Inferência}
+
+\section{Estimação}
+
+
+\section{Validação}
+\subsection{Validação Dentro-Fora da Amostra}
+\subsection{Validação Cruzada}
+
+\chapter{Computação de Efeitos Marginais}
+\section{Modelos Lineares}
+\subsection{Modelando Não-Linearidades com Modelos Lineares}
+\subsection{Efeitos Marginais em Modelos Lineares}
+\section{Dependência Parcial para Florestas Aleatórias}
+\section{Preenchimento de Suporte}
+
+\chapter{Dados, Estimação e Validação}s
