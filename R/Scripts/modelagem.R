@@ -8,6 +8,9 @@ library(magrittr)
 set.seed(1234)
 
 dados <- readRDS("R/Dados/acidentes.Rds") %>%
+  mutate(classificacao_adicente = if_else(classificacao_acidente == "Com Vítimas Fatais",
+                                          true = "Fatal",
+                                          false = "Não-Fatal")) %>%
   select(-pessoas, -mortos, -feridos_leves, 
          -feridos_graves, -ilesos, -ignorados,
          -dia_semana, -latitude, -longitude, -regional) %T>% {
