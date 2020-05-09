@@ -30,8 +30,7 @@ dados %>%
        caption = "Fonte: Polícia Rodoviária Federal") +
   theme_minimal()
 
-
-ggSave(filename = "redeEstradasAcidentes.png")
+ggSave(filename = "imagens/redeEstradasAcidentes.png")
 
 
 
