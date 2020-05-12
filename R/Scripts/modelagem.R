@@ -15,8 +15,8 @@ dados <- readRDS("R/Dados/acidentes.Rds") %>%
                                           "Não-Fatal"),
          br = paste0("BR-", br)) %>%
   select(-pessoas, -mortos, -feridos_leves, -id, -delegacia,
-         -municipio, -feridos_graves, -ilesos, -ignorados, -uop,
-         -dia_semana, -latitude, -longitude, -regional, -data_inversa) %T>% {
+         -municipio, -feridos_graves, -ilesos, -ignorados, -uop, -feridos,
+         -tipo_acidente,-dia_semana, -latitude, -longitude, -regional, -data_inversa) %T>% {
   
   dados_split <<- initial_split(., .8)
   
@@ -37,7 +37,7 @@ prep_rec <- prep(receita_dados)
 modelo_spec_rand <- rand_forest(
   mtry = tune(),
   min_n = tune(),
-  trees = 1000) %>%
+  trees = 500) %>%
   set_mode("classification") %>%
   set_engine("ranger")
 
