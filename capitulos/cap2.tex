@@ -9,23 +9,22 @@ Uma \textbf{observação} de $k$ variáveis é um vetor $x \in \R^k$, em que cad
 
 As observações podem ser entendidas como pertencendo a \textbf{classes} (como por exemplo, bicicletas de corrida, bicicletas de passeio, bicicletas dobráveis, etc), estando a cargo do modelador definir exatamente quais classes são essas. Dizemos que o problema é de \textbf{Classificação} quando nossas observações tem suas classes em um conjunto discreto e que o problema é de \textbf{Regressão} quando há um conjunto infinito de classes disponíveis (e.g. quando a variável modelada é um preço, ou outra grandeza contínua).
 
-Classificar um paciente como sendo portador de uma doença ou não é claramente um problema de classificação. Estimar o preço de um imóvel com base em suas características é um problema de regressão. Suponha que temos um conjunto de classes $\C = \{1,2,...,J\}$ com $J$ classes. Notaremos $\C(x)$ como a classe da observação $x$. Nesta monografia a cardinalidade de $\C(x)$ sempre é unitária, trabalharemos com contextos em que não há sobreposição de classes. 
+Classificar um paciente como sendo portador de uma doença ou não é claramente um problema de classificação. Estimar o preço de um imóvel com base em suas características é um problema de regressão. 
 
-Ao falarmos que uma observação de um certo fenômeno pode ser incluída em um certo espaço de mensuração estamos apenas dizendo que a observação, informalmente, "faz sentido". Um carro não pode colidir com outro no -32 km de uma rodovia porque, bem, não há marcações negativas em estradas. Essa noção será formalizada.
+Ao falarmos que uma observação de um certo fenômeno pode ser incluída em um certo espaço de mensuração estamos delimitando um região do que é aceitável enquanto dado. Um carro não pode colidir com outro no -32 km de uma rodovia porque, bem, não há marcações negativas em estradas. Essa noção será formalizada.
 
 
 \begin{defi}
-Um \textbf{Banco} é uma par de um espaço de mensuração com um conjunto de classes possíveis $(\mathbf{X}, \C)$ tal que $x \in \mathbf{X} \to \C(x) \in \C$. Ademais, se temos um conjunto de vetores $X \subset \mathbf{X}$ então o par $(X, \C)$ que satisfaça $x \in X \to \C(x) \in \C$ é dito uma \textbf{instância} do banco $(\mathbf{X}, \C)$.
+Um \textbf{Banco} é uma par de um espaço de mensuração com um conjunto de classes possíveis $(\mathbf{X}, \C)$ tal que $x \in \mathbf{X} \to \C(x) \in \C$. 
 \end{defi}
+
+Podemos, mais ainda, entender que uma massa de dados usada na estimação de um modelo como uma \textbf{instância} de um banco. Matematicamente, um conjunto de vetores. Na representação computacional de software e típica da econometria tradicional, uma matriz.
+
 
 \begin{defi} Seja $(\mathbf{X}, \C)$ um Banco. Um \textbf{Classificador} é uma função $\C: \mathbf{X} \to \C$.
 \end{defi}
 
 Podemos entender um Classificador de outra maneira. Defina o conjunto $A_i = \{ x \in X \,\, ; \,\, \C(x) = i\}$. Então a união $\bigcup_{i = 1}^J A_i$ é o próprio conjunto $X$ e cada $A_i$ é disjunto de todos os outros $A_{j \neq i}$. Isso logo nos leva à noção intuitiva de que classificar um conjunto de dados é fatia-lo segundo critérios razoáveis. O "jogo" da classificação estatística é encontrar os sonhados critérios razoáveis a partir dos dados.
-
-\begin{defi}
-Um \textbf{Classificador} é uma partição disjunta de $\mathbf{X}$.
-\end{defi}
 
 Estimar uma Floresta Aleatória (ou Árvore de Decisão, modelo de regressão linear, o que quer que seja) é fundamentalmente escolher entre as inúmeras possibilidades de Classificadores o mais apropriado para os \textbf{dados}. Os procedimentos estatísticos que empregamos para encontrar alguma aproximação desde "classificador ideal" são aplicados em algum tipo de amostra, convenientemente representada a partir de agora por uma instância de um Banco.
 
@@ -64,7 +63,11 @@ Suponha agora que $G$ seja conexo e que $G / h_1$ seja um grafo desconexo. Tome 
 
 \end{prova}
 
-Um classificador Árvore de Decisão é qualquer classificador que admita uma representação como Árvore. Podemos entender isso associando a cada vértice de uma árvore uma divisão dos dados. Cada divisão $D_i$ carrega duas informações: (i) um teste lógico factível para todas as observações passarem ou não (e.g. ao classificar a classe de um navio militar, nenhum com mais de $100m$ de comprimento pode ser um destróier) e (ii) uma posição na árvore, determinando quais divisões/vértices estão acima e quais estão abaixo.
+\begin{defi}
+Seja $(\mathbf{X}, \C)$ um banco. Uma \textbf{Árvore de Decisão} é um classificador $\A: \mathbf{X} \to \C$ que admite representação de árvore. Se $\A: \mathbf{X} \to \mathbb{R}$ então chamamos de \textbf{Árvore de Regressão}.
+\end{defi}
+
+Podemos entender isso associando a cada vértice de uma árvore uma divisão dos dados. Cada divisão $D_i$ carrega duas informações: (i) um teste lógico factível para todas as observações passarem ou não (e.g. ao classificar a classe de um navio militar, nenhum com mais de $100m$ de comprimento pode ser um destróier) e (ii) uma posição na árvore, determinando quais divisões/vértices estão acima e quais estão abaixo.
 
 \begin{figure}
     \centering
@@ -100,10 +103,9 @@ Note que a qualidade é uma variável aleatória. O processo de formar uma árvo
   
   \begin{defi}
   Seja $A$ uma instância de um Banco $(\mathbf{X}, \C)$ com $n$ observações. Seja $F$ um conjunto de $k$ árvores de decisão treinadas em $A$ de acordo com a definição anterior. Seja $x_i$ a $i$-ésima observação da instância $A$ e, por fim, $\1(\cdot)$ a função indicadora. A \textbf{Margem} da floresta aleatória $\F$ formada pelas árvores de decisão $\A_j$ na observação $x_i$ é a função $M(\F, x_i) := \sum_{j=1}^k \1 ( \A_j (x_i) = \C(x_i) ) - \sum_{j=1}^k \1  ( \A_j (x_i) \neq \C(x_i) )$.
-  
   \end{defi}
   
-  
+ 
   \begin{defi}
  Para uma observação $x$ de uma instância $A$, o \textbf{Erro de Generalização} $G(\F, x) := \Prob (M(\F, A, x)) < 0)$.  \end{defi}
   
