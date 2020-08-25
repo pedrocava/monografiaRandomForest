@@ -5,13 +5,13 @@
 
 A unidade mais simples de uma Floresta Aleatória é uma Árvore de Decisão \cite{breiman2017classification} então a exposição daí partirá. Vamos construir uma árvore de decisão, mas antes precisamos de algumas definições e campo limpo. 
 
-Em Aprendizado de Máquina Supervisionado se entende que uma \textbf{observação} é um par de um vetor $x \in \R^k$, em que cada dimensão representa uma variável mensurada e um escalar que chamaremos de \textbf{variável resposta}. Variáveis binárias podem ser representadas por pares $0$ e $1$, então usar "apenas" números reais não é uma grande limitação. Definimos o \textbf{Espaço de Mensuração} $\mathbf{X}$ como sendo o conjunto de todos os vetores $x$ possíveis para os suportes definidos e $\mathbf{Y}$ o \textbf{Espaço de Resposta}. Por exemplo: se uma dimensão deste espaço representa idade, entendemos que seu suporte está nos inteiros positivos entre $0$ e, digamos, $120$. Se uma variável é uma categoria binária, então seu suporte está em $0$ e $1$. 
+Em Aprendizado de Máquina Supervisionado se entende que uma \textbf{observação} é um par de um vetor $x \in \R^k$, em que cada dimensão representa uma variável mensurada e um escalar que chamaremos de \textbf{variável resposta}. Variáveis binárias podem ser representadas por pares $0$ e $1$, então usar "apenas" números reais não é uma grande limitação. Definimos o \textbf{Espaço de Mensuração} $\mathcal{X}$ como sendo o conjunto de todos os vetores $x$ possíveis para os suportes definidos e $\mathcal{Y}$ o \textbf{Espaço de Resposta}. Por exemplo: se uma dimensão deste espaço representa idade, entendemos que seu suporte está nos inteiros positivos entre $0$ e, digamos, $120$. Se uma variável é uma categoria binária, então seu suporte está em $0$ e $1$. 
 
-As observações podem ser entendidas como pertencendo a \textbf{classes} (por exemplo, bicicletas de corrida, bicicletas de passeio, bicicletas dobráveis, etc), estando a cargo do modelador definir exatamente quais classes são essas. Um \textbf{modelo} é uma função $f: \mathbf{X} \to \mathbf{Y}$. Se $\mathbf{Y}$ é enumerável dizemos que é um modelo de \textbf{Classificação}, se for a reta real dizemos que é de \textbf{Regressão}. Classificar um paciente como sendo portador de uma doença ou não é claramente um problema de classificação. Estimar o preço de um imóvel com base em suas características é um problema de regressão. 
+As observações podem ser entendidas como pertencendo a \textbf{classes} (por exemplo, bicicletas de corrida, bicicletas de passeio, bicicletas dobráveis, etc), estando a cargo do modelador definir exatamente quais classes são essas. Um \textbf{modelo} é uma função $f: \mathcal{X} \to \mathcal{Y}$. Se $\mathcal{Y}$ é enumerável dizemos que é um modelo de \textbf{Classificação}, se for a reta real dizemos que é de \textbf{Regressão}. Classificar um paciente como sendo portador de uma doença ou não é claramente um problema de classificação. Estimar o preço de um imóvel com base em suas características é um problema de regressão. 
 
 Estimar uma Floresta Aleatória (ou Árvore de Decisão, modelo de regressão linear, o que quer que seja) é  escolher entre as inúmeras possibilidades de modelos o mais apropriado para os \textbf{dados}. Os procedimentos estatísticos que empregamos para encontrar alguma aproximação do "melhor" modelo, e podemos definir isso com uma variedade de métricas, são variados.
 
-Algumas propriedades interessantes de um modelo, como por exemplo $\frac{\partial f}{\partial x}, \, x \in \mathbf{X}$, são trivialmente obtidas em modelos de regressão linear. Basta diferenciar um polinômio. Essa propriedade não vale em funções não-analíticas, como veremos que uma Floresta Aleatória é. Efeitos parciais são centrais para várias aplicações de econometria e demandam uma maneira de aproxima-los em outras classes de modelos.
+Algumas propriedades interessantes de um modelo, como por exemplo $\frac{\partial f}{\partial x}, \, x \in \mathcal{X}$, são trivialmente obtidas em modelos de regressão linear. Basta diferenciar um polinômio. Essa propriedade não vale em funções não-analíticas, como veremos que uma Floresta Aleatória é. Efeitos parciais são centrais para várias aplicações de econometria e demandam uma maneira de aproxima-los em outras classes de modelos.
 
 \section{Construindo uma Árvore de Decisão}
 
@@ -31,23 +31,30 @@ Um grafo $G$ é dito \textbf{conexo} se para qualquer par de vértices $x, y \in
 
 
 \begin{defi}
-Seja $G$ um grafo conexo. Se a a de qualquer aresta $h$ gera $G + \{h\}$ que cíclico, então $G$ é dito uma \textbf{árvore}. Um conjunto de árvores disjuntas é dito uma \textbf{floresta}.
+Um grafo $G$ é dito uma \textbf{árvore} se para quaisquer dois vértices de $G$ existe um caminho único os ligando.
 \end{defi}
 
 \begin{teo}
 $G$ é uma árvore se, e somente se, é conexo e acíclico.
 \end{teo}
 
-\begin{prova}
-Seja $G$ um grafo conexo e acíclico e a aresta $h_1$ incidente aos vértices $x$ e $y$. Suponha por absurdo que $G / \{h_1\}$ seja conexo. Então existe alguma aresta $h_2$ incidente a $x$ e a outro vértice $z$ ao qual $h_1$ não era incidente. Como $G$ é conexo, necessariamente há um caminho que começa em $y$ e termina em $z$. Então havia, antes da remoção de $h_1$, um ciclo começando e terminando em $y$, formado pela união do caminho que liga $z$ e $y$ com $h_1$, em contradição com $G$ ser acíclico.
 
-Suponha agora que $G$ seja conexo e que $G / h_1$ seja um grafo desconexo. Tome três vértices, $x, y \,\text{e}\, z$. Suponha sem perda de generalidade que $x$ e $y$ são ligados por $h_1$. Como $G$ é conexo há pelo menos um caminho ligando cada um destes vértices aos outros. Se $x$ tinha todo caminho indo para $z$ passando por $y$, então nenhum ciclo por incluir $x$. Se $x$ tinha um caminho para $z$ que não passava por $y$, isso contradiz $G / h_1$ ser um grafo desconexo, então de fato não há como um ciclo passar por $x$. $G$ é acíclico. \blacksquare
+\begin{prova}
+
+Seja $G$ uma árvore. $G$ é trivialmente conexo pois por definição existe um caminho entre qualquer par de vértices. Suponha por absurdo que $G$ admita um ciclo. Então existe uma trilha começando e terminando em um vértice $v$ de $G$. Escolha um vértice qualquer $u$ desse ciclo. Então existe um caminho $v \to u $ e uma trilha (possivelmente um caminho) $u \to v$. Dois casos ocorrem:
+
+Se $u \to v$ é uma trilha, então podemos entende-la como a união de dois caminhos $u \to w$ e $w \to v$. Note que nesse caso podemos truncar o caminho $v \to u$ em $w$ e estabelecemos dois caminhos distintos entre $v$ e $w$. Em contradição com $G$ ser uma árvore.
+
+Se $u \to v$ é um caminho então a contradição é imediata pois existiriam dois caminhos entre $u$ e $v$.
+
+Agora a volta. Tome $G$ conexo e acíclico, escolha dois vértices $v$ e $u$. Suponha por absurdo que exista mais de um caminho entre $v$ e $u$. Então necessariamente existe ciclo no grafo $G$, basta "ir" por um caminho e "voltar" por outro. $G$ é uma árvore.
+\blacksquare
 \end{prova}
 
 Antes de mais definições, um exemplo motivador.
 
 \begin{defi}
-Seja $\mathbf{X}$ um espaço de mensuração. Uma \textbf{Árvore de Decisão} é um classificador $\A: \mathbf{X} \to \C$, onde $\C$ é enumerável, que admite representação de árvore. Se $\A: \mathbf{X} \to \mathbb{R}$ então chamamos de \textbf{Árvore de Regressão}.
+Seja $\mathcal{X}, \mathcal{Y}$ um par de espaços de mensuração e resposta. Uma \textbf{Árvore de Decisão} é uma função $\A: \mathcal{X} \to \mathcal{Y}$, onde $\mathcal{Y}$ é enumerável. Se $\mathcal{Y}$ for um subconjunto convexo da reta então chamamos de \textbf{Árvore de Regressão}.
 \end{defi}
 
 Podemos entender isso associando a cada vértice de uma árvore uma divisão dos dados. Cada divisão $D_i$ carrega duas informações: (i) um teste lógico factível para todas as observações passarem ou não (e.g. ao classificar a classe de um navio militar, nenhum com mais de $100m$ de comprimento pode ser um destróier) e (ii) uma posição na árvore, determinando quais divisões/vértices estão acima e quais estão abaixo.
@@ -81,11 +88,11 @@ Note que a qualidade é uma variável aleatória. O processo de formar uma árvo
  A agregação das predições de árvores construídas a partir de pedaços diferentes da amostra é um passo seguinte e natural à modelagem anteriormente apresentada. Como os procedimentos de escolha de divisões são estocásticos, árvores individuais de decisão podem apresentar vieses ou baixa performance ao acaso. Se um número grande de árvores é agregado e não há relação sistemática do erro de predição com alguma variável preditiva, então os erros devem se anular com o aumento do número de árvores.
  
  \begin{defi}
- Seja $A$ uma instância de um Banco $(\mathbf{X}, \C)$. Existe um conjunto de subamostras únicas dessa instância, $B = \{ B_1, B_2, ..., B_k\}$  independentes. Treine em cada elemento de $B$ uma árvore de decisão $\A_i$ e chame de $F(x)$ o conjunto de imagens obtidas ao aplicar cada $\A_i$ a uma observação $x$ da instância $A$. Uma \textbf{Floresta Aleatória} é um classificador $\F : F(x) \to \C$. 
+ Seja $A$ uma instância de um Banco $(\mathcal{X}, \C)$. Existe um conjunto de subamostras únicas dessa instância, $B = \{ B_1, B_2, ..., B_k\}$  independentes. Treine em cada elemento de $B$ uma árvore de decisão $\A_i$ e chame de $F(x)$ o conjunto de imagens obtidas ao aplicar cada $\A_i$ a uma observação $x$ da instância $A$. Uma \textbf{Floresta Aleatória} é um classificador $\F : F(x) \to \C$. 
   \end{defi}
   
   \begin{defi}
-  Seja $A$ uma instância de um Banco $(\mathbf{X}, \C)$ com $n$ observações. Seja $F$ um conjunto de $k$ árvores de decisão treinadas em $A$ de acordo com a definição anterior. Seja $x_i$ a $i$-ésima observação da instância $A$ e, por fim, $\1(\cdot)$ a função indicadora. A \textbf{Margem} da floresta aleatória $\F$ formada pelas árvores de decisão $\A_j$ na observação $x_i$ é a função $M(\F, x_i) := \sum_{j=1}^k \1 ( \A_j (x_i) = \C(x_i) ) - \sum_{j=1}^k \1  ( \A_j (x_i) \neq \C(x_i) )$.
+  Seja $A$ uma instância de um Banco $(\mathcal{X}, \C)$ com $n$ observações. Seja $F$ um conjunto de $k$ árvores de decisão treinadas em $A$ de acordo com a definição anterior. Seja $x_i$ a $i$-ésima observação da instância $A$ e, por fim, $\1(\cdot)$ a função indicadora. A \textbf{Margem} da floresta aleatória $\F$ formada pelas árvores de decisão $\A_j$ na observação $x_i$ é a função $M(\F, x_i) := \sum_{j=1}^k \1 ( \A_j (x_i) = \C(x_i) ) - \sum_{j=1}^k \1  ( \A_j (x_i) \neq \C(x_i) )$.
   \end{defi}
   
  
@@ -94,7 +101,7 @@ Note que a qualidade é uma variável aleatória. O processo de formar uma árvo
   
   A margem provê uma medida do quão precisa é a floresta em votar corretamente na classe verdadeira da observação. Uma margem maior sinaliza uma maior capacidade da floresta de discriminar o dado observado entre possíveis classes.  
 
- \begin{teo}[Convergência do Erro de Generalização] Seja $A$ uma instância de um Banco $(\mathbf{X}, \C)$. Defina a sequência $E_k = \{ G(\F_k, A, x) \}$ de forma que $\F_k = \F_{k-1} \bigcup \A_k $,  Tome as classes possíveis $\C = \{1,2,3,...,c,...,J \}$ e uma observação $x$, tal que $\C(x) = c$. Então $E_k \to \sum_{i=1}^k \1 ( \A_i (x) = c ) - \underset{}{\text{Max}} \sum_{i=1}^k \1  ( \A_i (x) \neq c) $
+ \begin{teo}[Convergência do Erro de Generalização] Seja $A$ uma instância de um Banco $(\mathcal{X}, \C)$. Defina a sequência $E_k = \{ G(\F_k, A, x) \}$ de forma que $\F_k = \F_{k-1} \bigcup \A_k $,  Tome as classes possíveis $\C = \{1,2,3,...,c,...,J \}$ e uma observação $x$, tal que $\C(x) = c$. Então $E_k \to \sum_{i=1}^k \1 ( \A_i (x) = c ) - \underset{}{\text{Max}} \sum_{i=1}^k \1  ( \A_i (x) \neq c) $
  
  \end{teo}
  
