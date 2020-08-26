@@ -17,11 +17,12 @@ ggSave <- partial(ggplot2::ggsave,
                   units = "in")
 
 
-dados <- readRDS("R/Dados/acidentes.Rds")
+acidentes <- readRDS("R/Dados/acidentes.Rds")
+(data <- readRDS("R/Dados/data_acidentes.Rds"))
 
 ## -----------------------------------------
 
-dados %>%
+acidentes %>%
   ggplot(aes(x = longitude, y = latitude, color = br)) +
   geom_point() +
   labs(title = "Reconstruindo a Rede de Estradas Federais no RJ pelos Acidentes",
@@ -32,7 +33,9 @@ dados %>%
 
 ggSave(filename = "imagens/redeEstradasAcidentes.png")
 
-
+data %>%
+  ggplot(aes(x = factor(governo_bolsonaro), y = log_acidentes)) +
+  geom_boxplot()
 
 
 
