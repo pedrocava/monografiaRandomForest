@@ -3,7 +3,9 @@
 
 \section{Modelos Lineares}
 
-Considere o contexto simples de regressão linear estimada por Mínimos Quadrados Ordinários. Se estima um vetor de parâmetros cujo produto interno com um vetor de variáveis explicativas - adicionado um ruído estatístico - dá a variável resposta. Tomemos $p$ regressores, $n$ observações, a variável resposta $Y$, a matriz com os vetores dos regressores $\mathbf{X}$ e um ruído branco i.i.d $\epsilon \sim N(0, \sigma)$. A estimação equivale a solucionar o sistema linear de $n$ equações que assumem a forma:
+Um modelo linear é qualquer $f: \X \to \Y$ tal que $\frac{\partial f}{\partial x_k} \in \R$. Por função linear, aqui, usamos a concepção típica do cálculo de que nos referimos a uma função cujas derivadas parciais são todas constantes, cujo gráfico é um hiperplano e que podemos representar
+
+Considere o contexto simples de regressão linear estimada por Mínimos Quadrados Ordinários. Se estima um vetor de parâmetros cujo produto interno com um vetor de variáveis explicativas - adicionado um ruído estatístico - dá a variável resposta. Tomemos $p$ regressores, $n$ observações, a variável resposta $Y$, a matriz $\mathbf{X}$ tem nas linhas cada observação e um ruído branco i.i.d $\epsilon \sim N(0, \sigma)$. A estimação equivale a solucionar o sistema linear de $n$ equações que assumem a forma:
 
 \begin{equation}
     Y_i = \alpha + \sum_{j = 1}^{p} \boldsymbol{\beta}_j \mathbf{X}_{ij} + \epsilon_i 
@@ -14,5 +16,7 @@ Ou, empilhando tudo em notação matricial:
 \begin{equation}
     \underset{n \times 1}{\mathbf{y}} = \underset{n \times p+1}{\mathbf{X}} \,\, \underset{p+1 \times 1}{\boldsymbol{\beta}}   + \underset{n \times 1}{\boldsymbol{\epsilon}}
 \end{equation}
+
+
 
 \section{Preenchimento de Suporte}

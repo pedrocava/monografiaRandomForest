@@ -18,7 +18,7 @@ Algumas propriedades interessantes de um modelo, como por exemplo $\frac{\partia
 Antes de propriamente construir uma Árvore de Decisão, vamos definir formalmente uma árvore em um contexto de teoria dos grafos. 
 
 \begin{defi}
-Um \textbf{grafo} é um par $G = (V, E)$, onde $V$ é um conjunto de elementos que chamamos de \textbf{vértices} e os de $E$, \textbf{arestas}. Se uma aresta conecta dois vértices, dizemos que é aresta incidente aos vértices. Notamos o conjunto de vértices incidentes a uma aresta $h$ pela função $\phi(h)$.
+Um \textbf{grafo} é um par $G = (V, E)$, onde $V$ é um conjunto de elementos que chamamos de \textbf{vértices} e os de $E$, \textbf{arestas}. Se uma aresta conecta dois vértices, dizemos que é aresta incidente aos vértices. Notamos o conjunto de vértices incidentes a uma aresta $h$ pela função $\phi(h)$. O número de arestas que se liga a um vértice $v$ é chamado de seu \textbf{grau}.
 \end{defi}
 
 \begin{defi}
@@ -31,7 +31,7 @@ Um grafo $G$ é dito \textbf{conexo} se para qualquer par de vértices $x, y \in
 
 
 \begin{defi}
-Um grafo $G$ é dito uma \textbf{árvore} se para quaisquer dois vértices de $G$ existe um caminho único os ligando.
+Um grafo $G$ é dito uma \textbf{árvore} se para quaisquer dois vértices de $G$ existe um caminho único os ligando. Se há um vértice $v$ de $G$ tal que existe um caminho entre todo outro vértice $u$ e $v$, então chamamos $v$ de a \textbf{raiz} da árvore. Os vértices de $G$ com grau unitário são chamados de \textbf{folhas}.
 \end{defi}
 
 \begin{teo}
@@ -43,21 +43,32 @@ $G$ é uma árvore se, e somente se, é conexo e acíclico.
 
 Seja $G$ uma árvore. $G$ é trivialmente conexo pois por definição existe um caminho entre qualquer par de vértices. Suponha por absurdo que $G$ admita um ciclo. Então existe uma trilha começando e terminando em um vértice $v$ de $G$. Escolha um vértice qualquer $u$ desse ciclo. Então existe um caminho $v \to u $ e uma trilha (possivelmente um caminho) $u \to v$. Dois casos ocorrem:
 
-Se $u \to v$ é uma trilha, então podemos entende-la como a união de dois caminhos $u \to w$ e $w \to v$. Note que nesse caso podemos truncar o caminho $v \to u$ em $w$ e estabelecemos dois caminhos distintos entre $v$ e $w$. Em contradição com $G$ ser uma árvore.
+\begin{itemize}
+    \item Se $u \to v$ é uma trilha, então podemos entende-la como a união de dois caminhos $u \to w$ e $w \to v$. Note que nesse caso podemos truncar o caminho $v \to u$ em $w$ e estabelecemos dois caminhos distintos entre $v$ e $w$. Em contradição com $G$ ser uma árvore.
 
-Se $u \to v$ é um caminho então a contradição é imediata pois existiriam dois caminhos entre $u$ e $v$.
+    \item Se $u \to v$ é um caminho então a contradição é imediata pois existiriam dois caminhos entre $u$ e $v$.
+\end{itemize}
+
 
 Agora a volta. Tome $G$ conexo e acíclico, escolha dois vértices $v$ e $u$. Suponha por absurdo que exista mais de um caminho entre $v$ e $u$. Então necessariamente existe ciclo no grafo $G$, basta "ir" por um caminho e "voltar" por outro. $G$ é uma árvore.
 \blacksquare
 \end{prova}
 
-Antes de mais definições, um exemplo motivador.
 
 \begin{defi}
-Seja $\mathcal{X}, \mathcal{Y}$ um par de espaços de mensuração e resposta. Uma \textbf{Árvore de Decisão} é uma função $\A: \mathcal{X} \to \mathcal{Y}$, onde $\mathcal{Y}$ é enumerável. Se $\mathcal{Y}$ for um subconjunto convexo da reta então chamamos de \textbf{Árvore de Regressão}.
+Seja $\mathcal{X}, \mathcal{Y}$ um par de espaços de mensuração e resposta. Uma \textbf{Árvore de Decisão} é uma função $\A: \mathcal{X} \to \mathcal{Y}$, onde $\mathcal{Y}$ é enumerável, associada à uma árvore. Se $\mathcal{Y}$ for um subconjunto convexo da reta então chamamos de \textbf{Árvore de Regressão}.
 \end{defi}
 
-Podemos entender isso associando a cada vértice de uma árvore uma divisão dos dados. Cada divisão $D_i$ carrega duas informações: (i) um teste lógico factível para todas as observações passarem ou não (e.g. ao classificar a classe de um navio militar, nenhum com mais de $100m$ de comprimento pode ser um destróier) e (ii) uma posição na árvore, determinando quais divisões/vértices estão acima e quais estão abaixo.
+Essa definição demanda entender exatamente o que é associar um mapa a uma árvore. Por isso queremos dizer que uma árvore funciona como uma espécie de fluxograma de dados. Na raiz está a amostra completa de treinamento. Cada caminho partindo da raiz representa uma regra de classificação e cada folha representa uma resposta final. 
+
+Imagine um banco de dados coletado de uma amostra da população em todos os estados contendo quatro variáveis: salário mensal, escolaridade, estado da federação e idade. Se estamos modelando a renda mensal, então o espaço de mensuração $\X$ é o espaço vetorial contendo uma dimensão para idade, uma dimensão para cada nível de escolaridade em que as entradas podem ser 0 ou 1 (e.g. 1 na dimensão de ensino superior e 0 nas outras nas observações com ensino superior completo) e uma dimensão para cada ente da federação, também com 0s e 1s em cada entrada. O espaço de mensuração $\Y$ é $\R_{+}$.
+
+Achar a árvore de regressão apropriada é escolher quais divisões são as melhores - iremos discutir com mais detalhes exatamente o que caracteriza uma divisão melhor. Imagine que temos como melhor divisão primeiro separar a amostra entre graduados e não graduados. Então partindo da raiz teríamos duas arestas. 
+
+
+
+
+
 
 \begin{figure}
     \centering
@@ -66,7 +77,7 @@ Podemos entender isso associando a cada vértice de uma árvore uma divisão dos
     \label{fig:arvore}
 \end{figure}
 
-Cada divisão quebra todas as observações que chegaram nela em exatamente dois grupos. Então toda divisão posterior gera apenas subconjuntos disjuntos dos dados que nela chegam. Uma divisão pode ser de dois tipos: terminal e não-terminal. Se uma divisão implica classificação perfeita (todas as observações que atendem ao critério são da mesma classe), então não há por que continuar a dividir os dados e esta divisão termina seu "galho" da árvore. 
+
 
 
 \section{Noções de Estimação de uma Árvore de Decisão}
