@@ -5,17 +5,17 @@
 
 A unidade mais simples de uma Floresta Aleatória é uma Árvore de Decisão \cite{breiman2017classification} então a exposição daí partirá. Vamos construir uma árvore de decisão, mas antes precisamos de algumas definições e campo limpo. 
 
-Em Aprendizado de Máquina Supervisionado se entende que uma \textbf{observação} é um par de um vetor $x \in \R^k$, em que cada dimensão representa uma variável mensurada e um escalar que chamaremos de \textbf{variável resposta}. Variáveis binárias podem ser representadas por pares $0$ e $1$, então usar "apenas" números reais não é uma grande limitação. Definimos o \textbf{Espaço de Mensuração} $\mathcal{X}$ como sendo o conjunto de todos os vetores $x$ possíveis para os suportes definidos e $\mathcal{Y}$ o \textbf{Espaço de Resposta}. Por exemplo: se uma dimensão deste espaço representa idade, entendemos que seu suporte está nos inteiros positivos entre $0$ e, digamos, $120$. Se uma variável é uma categoria binária, então seu suporte está em $0$ e $1$. 
+Em Aprendizado de Máquina Supervisionado se entende que uma \textbf{observação} é um par de um vetor $x \in \R^k$, em que cada dimensão representa uma variável mensurada e um escalar $y$ que chamaremos de \textbf{variável resposta}. Variáveis binárias podem ser representadas por pares $0$ e $1$, então usar "apenas" números reais não é uma grande limitação. Definimos o \textbf{Espaço de Mensuração} $\mathcal{X}$ como sendo o conjunto de todos os vetores $x$ possíveis para os suportes definidos e $\mathcal{Y}$ o \textbf{Espaço de Resposta}. Por exemplo: se uma dimensão deste espaço representa idade, entendemos que seu suporte está nos inteiros positivos entre $0$ e, digamos, $120$. Se uma variável é uma categoria binária, então seu suporte está em $0$ e $1$. 
 
-As observações podem ser entendidas como pertencendo a \textbf{classes} (por exemplo, bicicletas de corrida, bicicletas de passeio, bicicletas dobráveis, etc), estando a cargo do modelador definir exatamente quais classes são essas. Um \textbf{modelo} é uma função $f: \mathcal{X} \to \mathcal{Y}$. Se $\mathcal{Y}$ é enumerável dizemos que é um modelo de \textbf{Classificação}, se for a reta real dizemos que é de \textbf{Regressão}. Classificar um paciente como sendo portador de uma doença ou não é claramente um problema de classificação. Estimar o preço de um imóvel com base em suas características é um problema de regressão. 
+As observações podem ser entendidas como pertencendo a \textbf{classes} (por exemplo, bicicletas de corrida, bicicletas de passeio, bicicletas dobráveis, etc), estando a cargo do modelador definir exatamente quais classes são essas. Um \textbf{modelo} é uma função $f: \mathcal{X} \to \mathcal{Y}$. Se $\mathcal{Y}$ é enumerável dizemos que é um modelo de \textbf{Classificação}, se for um subconjunto da reta real dizemos que é de \textbf{Regressão}. Classificar um paciente como sendo portador de uma doença ou não é claramente um problema de classificação. Estimar o preço de um imóvel com base em suas características é um problema de regressão. 
 
 Estimar uma Floresta Aleatória (ou Árvore de Decisão, modelo de regressão linear, o que quer que seja) é  escolher entre as inúmeras possibilidades de modelos o mais apropriado para os \textbf{dados}. Os procedimentos estatísticos que empregamos para encontrar alguma aproximação do "melhor" modelo, e podemos definir isso com uma variedade de métricas, são variados.
 
-Algumas propriedades interessantes de um modelo, como por exemplo $\frac{\partial f}{\partial x}, \, x \in \mathcal{X}$, são trivialmente obtidas em modelos de regressão linear. Basta diferenciar um polinômio. Essa propriedade não vale em funções não-analíticas, como veremos que uma Floresta Aleatória é. Efeitos parciais são centrais para várias aplicações de econometria e demandam uma maneira de aproxima-los em outras classes de modelos.
+Algumas propriedades interessantes de um modelo, como por exemplo $\frac{\partial f}{\partial x}, \, x \in \mathcal{X}$, são trivialmente obtidas em modelos de regressão linear. Basta diferenciar um polinômio. Essa propriedade não vale em funções não-analíticas, como veremos que uma Floresta Aleatória é. Efeitos parciais são centrais para várias aplicações de econometria e demandam uma maneira de aproxima-los em outras classes, potencialmente mais interessantes que os lineares, de modelos.
 
 \section{Construindo uma Árvore de Decisão}
 
-Antes de propriamente construir uma Árvore de Decisão, vamos definir formalmente uma árvore em um contexto de teoria dos grafos. 
+Vamos estabelecer alguns fatos básicos de Teoria dos Grafos, caracterizar árvores nesse contexto e oferecer um resultado com duas condições razoavelmente fracas e suficientes para estabelecer que um grafo é uma árvore. Esse resultado tem implicações diretas em como estruturamos uma árvore de decisão, implicações estas que nos levam a estender naturalmente nossa noção de grafo árvore para uma função que relaciona um espaço de mensuração $\X$ e um de resposta $\Y$.
 
 \begin{defi}
 Um \textbf{grafo} é um par $G = (V, E)$, onde $V$ é um conjunto de elementos que chamamos de \textbf{vértices} e os de $E$, \textbf{arestas}. Se uma aresta conecta dois vértices, dizemos que é aresta incidente aos vértices. Notamos o conjunto de vértices incidentes a uma aresta $h$ pela função $\phi(h)$. O número de arestas que se liga a um vértice $v$ é chamado de seu \textbf{grau}.
@@ -31,13 +31,16 @@ Um grafo $G$ é dito \textbf{conexo} se para qualquer par de vértices $x, y \in
 
 
 \begin{defi}
-Um grafo $G$ é dito uma \textbf{árvore} se para quaisquer dois vértices de $G$ existe um caminho único os ligando. Se há um vértice $v$ de $G$ tal que existe um caminho entre todo outro vértice $u$ e $v$, então chamamos $v$ de a \textbf{raiz} da árvore. Os vértices de $G$ com grau unitário são chamados de \textbf{folhas}. Um conjunto disjunto de árvores é dito uma \textbf{floresta}.
+Um grafo $G$ é dito uma \textbf{árvore} se para quaisquer dois vértices de $G$ existe um caminho único os ligando. Se há um vértice $v$ de $G$ tal que existe um caminho entre todo outro vértice $u$ e $v$, então chamamos $v$ de a \textbf{raiz} da árvore. Os vértices com grau maior que $1$ que não são a raiz são chamados \textbf{nodos} e os com grau unitário são chamados de \textbf{folhas}. Um conjunto disjunto de árvores é dito uma \textbf{floresta}.
 \end{defi}
+
+Árvores podem ser caracterizadas por duas propriedades, são conexas e acíclicas. Conexidade é importante porque garante que toda observação nova apresentada à árvore terá uma previsão garantida - afinal há sempre um caminho entre a raiz da árvore e uma folha, cada caminho representando uma regra de previsão/classificação.
+
+A ausência de ciclos impõe que todo teste lógico que associaremos é \textit{completo} no sentido de que toda observação pode ser avaliada e terá alguma resposta. Alguns exemplos de testes lógicos completos são: uma pessoa tem mais que $a$ cm de altura, um avião tem mais de $b$ metros de comprimento, uma pessoa ganha mais de $c$ reais por mês, o estado de nascimento de alguém é ou não o RJ, etc. Testes completos não "misturam" regras de previsão/classificação. Assim nenhuma observação pode seguir um caminho diferente entre a raiz e sua folha. 
 
 \begin{teo}
 $G$ é uma árvore se, e somente se, é conexo e acíclico.
 \end{teo}
-
 
 \begin{prova}
 
@@ -54,6 +57,31 @@ Agora a volta. Tome $G$ conexo e acíclico, escolha dois vértices $v$ e $u$. Su
 \blacksquare
 \end{prova}
 
+Vamos agora contextualizar algumas dessas definições em uma aplicação típica. A unidade de email marketing de uma grande empresa de e-commerce quer segmentar clientes entre entusiastas de tecnologia, que engajarão felizmente com campanhas de aparelhos novos, e usuários relutantes de tecnologia, que não precisam receber esse contato nas suas caixa de email. Uma equipe selecionou algumas centenas de clientes aleatoriamente e manualmente os classificou usando entrevistas e análise de histórico de compras, um processo caro, demorado e de profundidade. Cabe agora a um analista tentar reproduzir os esforços manuais e não-escaláveis da equipe em um modelo preditivo que pode ser aplicado na base verdadeira de clientes usando os resultados do estudo.
+
+O analista consultou o banco de dados da empresa e montou uma amostra contendo os seguintes dados: idade do cliente, percentual das compras em eletrônicos, valor médio da compra. Estamos falando de um espaço de mensuração $\X \subset \R^3$. Como a variável resposta é binária, $\Y = \{0, 1\}$. 
+
+Um procedimento possível seria primeiro estimar por regressão linear ou logística um modelo para probabilidade uma observação pertencer à uma classe $f: \R^3 \to [0, \, 1]$ e depois alguma maneira de traduzir uma probabilidade presumida pelo modelo à uma classe $g: [0, \, 1] \to \{0, 1\}$. O modelo final, neste caso, seria a composição $g \circ f: \R^3 \to \{0, 1\} $.
+
+O analista pode seguir por outro caminho e enumerar uma série de perguntas sobre cada observação antes de emitir um julgamento:
+
+\begin{itemize}
+    \item O cliente tem menos de 30 anos?
+    \item Mais de um quarto das compras desse cliente foram em eletrônicos?
+    \item A compra média desse cliente é maior que 250 reais?
+\end{itemize}
+
+Cada pergunta aqui pode ser lida como uma função. 'O cliente tem menos de $k$ anos de idade?' é apenas $f(\text{idade}\, |\, k)$, tal que $f: \R_+ \to \{0, 1\}$. É de se esperar que o grupo de clientes entre 20 e 30 anos de idade cuja maior parte das compras históricas foram em eletrônicos e fazem compras acima da média tenha, entre seus membros, mais entusiastas de tecnologia do que usuários relutantes. Algumas perguntas são mais informativas que outras. Afinal, um usuário teve mais de 90\% das compras em eletrônicos é provavelmente mais relevante para a pergunta em questão do que saber se ele te mais ou menos do que 23 anos de idade. 
+
+Ao compor perguntas sucessivamente chegamos em uma espécie de fluxograma de decisão. Uma boa previsão de perfil para um clientes com menos de 30 anos que comprou eletrônicos em 60\% das compras passadas e gastou 40\% a mais que a média por compra provavelmente é um usuário ávido de tecnologia. Ao passo que um usuário de 72 anos que teve 10\% das compras em eletrônicos e faz compras 40\% menores que a média provavelmente é um usuário relutante. Note que muito provavelmente um usuário de 72 anos que comprou apenas eletrônicos na plataforma é entusiasta. A composição das repostas é importante.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale = .65]{imagens/exemplo_arvore.png}
+    \caption{Um exemplo de árvore de decisão. Elaboração própria.}
+    \label{fig:arvore}
+\end{figure}
+
 
 \begin{defi}
 Seja $\mathcal{X}, \mathcal{Y}$ um par de espaços de mensuração e resposta. Uma \textbf{Árvore de Decisão} é uma função $\A: \mathcal{X} \to \mathcal{Y}$, onde $\mathcal{Y}$ é enumerável, associada à uma árvore. Se $\mathcal{Y}$ for um subconjunto convexo da reta então chamamos de \textbf{Árvore de Regressão}.
@@ -64,19 +92,6 @@ Essa definição demanda entender exatamente o que é associar um mapa a uma ár
 Imagine um banco de dados coletado de uma amostra da população em todos os estados contendo quatro variáveis: salário mensal, escolaridade, estado da federação e idade. Se estamos modelando a renda mensal, então o espaço de mensuração $\X$ é o espaço vetorial contendo uma dimensão para idade, uma dimensão para cada nível de escolaridade em que as entradas podem ser 0 ou 1 (e.g. 1 na dimensão de ensino superior e 0 nas outras nas observações com ensino superior completo) e uma dimensão para cada ente da federação, também com 0s e 1s em cada entrada. O espaço de mensuração $\Y$ é $\R_{+}$.
 
 Achar a árvore de regressão apropriada é escolher quais divisões são as melhores - iremos discutir com mais detalhes exatamente o que caracteriza uma divisão melhor. Imagine que temos como melhor divisão primeiro separar a amostra entre graduados e não graduados. Então partindo da raiz teríamos duas arestas. 
-
-
-
-
-
-
-\begin{figure}
-    \centering
-    \includegraphics[scale = .25]{imagens/arvore.png}
-    \caption{Um exemplo de árvore de decisão}
-    \label{fig:arvore}
-\end{figure}
-
 
 
 
