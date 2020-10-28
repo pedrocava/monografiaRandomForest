@@ -3,7 +3,7 @@
 
 \section{Modelos Lineares}
 
-Um modelo linear é qualquer $f: \X \to \Y$ tal que $\frac{\partial f}{\partial x_k} \in \R$. Por função linear, aqui, usamos a concepção típica do cálculo de que nos referimos a uma função cujas derivadas parciais são todas constantes, cujo gráfico é um hiperplano e que podemos representar
+Um modelo linear é qualquer $f: \X \to \Y$ tal que $\frac{\partial f}{\partial x_k} \in \R$. Temos então um vetor $(\frac{\partial f}{\partial x_i}, ..., \frac{\partial f}{\partial x_k}) \in \R^k$. O procedimento de estima-lo é o que podemos chamar de regressão linear. 
 
 Considere o contexto simples de regressão linear estimada por Mínimos Quadrados Ordinários. Se estima um vetor de parâmetros cujo produto interno com um vetor de variáveis explicativas - adicionado um ruído estatístico - dá a variável resposta. Tomemos $p$ regressores, $n$ observações, a variável resposta $Y$, a matriz $\mathbf{X}$ tem nas linhas cada observação e um ruído branco i.i.d $\epsilon \sim N(0, \sigma)$. A estimação equivale a solucionar o sistema linear de $n$ equações que assumem a forma:
 
@@ -16,6 +16,9 @@ Ou, empilhando tudo em notação matricial:
 \begin{equation}
     \underset{n \times 1}{\mathbf{y}} = \underset{n \times p+1}{\mathbf{X}} \,\, \underset{p+1 \times 1}{\boldsymbol{\beta}}   + \underset{n \times 1}{\boldsymbol{\epsilon}}
 \end{equation}
+
+
+
 
 
 
