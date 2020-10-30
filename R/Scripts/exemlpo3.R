@@ -13,6 +13,7 @@ cor <- wes_palette("Cavalcanti1") %>%
 
 
 (tibble(x = runif(1000, -10, 10),
+        x2 = x^2,
         y = 100 + 5*x - 2*x^2 + rnorm(length(x), mean = 5, sd = 10)) -> 
   data)
 
@@ -26,6 +27,6 @@ data %>%
        y = "Y")
 
 lm(y ~ x, data = data) -> modelo1
-lm(y ~ x + x^2, data = data) -> modelo2
+lm(y ~ x + x2, data = data) -> modelo2
 
 stargazer(modelo1, modelo2, align = TRUE, out = "tabelas/exemplo3.tex")
