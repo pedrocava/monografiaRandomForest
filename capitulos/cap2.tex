@@ -73,7 +73,7 @@ $\blacksquare$
 
 Vamos agora contextualizar algumas dessas definições e resultados em uma aplicação típica.
 
-\begin{exemplo}
+\begin{exemplo}[Classificação Binária]
  A unidade de email marketing de uma grande empresa de e-commerce quer segmentar clientes entre entusiastas de tecnologia, que engajarão felizmente com campanhas de aparelhos novos, e usuários relutantes de tecnologia, que não precisam receber esse contato nas suas caixa de email. Uma equipe selecionou algumas centenas de clientes aleatoriamente e manualmente os classificou usando entrevistas e análise de histórico de compras, um processo caro, demorado e de profundidade. Cabe agora a um analista tentar reproduzir os esforços manuais e não-escaláveis da equipe em um modelo preditivo que pode ser aplicado na base verdadeira de clientes usando os resultados do estudo.
 
 O analista consultou o banco de dados da empresa e montou uma amostra contendo os seguintes dados: idade do cliente, percentual das compras em eletrônicos, valor médio da compra. Estamos falando de um espaço de mensuração $\X \subset \R^3$. Como a variável resposta é binária, $\Y = \{0, 1\}$. 
@@ -110,6 +110,13 @@ O ponto importante é que podemos traduzir um grafo árvore $G$ em um modelo, ba
 Seja $\X, \Y$ um par de espaços de mensuração e resposta. Uma \textbf{Árvore de Decisão} é uma função $\A: \X \to \Y$, onde $\Y$ é enumerável, associada à uma árvore $G$. Se $\Y$ for um subconjunto convexo da reta então chamamos de \textbf{Árvore de Regressão}.
 \end{defi}
 
+\begin{exemplo}[Regressão]
+ Uma empresa de tecnologia no ramo de venda e aluguel de imóveis quer trabalhar em um modelo de precificação de aluguel. A ideia é que donos de imóveis recebam um valor sugerido compatível com o mercado e embutir isso no serviço.
+ 
+ Um analista coletou dados de aluguel e algumas informações básicas do apartamento. Área, número de quartos, de banheiros, se aceita animais, se é mobiliado e em qual cidade está localizado. 
+ 
+ 
+\end{exemplo}
 
 
 
