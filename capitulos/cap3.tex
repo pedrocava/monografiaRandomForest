@@ -1,7 +1,7 @@
 
 \chapter{Estimação, Efeitos Marginais e Econometria Clássica}
 
-Introduzido o conceito de Floresta Aleatória, agora voltamos nossa atenção à Econometria Clássica e seu \texit{workhorse model}, o \textbf{modelo clássico de regressão linear}. Veremos uma maneira de estimar os parâmetros desse modelo, via Mínimos Quadrados Ordinários, como modelos de Floresta Aleatória não têm a mesma interpretabilidade e como podemos contornar essa problemática avaliando o modelo na vizinhança de algumas observações. 
+Introduzido o conceito de Floresta Aleatória, agora voltamos nossa atenção à Econometria Clássica e seu \textit{workhorse model}, o \textbf{modelo clássico de regressão linear}. Veremos uma maneira de estimar os parâmetros desse modelo, via Mínimos Quadrados Ordinários, como modelos de Floresta Aleatória não têm a mesma interpretabilidade e como podemos contornar essa problemática avaliando o modelo na vizinhança de algumas observações. 
 
 
 
@@ -30,15 +30,20 @@ Essa hipótese pode parecer muito restritiva a princípio, mas não é (tanto). 
 
 \begin{exemplo}[Estimando linearmente uma relação não-linear]
 
-Suponha que algum processo de interesse depende de uma variável aleatória $x$ e tenha a seguinte relação: $y(x) = 100 + 5*x - 2x^2$. Observamos $y$ com um erro:
+Suponha que algum processo de interesse dependa de uma variável aleatória $x$ com a seguinte relação: $y(x) = 100 + 5x - 2x^2$. Observamos $y$ com um erro:
 
-\begin{figure}[]
+\begin{figure}[H]
     \centering
     \includegraphics[scale = .60]{imagens/exemplo3_dist.png}
     \caption{Uma amostra simulada do processo. Elaboração própria.}
 \end{figure}
 
-\input{tabelas/exemplo3}
+A tabela \ref{tabela_exemplo3} mostra as estimativas de dois modelos, um com $x$ e uma constante, outro com $x$, a constante e $x^2$. O segundo modelo recupera os parâmetros com erros da ordem de $1\%$. 
+
+\input{tabelas/exemplo3}\label{tab:tabela_exemplo3}
+
+A introdução de novas variáveis, funções não-lineares das originais, expande o número de situações em que a aproximação linear não uma simplificação exagerada. Isso ocorre, inclusive, sem perda de interpretabilidade. Para entender o efeito marginal de uma variável que tenha sido ''expandida'' com transformações não-lineares basta somar as derivadas da resposta em relação à original bem como às expansões.
+
 
 \end{exemplo}
 
@@ -79,18 +84,12 @@ A variância dos erros independe do nível dos regressores:
 
 \end{hipotese}
 
-Dadas as Condições de Gauss-Markov e uma amostra $(\mathbf{X}, \mathbf{y})$, se $(\mathbf{x}_i, \mathbf{y}_i)$ são i.i.d vale que $ \E[\epsilon_i^2\, |\, \mathbf{X} ] = \E[\epsilon_i^2\, |\, \mathbf{x}_i ]  $.
-
-
-
-
-
-
-
-%%%%%%%%%%%%%%%%%
+% Dadas as Condições de Gauss-Markov e uma amostra $(\mathbf{X}, \mathbf{y})$, se $(\mathbf{x}_i, \mathbf{y}_i)$ são i.i.d vale que $ \E[\epsilon_i^2\, |\, \mathbf{X} ] = \E[\epsilon_i^2\, |\, \mathbf{x}_i ]  $.
 
 
 \section{Estimação de Modelos Lineares por Mínimos Quadrados Ordinários}
+
+
 
 \section{Efeitos Marginais em Florestas Aleatórias}
 
