@@ -117,8 +117,20 @@ Seja $\X, \Y$ um par de espaços de mensuração e resposta. Uma \textbf{Árvore
 \begin{exemplo}[Regressão]
  Uma empresa de tecnologia no ramo de venda e aluguel de imóveis quer trabalhar em um modelo de precificação de aluguel. A ideia é que donos de imóveis recebam um valor sugerido compatível com o mercado e embutir isso no serviço.
  
- Um analista coletou dados de aluguel e algumas informações básicas do apartamento. Área, número de quartos, de banheiros, se aceita animais, se é mobiliado e em qual cidade está localizado. 
+ Um analista coletou dados de aluguel e algumas informações básicas do apartamento. Área, número de quartos, de banheiros, se aceita animais, se é mobiliado e em qual cidade está localizado. A média de cada variável, por cidade, é:
  
+ \input{tabelas/tabela_arvore_reg}
+ 
+ E a árvore de regressão estimada foi:
+ 
+ \begin{figure}
+    \centering
+    \includegraphics[scale = .55]{imagens/arvore_decisao_houses.png}
+    \caption{Um exemplo de árvore de regressão. Elaboração própria.}
+    \label{fig:arvore_reg}
+\end{figure}
+ 
+ Os valores abaixo das folhas são as previsões. 
 
 
  
