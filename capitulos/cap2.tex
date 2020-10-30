@@ -1,17 +1,21 @@
 
 \chapter{Florestas Aleatórias}
 
-\section{Teoria Preeliminar}
+\begin{citacao}
+	``Todos os modelos estão errados, mas alguns são úteis.''  - George Box
+\end{citacao}
+
+\section{Noções de Aprendizado de Máquina Supervisionado}
 
 A unidade mais simples de uma Floresta Aleatória é uma Árvore de Decisão \cite{breiman2017classification} então a exposição daí partirá. Vamos construir uma árvore de decisão, mas antes precisamos de algumas definições e campo limpo. 
 
 Em Aprendizado de Máquina Supervisionado se entende que uma \textbf{observação} é um par de um vetor $x \in \R^k$, em que cada dimensão representa uma variável mensurada e um escalar $y$ que chamaremos de \textbf{variável resposta}. Variáveis binárias podem ser representadas por pares $0$ e $1$, então usar "apenas" números reais não é uma grande limitação. Definimos o \textbf{Espaço de Mensuração} $\mathcal{X}$ como sendo o conjunto de todos os vetores $x$ possíveis para os suportes definidos e $\mathcal{Y}$ o \textbf{Espaço de Resposta}. Por exemplo: se uma dimensão deste espaço representa idade, entendemos que seu suporte está nos inteiros positivos entre $0$ e, digamos, $120$. Se uma variável é uma categoria binária, então seu suporte está em $0$ e $1$. 
 
-As observações podem ser entendidas como pertencendo a \textbf{classes} (por exemplo, bicicletas de corrida, bicicletas de passeio, bicicletas dobráveis, etc), estando a cargo do modelador definir exatamente quais classes são essas. Um \textbf{modelo} é uma função $f: \mathcal{X} \to \mathcal{Y}$. Se $\mathcal{Y}$ é enumerável dizemos que é um modelo de \textbf{Classificação}, se for um subconjunto da reta real dizemos que é de \textbf{Regressão}. Classificar um paciente como sendo portador de uma doença ou não é claramente um problema de classificação. Estimar o preço de um imóvel com base em suas características é um problema de regressão. 
+As observações podem ser entendidas como pertencendo a \textbf{classes} (por exemplo, bicicletas de corrida, bicicletas de passeio, bicicletas dobráveis, etc), estando a cargo do modelador definir exatamente quais classes são essas. Um \textbf{modelo} é uma função $f: \mathcal{X} \to \mathcal{Y}$. Se $\mathcal{Y}$ é enumerável dizemos que é um modelo de \textbf{Classificação}, se for um subconjunto da reta real dizemos que é de \textbf{Regressão}. Um caso intermediário seria o de \textbf{Risco} em que $\Y = [0, \,1]$. Classificar um paciente como sendo portador de uma doença ou não é claramente um problema de classificação. Estimar o preço de um imóvel com base em suas características é um problema de regressão. 
 
 Estimar uma Floresta Aleatória (ou Árvore de Decisão, modelo de regressão linear, o que quer que seja) é  escolher entre as inúmeras possibilidades de modelos o mais apropriado para os \textbf{dados}. Os procedimentos estatísticos que empregamos para encontrar alguma aproximação do "melhor" modelo, e podemos definir isso com uma variedade de métricas, são variados.
 
-Algumas propriedades interessantes de um modelo, como por exemplo $\frac{\partial f}{\partial x}, \, x \in \mathcal{X}$, são trivialmente obtidas em modelos de regressão linear. Basta diferenciar um polinômio. Essa propriedade não vale em funções não-analíticas, como veremos que uma Floresta Aleatória é. Efeitos parciais são centrais para várias aplicações de econometria e demandam uma maneira de aproxima-los em outras classes, potencialmente mais interessantes que os lineares, de modelos.
+Algumas propriedades interessantes de um modelo, como por exemplo $\frac{\partial f}{\partial x}, \, x \in \mathcal{X}$, são trivialmente obtidas em modelos de regressão linear. Basta diferenciar um polinômio. Essa propriedade não vale em funções não-analíticas, como veremos que uma Floresta Aleatória é. Efeitos parciais são centrais para várias aplicações de econometria e demandam uma maneira de aproxima-los em outras classes, potencialmente mais interessantes que os lineares, de modelos. Ao longo deste capítulo iremos construir uma Floresta Aleatória.
 
 \section{Construindo uma Árvore de Decisão}
 
@@ -114,6 +118,9 @@ Seja $\X, \Y$ um par de espaços de mensuração e resposta. Uma \textbf{Árvore
  Uma empresa de tecnologia no ramo de venda e aluguel de imóveis quer trabalhar em um modelo de precificação de aluguel. A ideia é que donos de imóveis recebam um valor sugerido compatível com o mercado e embutir isso no serviço.
  
  Um analista coletou dados de aluguel e algumas informações básicas do apartamento. Área, número de quartos, de banheiros, se aceita animais, se é mobiliado e em qual cidade está localizado. 
+ 
+
+
  
  
 \end{exemplo}
