@@ -60,30 +60,39 @@ houses %>%
   geom_histogram(aes(y = ..density..)) +
   theme_minimal() +
   labs(title = "Distribuição dos apartamentos por área e cidade",
+       subtitle = "Apartamentos disponíveis para aluguel em Março de 2020",
        x = "Área (M^2)",
        y = "Densidade",
        fill = "Cidade") +
-  scale_fill_manual(values = pal)
+  scale_fill_manual(values = pal) +
+  facet_wrap(~ cidade) +
+  theme(legend.position = "none")
 
 houses %>%
   ggplot(aes(x = aluguel, fill = cidade)) +
   geom_histogram(aes(y = ..density..)) +
   theme_minimal() +
   labs(title = "Distribuição dos aluguéis por cidade",
+       subtitle = "Apartamentos disponíveis para aluguel em Março de 2020",
        x = "Aluguel",
        y = "Densidade",
        fill = "Cidade") +
-  scale_fill_manual(values = pal)
+  scale_fill_manual(values = pal) +
+  facet_wrap(~ cidade) +
+  theme(legend.position = "none")
 
 houses %>%
   ggplot(aes(x = andar, fill = cidade)) +
   geom_histogram(aes(y = ..density..)) +
   theme_minimal() +
-  labs(title = "Distribuição dos andares por cidade",
+  labs(title = "Distribuição dos andares de apartamentos para aluguel",
+       subtitle = "Apartamentos disponíveis em Março de 2020",
        x = "Andar",
        y = "Densidade",
        fill = "Cidade") +
-  scale_fill_manual(values = pal)
+  scale_fill_manual(values = pal) +
+  facet_wrap(~ cidade) +
+  theme(legend.position = "none")
 
 
 houses %>%
@@ -91,10 +100,13 @@ houses %>%
   geom_histogram(aes(y = ..density..)) +
   theme_minimal() +
   labs(title = "Distribuição dos quartos por cidade",
+       subtitle = "Apartamentos disponíveis para aluguel em Março de 2020",
        x = "quartos",
        y = "Densidade",
        fill = "Cidade") +
-  scale_fill_manual(values = pal)
+  scale_fill_manual(values = pal) +
+  facet_wrap(~ cidade) +
+  theme(legend.position = "none")
 
 houses %>%
   ggplot(aes(x = area, y = aluguel, color = cidade)) +
