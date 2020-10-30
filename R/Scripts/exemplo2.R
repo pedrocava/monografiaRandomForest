@@ -27,7 +27,8 @@ tabela <- file("tabelas/tabela_arvore_reg.tex")
 
 houses %>%
   group_by(cidade) %>%
-  summarise(across(area:aceita_animal, function(v) round(mean(v), digits = 1))) %>%
+  summarise(across(c(everything(), -aceita_animal, - mobiliado, -vagas), 
+                   function(v) round(mean(v), digits = 1))) %>%
   kable("latex") %>%
   enc2utf8() %>%
   writeLines(tabela, useBytes = TRUE)
