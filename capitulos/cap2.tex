@@ -201,8 +201,17 @@ Defina $H(n_i \, | \, a), H(n_i \, |\,  b)$ como a entropia dos potenciais nodos
 Uma limitação do modelo construído até aqui é que ele é inclinado à \textit{overfitting}, quando o modelo performa muito bem nos dados em que treinou e muito mal em dados novos. Isso deve a modelos de árvore serem típicos exemplos de modelos de alta variância: mudanças pequenas nos dados de treino podem gerar regras de previsão vastamente diferentes. Em compensação isso os torna modelos de baixo viés, capturam muito bem padrões nos dados apresentados. 
 
 \begin{exemplo}[Variância de Árvores de Decisão]
-Voltando ao exemplo da árvore de regressão para preços de casas. Vamos agora selecionar aleatoriamente duas amostras de apartamentos e treinar uma árvore em cada. O que acontece com o aluguel presumido para apartamentos iguais?
+Voltando ao exemplo da árvore de regressão para preços de casas. Vamos agora selecionar aleatoriamente várias amostras de apartamentos e treinar uma árvore e um modelo linear (estimado por OLS) em cada. O que acontece com o aluguel presumido para apartamentos iguais?
 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale = .60]{imagens/exemplo_var_arvores.png}
+    \caption{A distribuição das previsões por classe de modelo. Elaboração própria.}
+    \label{fig:arvore_var_ols}
+\end{figure}
+
+Agregando as previsões, as diferenças diminuem consideravelmente:
 
 
 
@@ -211,7 +220,8 @@ Voltando ao exemplo da árvore de regressão para preços de casas. Vamos agora 
 
 
 
-Esse comportamento sugere que o modelo não é parcimonioso e não consegue generalizar para outros cenários. Um modelo parcimonioso, ao passo que tem , tende a ter mais viés e se adequar . 
+
+
 
 
 
