@@ -33,9 +33,16 @@ cor <- wes_palette("Cavalcanti1") %>%
   mutate(arvores = map(data, ~ rpart(aluguel ~ ., data = .x)),
          ols = map(data, ~ lm(aluguel ~ ., data = .x))) %>%
   pivot_longer(arvores:ols, names_to = "modelo") %>%
-  mutate(predict = map_dbl(value, ~ predict(.x, casa)))   ->
+  mutate(predict = map_dbl(value, ~ predict(.x, casa))) ->
   models)
 
+
+models %>% 
+  group_by(modelo) %>%
+  summarise(media = mean(predict),
+            SD = sd(predict)) %>%
+  pivot_wider(values_from = media:SD)
+  
 
 models %>%
   ggplot(aes(x = predict, fill = modelo)) +
@@ -50,7 +57,3 @@ models %>%
 
 
 
-
-png("imagens/arvore_reg_casas.png")
-rpart.plot(arvore)
-dev.off()
