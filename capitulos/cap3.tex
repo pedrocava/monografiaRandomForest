@@ -38,11 +38,11 @@ Suponha que algum processo de interesse dependa de uma variável aleatória $x$ 
     \caption{Uma amostra simulada do processo. Elaboração própria.}
 \end{figure}
 
-A tabela \ref{tabela_exemplo3} mostra as estimativas de dois modelos, um com $x$ e uma constante, outro com $x$, a constante e $x^2$. O segundo modelo recupera os parâmetros com erros da ordem de $1\%$. 
+A tabela \ref{tab:tabela_exemplo3} mostra as estimativas de dois modelos, um com $x$ e uma constante, outro com $x$, a constante e $x^2$. O segundo modelo recupera os parâmetros com erros da ordem de $1\%$. 
 
 \input{tabelas/exemplo3}\label{tab:tabela_exemplo3}
 
-A introdução de novas variáveis, funções não-lineares das originais, expande o número de situações em que a aproximação linear não uma simplificação exagerada. Isso ocorre, inclusive, sem perda de interpretabilidade. Para entender o efeito marginal de uma variável que tenha sido ''expandida'' com transformações não-lineares basta somar as derivadas da resposta em relação à original bem como às expansões.
+A introdução de novas variáveis, funções não-lineares das originais, expande o número de situações em que a aproximação linear não é uma simplificação exagerada da realidade. Isso ocorre, inclusive, sem perda de interpretabilidade. Para entender o efeito marginal de uma variável que tenha sido ''expandida'' com transformações não-lineares basta somar as derivadas da resposta em relação à original bem como às expansões.
 
 
 \end{exemplo}
@@ -70,7 +70,7 @@ Enquanto função dos dados, a média condicional dos resíduos não necessariam
 O posto da matriz de dados $\mathbf{X}_{n \times k}$ é $k$ com probabilidade 1.
 \end{hipotese}
 
-Em termos práticos, supomos que as variáveis dadas para um modelo linear são linearmente independentes umas das outras. Se os valores de uma variável podem ser inteiramente determinados pelos valores de outras, a adição dessa variável sobredetermina o sistema. 
+Em termos práticos, supomos que as variáveis dadas para um modelo linear são linearmente independentes umas das outras. Se os valores de uma variável podem ser inteiramente determinados por combinações lineares de outras, qualquer informação que possa trazer já está contida nas outras.
 
 Também supomos que nosso modelo erra de maneira consistente:
 
@@ -86,6 +86,7 @@ A variância dos erros independe do nível dos regressores:
 
 % Dadas as Condições de Gauss-Markov e uma amostra $(\mathbf{X}, \mathbf{y})$, se $(\mathbf{x}_i, \mathbf{y}_i)$ são i.i.d vale que $ \E[\epsilon_i^2\, |\, \mathbf{X} ] = \E[\epsilon_i^2\, |\, \mathbf{x}_i ]  $.
 
+\subsection{Regressores fixos e variáveis aleatórias}
 
 \section{Estimação de Modelos Lineares por Mínimos Quadrados Ordinários}
 
