@@ -27,15 +27,22 @@ cor <- wes_palette("Cavalcanti1") %>%
   aceita_animal = 1))
 
 
-(map(1:1000,
+(map(
+    1:1000,
     ~ sample_frac(houses, .3), 100) %>%
   tibble(data = .) %>%
-  mutate(arvores = map(data, ~ rpart(aluguel ~ ., data = .x)),
-         ols = map(data, ~ lm(aluguel ~ ., data = .x))) %>%
-  pivot_longer(arvores:ols, names_to = "modelo") %>%
+  mutate(
+    arvores = map(data, ~ rpart(aluguel ~ ., data = .x)),
+    ols = map(data, ~ lm(aluguel ~ ., data = .x))) %>%
+  pivot_longer(
+    arvores:ols,
+    names_to = "modelo") %>%
   mutate(predict = map_dbl(value, ~ predict(.x, casa))) ->
   models)
 
+
+lm(log(aluguel) ~ ., data = houses) %>%
+  summary()
 
 models %>% 
   group_by(modelo) %>%

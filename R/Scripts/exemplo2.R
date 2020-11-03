@@ -38,6 +38,6 @@ close(tabela)
 
 arvore <- rpart(aluguel ~ .,
                 data = houses)
-png("imagens/arvore_reg_casas.png")
+png("imagens/arvore_reg_casas.png", width = 940, height = 678, res = 120)
 rpart.plot(arvore)
 dev.off()
