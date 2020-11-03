@@ -53,8 +53,11 @@ data2 %>%
 
 dev.off()
 
-lm(y ~ x, data = data2)  %>%
-  stargazer(align = TRUE, out = "tabelas/exemplo_heteroskeda")
+lm(y ~ x, data = data2) -> modelo21
+lm(y ~ x + x2, data = data2) -> modelo22
+
+stargazer(modelo21, modelo22, 
+          align = TRUE, out = "tabelas/exemplo_heteroskeda.tex")
 
 
 
