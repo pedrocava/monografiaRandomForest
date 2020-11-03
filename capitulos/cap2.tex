@@ -185,7 +185,7 @@ O vetor $P(n_i) = (p_1, p_2, ..., p_J)$ representa as probabilidades de que um e
 Defina $H(n_i \, | \, a), H(n_i \, |\,  b)$ como a entropia dos potenciais nodos filhos de $n_i$, dado um teste $\tau$ que gere dois grupos $a$ e $b$. Defina $P_a(\tau), P_b(\tau)$ como a proporção de elementos do nodo pai que vai para cada filho dado um teste $\tau$. O ganho de informação por entropia $\I_E(\tau)$ é data abaixo. Em cada divisão, usando essa métrica, escolhemos $\tau^* = \argmax{\I_E(\tau)}$.
 
 \begin{align}
-    \I_E(\tau) = H(n_i) - P_a(\tau) H(n_i \, |\,  a) - P_b(\tau) H(n_i \, |\,  b)
+    \I_E(\tau) = H(n_i) - P(a\, |\, \tau) \,H(n_i \, |\,  a) - P(b \,| \,\tau)\, H(n_i \, |\,  b)
 \end{align}
 
  Outra métrica de classificação é a \textbf{Impureza de Gini}, definida como:
@@ -198,10 +198,16 @@ Defina $H(n_i \, | \, a), H(n_i \, |\,  b)$ como a entropia dos potenciais nodos
  \section{Construindo uma Floresta Aleatória}
  
 
-Uma limitação do modelo construído até aqui é que ele é inclinado à \textit{overfitting}, quando o modelo performa muito bem nos dados em que treinou e muito mal em dados novos. Isso deve a modelos de árvore serem típicos exemplos de modelos de alta variância: mudanças pequenas nos dados de treino podem gerar regras de previsão vastamente diferentes. Em compensação isso os torna modelos de baixo viés, capturam muito bem padrões nos dados apresentados. 
+Uma limitação do modelo construído até aqui é que ele é inclinado a \textit{overfitting}, quando o modelo performa muito bem nos dados em que treinou e muito mal em dados novos. O problema é notoriamente acentuado em contexto de regressão. Afinal, um modelo de árvore parcimonioso terá algo entre 3 e 20 regras de previsão distintas, ao passo que um modelo linear cobre uma região convexa do resposta de resposta em previsões possíveis.
 
-\begin{exemplo}[Variância de Árvores de Decisão]
-Voltando ao exemplo da árvore de regressão para preços de casas. Vamos agora selecionar aleatoriamente várias amostras de apartamentos e treinar uma árvore e um modelo linear (estimado por OLS) em cada. O que acontece com o aluguel presumido para apartamentos iguais?
+Isso deve a modelos de árvore serem típicos exemplos de modelos de alta variância: mudanças pequenas nos dados de treino podem gerar regras de previsão vastamente diferentes. Em compensação isso os torna modelos de baixo viés, capturam muito bem padrões nos dados apresentados. Ao contrário de modelos lineares, que tipicamente irão produzir previsões de variância mais baixa que modelos de árvore e com mais viés porque não conseguem incorporar relações latentes entre variáveis explicativas. 
+
+Essa troca entre viés e variância é uma espécie de restrição fundamental da modelagem e permeia \textit{machine learning}/ aprendizado de máquina. O dito \textbf{\textit{trade-off} viés-variância} é um conjunto de resultados para uma variedade de classes de modelos que se forem assintotincamente não-viesados então têm variância ilimitada. Várias formulações desse resultado podem ser encontradas em \citeonline{derumingy}.
+
+Podemos realizar uma simulação de Monte Carlo para por esse problema em perspectiva. No próximo capítulo exploraremos melhor modelos lineares e sua estimação por Mínimos Quadrados Ordinários (OLS). Agora, vamos ilustrar dois comportamentos desagradáveis dos modelos de árvore disponíveis até aqui, é para mitiga-los que vamos dar o próximo passo. 
+
+\begin{exemplo}[Variância de Árvores de Regressão]
+Voltando ao exemplo da árvore de regressão para preços de casas. Vamos agora selecionar aleatoriamente várias amostras de apartamentos e treinar uma árvore e um modelo linear (estimado por OLS) em cada. Como comparativo, vamos prever o aluguel de um apartamento de $82m^2$, $2$ quartos, $1$ banheiro, no Rio de Janeiro, não-mobiliado e que aceite animais com cada um dos modelos e observar como as previsões se distribuem. 
 
 
 \begin{figure}[H]
@@ -211,11 +217,26 @@ Voltando ao exemplo da árvore de regressão para preços de casas. Vamos agora 
     \label{fig:arvore_var_ols}
 \end{figure}
 
-Agregando as previsões, as diferenças diminuem consideravelmente:
-
-
-
 \end{exemplo}
+
+O que acontece se ao invés de treinarmos \textbf{uma} árvore, treinar \textbf{várias} e usar a alguma agregação das previsões individuais como previsão final? Em caso de classificação basta usar a moda, em caso de regressão basta usar a média. Sabemos pelo Teorema do Limite Central que a distribuição desse modelo seria, ao contrário do que acontece com a distribuição das previsões de uma árvore individual, normal.
+
+\begin{teo}[Limite Central Lindenberg-Lévy]
+Seja $(\textbf{X}_1, ..., \textbf{X}_n)$ uma amostra independente e identicamente distribuída com $\E[\textbf{X}_i] = \mu$ e $\V[\textbf{X}_i] = \sigma^2 < \infty$. Então:
+
+\begin{align}
+    \sqrt{n}(\bar{\textbf{X}_i} - \mu) \xrightarrow[]{d} N(0, \sigma^2)
+\end{align}
+
+
+
+
+\end{teo}
+
+
+
+
+
 
 
 
@@ -243,7 +264,7 @@ Agregando as previsões, as diferenças diminuem consideravelmente:
  
 % \end{teo}
  
-Alguns refinamentos muito interessantes podem ser feitos. \textit{Bagging}, a ideia de expor árvores diferentes da floresta à observações e variáveis explicativas diferentes. \textit{Boosting}, treinar uma árvore no resíduo de outra, fazendo a floresta aprender lentamente, incorporando padrões mais sutis. 
+%Alguns refinamentos muito interessantes podem ser feitos. \textit{Bagging}, a ideia de expor árvores diferentes da floresta à observações e variáveis explicativas diferentes. \textit{Boosting}, treinar uma árvore no resíduo de outra, fazendo a floresta aprender lentamente, incorporando padrões mais sutis. 
  
  
  
