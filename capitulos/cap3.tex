@@ -1,5 +1,5 @@
 
-\chapter{Estimação, Efeitos Marginais e Econometria Clássica}
+\chapter{Econometria Clássica e Efeitos Marginais}
 
 Introduzido o conceito de Floresta Aleatória, agora voltamos nossa atenção à Econometria Clássica e seu \textit{workhorse model}, o \textbf{modelo clássico de regressão linear}. Veremos uma maneira de estimar os parâmetros desse modelo, via Mínimos Quadrados Ordinários, como modelos de Floresta Aleatória não têm a mesma interpretabilidade e como podemos contornar essa problemática avaliando o modelo na vizinhança de algumas observações. 
 
@@ -47,7 +47,7 @@ A introdução de novas variáveis, funções não-lineares das originais, expan
 
 \end{exemplo}
 
-Antes de prosseguir é importante apresentar a notação matricial dos modelos lineares. Uma maneira interessante de nos referir aos dados coletados de uma amostra - e como discutiremos estimação isso é importante - é associa-los à uma matriz. Notaremos uma \textbf{matriz de dados} como $\mathbf{X}$ em que $\mathbf{X}_{ij}$ é a medição da $i$-ésima observação na $j$-ésima variável. Também teremos $\mathbf{y}$, o vetor em que a $i$-ésima entrada é a medição da variável resposta da $i$-ésima observação, e $\mathbf{\epsilon}$, o vetor com o resíduo. A partir de agora usaremos $n$ para nos referir ao tamanho da amostra, o número de linhas em $\mathbf{X}$ e $\mathbf{y}$. Reescrevendo a equação \ref{mod_lin} em notação matricial:
+Antes de prosseguir é importante apresentar a notação matricial dos modelos lineares. Uma maneira interessante de nos referir aos dados coletados de uma amostra - e como discutiremos estimação isso é importante - é associa-los à uma matriz. Notaremos uma \textbf{matriz de dados} como $\mathbf{X}$ em que $\mathbf{X}_{ij}$ é a medida da $i$-ésima observação na $j$-ésima variável. Também teremos $\mathbf{y}$, o vetor em que a $i$-ésima entrada é a medida da variável resposta da $i$-ésima observação, e $\mathbf{\epsilon}$, o vetor com o resíduo. A partir de agora usaremos $n$ para nos referir ao tamanho da amostra, o número de linhas em $\mathbf{X}$ e $\mathbf{y}$. Reescrevendo a equação \ref{mod_lin} em notação matricial:
 
 \begin{equation}
     \underset{n \times 1}{\mathbf{y}} = \underset{n \times k}{\mathbf{X}} \,\, \underset{k \times 1}{\boldsymbol{\beta}}   + \underset{n \times 1}{\boldsymbol{\epsilon}}
@@ -93,7 +93,7 @@ A variância dos erros independe do nível dos regressores:
     \caption{Uma amostra simulada do processo. Elaboração própria.}
 \end{figure}
 
-Agora quando tentamos recuperar os parâmetros:
+Agora quando tentamos recuperar os parâmetros obtemos estimativas estatisticamente significantes e um R2 elevado. Os parâmetros estimados, no entanto, estão à dezenas de desvios-padrão dos verdadeiros.
 
 \input{tabelas/exemplo_heteroskeda.tex}
 
@@ -113,9 +113,9 @@ Agora quando tentamos recuperar os parâmetros:
 
 \section{Efeitos Marginais em Florestas Aleatórias}
 
+Suponha que temos uma árvore treinada $\A$ e uma observação $x$. Com alguma licença poética nos referimos à previsão dessa árvore para essa obervação como $\A(x)$, mas não temos uma função analítica em mãos. De maior incômodo para o econometrista é que não é claro o que exatamente é a derivada dessa função. Isso é um problema porque boa parte da utilidade de um modelo (linear) estimado é ter um vetor de parâmetros intuitivamente interpretáveis. 
 
+A derivada de $\A(\cdot)$, seja lá como for, não é tão informativa. Uma pertubação em uma observação $x$ só altera o resultado da previsão de uma árvore se for grande o suficiente para deslocar $x$ para outra regra de classificação/previsão. Teríamos uma função que é nula em boa parte de seu domínio, descontínua onde não for. 
 
+O problema é atenuado com uma floresta aleatória. Uma pertubação pequena em $x$ pode alterar a previsão de uma fração das árvores da florestas. Com um número suficientemente grande de árvores uma variação arbitrariamente pequena em $x$ leva à uma variação arbitrariamente pequena em $\F(x)$.
 
-
-
-\section{Preenchimento de Suporte}

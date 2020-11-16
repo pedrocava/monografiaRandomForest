@@ -99,7 +99,9 @@ Ao compor perguntas sucessivamente chegamos em uma espécie de fluxograma de dec
 Note que cada vértice pode ser associado à uma pergunta única. De fato, o processo de estimação de uma árvore é o de selecionar quais perguntas são feitas com quais parâmetros em quais vértices. 
 \end{exemplo}
 
-O ponto importante é que podemos traduzir um grafo árvore $G$ ''enriquecido com perguntas'' em um modelo, basta associar a cada nodo alguma função representando um teste lógico parametrizado por $k \in K$ sobre uma variável contida em um subconjunto $x_j \in X \subset \X$ de uma observação $x \in \X$, para cada folha uma previsão $y \in \Y$ e por fim, uma raiz. Se a variável for categórica, $X$ é um subconjunto enumerável de $\X$, se for contínua é convexo. Para todo nodo $n_i \in G$ existe um teste $\tau_{n_i}(x_j, k) : X  \times K \to \{0, 1\}$. Por construção, para cada observação $x \in \X$ existe um único caminho com os nodos $ \{n_i \, | \, \tau_{n_i}(x, k) = 1\}$ e portanto uma única previsão $y \in \Y$. 
+REESCREVER ESSE PARAGRAFO SEM REFERENCIAS AO CONCEITO DE TESTE, MAIS SIMPLES FALAR DE FUNÇÃO DEFINIDA POR TRECHOS
+
+O ponto importante é que podemos traduzir um grafo árvore $G$ ''enriquecido com perguntas'' em um modelo, basta associar a cada nodo alguma função representando um teste lógico parametrizado por $k \in K$ sobre uma variável contida em um subconjunto $x_j \in X \subset \X$ de uma observação $x \in \X$, para cada folha uma previsão $y \in \Y$ e por fim, uma raiz. Se a variável for categórica, $X$ é um subconjunto enumerável de $\X$, se for contínua é convexo. Para todo nodo $n_i \in G$ existe um teste $\tau_{n_i}(x_j, k) : X  \times K \to \{0, 1\}$. Por construção, para cada observação $x \in \X$ existe um único caminho com os nodos $ \{n_i \, | \, \tau_{n_i}(x, k) = 1\}$ e portanto uma única previsão $y \in \Y$. Isso pode ser traduzido em uma função definida por trechos em que cada trecho corresponde à uma regra de previsão. Isso gera uma espécie de partição do espaço de resposta, em que cada região é associada à uma regra de previsão/classificação.
 
 
 \begin{figure}
@@ -111,7 +113,7 @@ O ponto importante é que podemos traduzir um grafo árvore $G$ ''enriquecido co
 
 
 \begin{defi}[Modelos de Árvore]
-Seja $\X, \Y$ um par de espaços de mensuração e resposta. Uma \textbf{Árvore de Decisão} é uma função $\A: \X \to \Y$, onde $\Y$ é enumerável, associada à uma árvore $G$. No caso em que $\Y$ ao, ao invés de enumerável, um subconjunto convexo da reta chamamos de \textbf{Árvore de Regressão}. Se $\Y = [0, 1]$ é comum se referir à uma \textbf{Árvore de Risco}.
+Seja $\X, \Y$ um par de espaços de mensuração e resposta. Uma \textbf{Árvore de Decisão} é uma função definida por trechos $\A: \X \to \Y$, onde $\Y$ é enumerável. No caso em que $\Y$ ao, ao invés de enumerável, um subconjunto convexo da reta chamamos de \textbf{Árvore de Regressão}. Se $\Y = [0, 1]$ é comum se referir à uma \textbf{Árvore de Risco}.
 \end{defi}
 
 
@@ -155,7 +157,7 @@ Um algoritmo de divisão de conjuntos que opere dividindo em subconjuntos os res
 
 Cada sequência de perguntas pode ser entendida como uma sequência de testes $\tau_i$, a partição induzida pelas perguntas sendo representada por uma árvore $\A$ onde todo vértice que não seja uma folha tem um $\tau_i$ associado. Estimar a árvore é encontrar quais são as perguntas mais apropriadas, dado uma amostra. 
 
-Começamos com a amostra completa e enunciamos uma série de perguntas sobre ela - um procedimento computacionalmente intensivo, melhor deixado para computadores e medimos a qualidade da pergunta através de uma métrica (veremos mais à frente algumas). Escolhemos a pergunta que melhor performa e partimos para os nodos ''filhos''. Repetimos o processo em cada um até algum gatilho ser ativado, então usamos o grupo para definir a regra de classificação/previsão. Em classificação podemos usar a classe mais comum, em regressão podemos usar a média ou mediana da variável resposta dentro do grupo. Pode-se compor modelos e, por exemplo, estimar um modelo de regressão linear em grupo e usar a sua previsão.  
+Começamos com a amostra completa e enunciamos uma série de perguntas sobre ela - um procedimento computacionalmente intensivo por isso a estimação é quase sempre estocástica. Um subconjunto aleatório das perguntas possíveis é testado. Escolhemos a pergunta que melhor performa e partimos para os nodos ''filhos''. Repetimos o processo em cada um até algum gatilho ser ativado, então usamos o grupo para definir a regra de classificação/previsão. Em classificação podemos usar a classe mais comum no grupo, em regressão podemos usar a média ou mediana da variável resposta dentro do grupo. Pode-se compor modelos e, por exemplo, estimar um modelo de regressão linear em grupo e usar a sua previsão.  
 
 Dois exemplos de gatilhos comuns na literatura:
 
@@ -198,16 +200,17 @@ Defina $H(n_i \, | \, a), H(n_i \, |\,  b)$ como a entropia dos potenciais nodos
  \section{Construindo uma Floresta Aleatória}
  
 
-Uma limitação do modelo construído até aqui é que ele é inclinado a \textit{overfitting}, quando o modelo performa muito bem nos dados em que treinou e muito mal em dados novos. O problema é notoriamente acentuado em contexto de regressão. Afinal, um modelo de árvore parcimonioso terá algo entre 3 e 20 regras de previsão distintas, ao passo que um modelo linear cobre uma região convexa do resposta de resposta em previsões possíveis.
+Uma limitação do modelo construído até aqui é que ele é inclinado a \textit{overfitting}, quando o modelo performa muito bem nos dados em que treinou e muito mal em dados novos. O problema é notoriamente acentuado em contexto de regressão. Afinal, um modelo de árvore parcimonioso terá algo entre 3 e 20 regras de previsão distintas, ao passo que um modelo linear cobre uma região convexa. 
 
-Isso deve a modelos de árvore serem típicos exemplos de modelos de alta variância: mudanças pequenas nos dados de treino podem gerar regras de previsão vastamente diferentes. Em compensação isso os torna modelos de baixo viés, capturam muito bem padrões nos dados apresentados. Ao contrário de modelos lineares, que tipicamente irão produzir previsões de variância mais baixa que modelos de árvore e com mais viés porque não conseguem incorporar relações latentes entre variáveis explicativas. 
+Isso deve a modelos de árvore serem modelos de alta variância: mudanças pequenas nos dados de treino podem gerar regras de previsão vastamente diferentes. Em compensação isso os torna modelos de baixo viés, capturam muito bem padrões nos dados apresentados. Ao contrário de modelos lineares, que tipicamente irão produzir previsões de variância mais baixa que modelos de árvore e com mais viés porque não conseguem incorporar relações latentes entre variáveis explicativas. 
 
-Essa troca entre viés e variância é uma espécie de restrição fundamental da modelagem e permeia \textit{machine learning}/ aprendizado de máquina. O dito \textbf{\textit{trade-off} viés-variância} é um conjunto de resultados para uma variedade de classes de modelos que se forem assintotincamente não-viesados então têm variância ilimitada. Várias formulações desse resultado podem ser encontradas em \citeonline{derumingy}.
+Essa troca entre viés e variância é uma espécie de restrição fundamental da modelagem e permeia \textit{machine learning}/ aprendizado de máquina. O dito \textbf{\textit{trade-off} viés-variância} é um conjunto de resultados para uma variedade de classes de modelos. Várias formulações desse resultado podem ser encontradas em \citeonline{derumingy}.
 
 Podemos realizar uma simulação de Monte Carlo para por esse problema em perspectiva. No próximo capítulo exploraremos melhor modelos lineares e sua estimação por Mínimos Quadrados Ordinários (OLS). Agora, vamos ilustrar dois comportamentos desagradáveis dos modelos de árvore disponíveis até aqui, é para mitiga-los que vamos dar o próximo passo. 
 
 \begin{exemplo}[Variância de Árvores de Regressão]
 Voltando ao exemplo da árvore de regressão para preços de casas. Vamos agora selecionar aleatoriamente várias amostras de apartamentos e treinar uma árvore e um modelo linear (estimado por OLS) em cada. Como comparativo, vamos prever o aluguel de um apartamento de $82m^2$, $2$ quartos, $1$ banheiro, no Rio de Janeiro, não-mobiliado e que aceite animais com cada um dos modelos e observar como as previsões se distribuem. 
+
 
 
 \begin{figure}[H]
@@ -219,19 +222,25 @@ Voltando ao exemplo da árvore de regressão para preços de casas. Vamos agora 
 
 \end{exemplo}
 
-O que acontece se ao invés de treinarmos \textbf{uma} árvore, treinar \textbf{várias} e usar a alguma agregação das previsões individuais como previsão final? Em caso de classificação basta usar a moda, em caso de regressão basta usar a média. Sabemos pelo Teorema do Limite Central que a distribuição desse modelo seria, ao contrário do que acontece com a distribuição das previsões de uma árvore individual, normal.
+O que acontece se ao invés de treinarmos \textbf{uma} árvore, treinar \textbf{várias} e usar a alguma agregação das previsões individuais como previsão final? Em caso de classificação basta usar a moda, em caso de regressão basta usar a média. Sabemos pelo Teorema do Limite Central que a distribuição desse modelo seria normal, ao contrário do que acontece com a distribuição das previsões de uma árvore individual, normal. 
 
-\begin{teo}[Limite Central Lindenberg-Lévy]
+\begin{teo}[Lindenberg-Lévy]
 Seja $(\textbf{X}_1, ..., \textbf{X}_n)$ uma amostra independente e identicamente distribuída com $\E[\textbf{X}_i] = \mu$ e $\V[\textbf{X}_i] = \sigma^2 < \infty$. Então:
 
 \begin{align}
-    \sqrt{n}(\bar{\textbf{X}_i} - \mu) \xrightarrow[]{d} N(0, \sigma^2)
+    \sqrt{n}\,(\bar{\textbf{X}_i }- \mu) \xrightarrow[n \to \infty]{d} N(0, \sigma^2)
 \end{align}
 
-
-
-
 \end{teo}
+
+
+Agregar várias árvores não irá diminuir em absoluto a variância das previsões, temos modelos de baixo viés, mas as dará propriedades estatísticas mais amigáveis. Talvez melhor ainda, fará com que as previsões de um modelo de regressão passem a ocupar uma região convexa, assim como em modelos lineares.
+
+\begin{defi}
+Considere uma função $\mu : \R^m \to \R$ e uma floresta $\F' = \{\A_1, ..., \A_m\}$. Uma \textbf{Floresta Aleatória} é um modelo $\F : \X \to \Y$,  $x \mapsto \mu(\A_1(x), ..., \A_m(x))$. 
+\end{defi}
+
+
 
 
 
