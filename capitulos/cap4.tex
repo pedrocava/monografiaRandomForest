@@ -4,8 +4,7 @@
 
 Os dados foram adquiridas via \textit{webscrapping} de um site nacional de aluguel de imóveis para 4 capitais brasileiras no dia 20 de Março de 2020, realizado pelo autor. Iremos estimar uma série de modelos com variadas configurações de hiperparametros, computar algumas métricas de sucesso e escolher os hiperparametros do modelo 'final' com base nisso. Essas métricas de sucesso serão computadas com dados omitidos no processo de treinamento, num processo chamado Validação Cruzada, e então aplicaremos o procedimento descrito no capítulo anterior.
 
-\section{Estimação, Validação e Otimização de Hiperparametros}
-
+\section{Otimização de Hiperparametros}
 
 Não existe uma única maneira de estimar uma floresta aleatória. De fato, como machine learning é um campo que cresceu muito às margens da academia, em laboratórios da indústria, as convenções são informais e há pouco escrito em pedra. Optei por usar a implementação em \citeonline{ranger}, que usa como gatilho de geração de folhas uma amostra abaixo da mínima chegar no nodo e aleatoriza quantas variáveis explicativas são usadas em cada árvore. Uma alternativa de alta confiabilidade seria \citeonline{randomForest}. Para a otimização de hiperparâmetros, validação cruzada e avaliação dos modelos foi usada a plataforma \texttt{tidymodels} \cite{tidymodels}, implementada em linguagem R \cite{R}.
 
@@ -26,9 +25,7 @@ Essas são ditas abordagens \textbf{caixa-preta livre de modelo} pois não fazem
     \caption{Duas buscas de 100 modelos cada. Elaboração própria.}
 \end{figure}
 
-
-
-\subsection{Métricas de Qualidade}
+\section{Métricas de Qualidade}
 
 Na seção anterior optamos por escolher hiperparâmetros de forma a maximizar alguma função que entendemos ser algo como a ''qualidade'' de um modelo. Precisamos agora definir como computa-la. Métricas de performance de modelo são sempre arbitrárias então a boa prática recomenda usar uma cesta delas. As opções para regressão são inúmeras. Serão avaliadas seis:
 
@@ -53,6 +50,27 @@ Na seção anterior optamos por escolher hiperparâmetros de forma a maximizar a
     
 \end{itemize}
 
+\section{Validação Cruzada}
+
+Para dar uma chance melhor a cada combinação podemos testa-la em amostras diferentes. Fazemos isso com validação $k$-cruzada. Dividimos a amostra em $k$ grupos aproximadamente iguais e para cada combinação de hiperparâmetros estimamos o modelo em $k-1$ combinações, excluindo um grupo de cada vez. Como medida de performance para cada combinação específica de hiperparâmetros usamos então a média das métricas de performance nas $k-1$ validações. 
+
+Um pouco de sabedoria popular com florestas aleatórias sugere que o número de árvores não é um bom hiperparâmetro para se validar. Os ganhos de performance são pequenos, o custo computacional, no entanto, variante. Note que o custo de estimar uma floresta cresce linearmente, um para um, com o número de árvores. Validar $k$ combinações cada uma com $a*b$ árvores é $a$ vezes mais caro que validar $k$ combinações com $b$ árvores. 
+
+Esse tempo de computação é melhor empregado procurando com uma grade fina melhores combinações de amostra única e número de variáveis por árvore. Árvores com menos variáveis tem menos variância, o que ajuda a diminuir a variância da floresta, e menor poder preditivo. Árvores com menor amostra mínima têm mais folhas, criando respostas mais finas, mas têm mais variância também. 
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale = .72]{imagens/cross_v_mtry.png}
+    \caption{Resumo de métricas de performance variando quantas variáveis alimentar para cada árvore. Elaboração própria.}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale = .70]{imagens/crossv_min.png}
+    \caption{Resumo de métricas de performance variando a amostra mínima para criar uma folha. Elaboração própria.}
+\end{figure}
 
 
 
