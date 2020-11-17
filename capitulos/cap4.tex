@@ -9,22 +9,49 @@ Os dados foram adquiridas via \textit{webscrapping} de um site nacional de alugu
 
 Não existe uma única maneira de estimar uma floresta aleatória. De fato, como machine learning é um campo que cresceu muito às margens da academia, em laboratórios da indústria, as convenções são informais e há pouco escrito em pedra. Optei por usar a implementação em \citeonline{ranger}, que usa como gatilho de geração de folhas uma amostra abaixo da mínima chegar no nodo e aleatoriza quantas variáveis explicativas são usadas em cada árvore. Uma alternativa de alta confiabilidade seria \citeonline{randomForest}. Para a otimização de hiperparâmetros, validação cruzada e avaliação dos modelos foi usada a plataforma \texttt{tidymodels} \cite{tidymodels}, implementada em linguagem R \cite{R}.
 
-Decidida a implementação que irá realizar as computações, é preciso fazer uma escolha sobre os hiperparâmetros do modelo, no caso três: amostra mínima para criação de folha, número de árvores e número de variáveis a serem aleatoriamente escolhidas para cada árvore. A abordagem mais tradicional de \textit{random search} sugere gerar algumas combinações de hiperparâmetros aleatórias, estimar um modelo em cada e escolher o de melhor performance, que definiremos em detalhes brevemente. O dual dessa abordagem é \textit{grid search} em que ao invés de gerar combinações aleatórias se cobre o espaço de hiperparâmetros de vetores com distância regular, gerando uma grade. 
+Decidida a implementação que irá realizar as computações, é preciso fazer uma escolha sobre os hiperparâmetros do modelo, no caso três: amostra mínima para criação de folha, número de árvores e número de variáveis a serem aleatoriamente escolhidas para cada árvore. Do ponto de vista do expectador desinteressado o problema é apenas:
 
-Essas são ditas abordagens \textbf{caixa-preta livre de modelo} pois não fazem suposições sobre a forma funcional da função a ser maximizada ajustando os hiperparâmetros. Varremos o que acreditamos ser o seu domínio à força bruta.  
+\begin{align}
+    \mathbf{x}^* = \underset{\mathbf{x}}{\text{arg max}} \,\,\phi(\mathbf{x}) 
+\end{align}
+
+E como seria fácil se soubéssemos exatamente o que é $\phi(\cdot)$, mas não sabemos. Uma primeira abordagem é tatear o suporte da função em busca da melhor combinação. Um método para isso é \textit{random search}, gerar algumas combinações de hiperparâmetros aleatórias, estimar um modelo em cada e escolher o de melhor performance, que definiremos em detalhes brevemente. O dual dessa abordagem é \textit{grid search} em que ao invés de gerar combinações aleatórias se cobre o espaço de hiperparâmetros de vetores com distância regular, gerando uma grade. 
+
+Essas são ditas abordagens \textbf{caixa-preta livre de modelo} pois não fazem suposições sobre a forma funcional da função a ser maximizada ajustando os hiperparâmetros. Varremos o que acreditamos ser o seu domínio à força bruta. Existem alternativas. \citeonline{shahriari2015taking} é um tratamento amplo da principal, otimização bayesiana. Otimização de Hiperparâmetros é um campo grande. Um tratamento mais detalhado do estado da arte na área está disponível em \citeonline{feurer2019hyperparameter}.
 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale = .75]{imagens/random_}
-    \caption{As duas abordagens caixa-preta sem modelo. Elaboração própria.}
+    \includegraphics[scale = .75]{imagens/random_grid.png}
+    \caption{Duas buscas de 100 modelos cada. Elaboração própria.}
 \end{figure}
 
 
 
-Otimização de Hiperparâmetros é um campo grande. Um tratamento mais detalhado do estado da arte na área está disponível em \citeonline{feurer2019hyperparameter}.
-
 \subsection{Métricas de Qualidade}
+
+Na seção anterior optamos por escolher hiperparâmetros de forma a maximizar alguma função que entendemos ser algo como a ''qualidade'' de um modelo. Precisamos agora definir como computa-la. Métricas de performance de modelo são sempre arbitrárias então a boa prática recomenda usar uma cesta delas. As opções para regressão são inúmeras. Serão avaliadas seis:
+
+\begin{itemize}
+    \item \textbf{Razão Performance-Interquatil (RPIQ)} \newline
+    Definida como o desvio-padrão das previsões dividido pela amplitude interquartil da resposta. Mede principalmente a consistência do modelo, não a acurácia preditiva. 
+    
+    \item \textbf{Coeficiente de Concordância de Correlação (CCC)} \newline
+    Introduzido por \citeonline{lawrence1989concordance}, mede tanto consistência quanto acurácia. Calculada a partir da diferença entre a identidade e a reta de regressão dos valores preditos nos verdadeiros.
+    
+    \item \textbf{Erro Médio Absoluto (MAE)} \newline
+    A média das diferenças entre previsões e valores verdadeiros. Diretamente interpretável na unidade original da resposta. Indica acurácia.
+    
+    \item \textbf{Erro Médio Percentual (MPE)} \newline
+    A média das diferenças entre previsões e valores verdadeiros ponderada pela média da resposta. Lida em unidades relativas. Indica acurácia.
+    
+    \item \textbf{Coeficiente de Determinação (R2)} \newline
+    Calcula-se a soma dos quadrados dos desvios das previsões à média da resposta. Dividi-se esse valor pela soma dos quadrados dos desvios as observações originais à média da resposta. O resultado está entre $0$ e $1$ e pode ser interpretado como a fração da variância que o modelo consegue explicar. Mede principalmente consistência, não acurácia. 
+    
+    \item \textbf{Raiz do Erro Quadrático Médio (RMSE)} \newline
+    O Erro Quadrático Médio é a média dos quadrados dos desvios das previsões em relação aos valores verdadeiros. A raiz dá a métrica. Mede principalmente acurácia, embora seja muito sensível a outliers. 
+    
+\end{itemize}
 
 
 
