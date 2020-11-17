@@ -159,7 +159,7 @@ Cada sequência de perguntas pode ser entendida como uma sequência de testes $\
 
 Começamos com a amostra completa e enunciamos uma série de perguntas sobre ela - um procedimento computacionalmente intensivo por isso a estimação é quase sempre estocástica. Um subconjunto aleatório das perguntas possíveis é testado. Escolhemos a pergunta que melhor performa e partimos para os nodos ''filhos''. Repetimos o processo em cada um até algum gatilho ser ativado, então usamos o grupo para definir a regra de classificação/previsão. Em classificação podemos usar a classe mais comum no grupo, em regressão podemos usar a média ou mediana da variável resposta dentro do grupo. Pode-se compor modelos e, por exemplo, estimar um modelo de regressão linear em grupo e usar a sua previsão.  
 
-Dois exemplos de gatilhos comuns na literatura:
+Três exemplos de gatilhos:
 
 \begin{itemize}
     \item \textbf{Nenhum teste cumpre um valor mínimo para a métrica de qualidade} \newline Cada pergunta respondida diminui a informação disponível, tornando o ganho de informação cada vez menor. Alguma hora, a cargo do modelador definir, uma pergunta adicional provavelmente custa mais em parcimônia e computação do que devolve em acurácia de previsão. É hora de gerar uma folha.
@@ -167,6 +167,8 @@ Dois exemplos de gatilhos comuns na literatura:
     \item \textbf{O número de perguntas feitas chegou ao máximo} \newline
     Uma maneira de forçar parcimônia do modelo é limitar o número de perguntas. Algumas implementações diferenciam o número total de perguntas do número de perguntas sucessivas.  
     
+    \item \textbf{O número de observações do nodo não cumpre um mínimo} \newline 
+    A amostra que chegou no nodo está abaixo de um mínimo. Por ser um dos mais simples e ter uma relação diretamente proporcional com o número de regras de previsão/classificação distintos é um dos mais comuns na literatura.
 \end{itemize}
 
 É esse o procedimento. Dividimos a amostra guiados por alguma métrica de sucesso e usamos a divisão final como um modelo estimado contendo regras de previsão/classificação informadas pelos dados. Resta entender o que queremos dizer, rigorosamente, com um teste ser \textit{melhor} que outro.
@@ -181,7 +183,7 @@ Começando pelo contexto de classificação, suponha $J$ classes. Uma primeira m
 O vetor $P(n_i) = (p_1, p_2, ..., p_J)$ representa as probabilidades de que um elemento aleatoriamente escolhido do grupo que chegou no nodo $n_i$ seja da $i$-ésima classe. A entropia do nodo $n_i$ é:
 
 \begin{align}
-    H(n_i) = - \sum_{i = 1}^J p_i \log_2 p_i
+    H(n_i) = - \sum_{p_i \in P(n_i)} p_i \log_2 p_i, 
 \end{align}
 
 Defina $H(n_i \, | \, a), H(n_i \, |\,  b)$ como a entropia dos potenciais nodos filhos de $n_i$, dado um teste $\tau$ que gere dois grupos $a$ e $b$. Defina $P_a(\tau), P_b(\tau)$ como a proporção de elementos do nodo pai que vai para cada filho dado um teste $\tau$. O ganho de informação por entropia $\I_E(\tau)$ é data abaixo. Em cada divisão, usando essa métrica, escolhemos $\tau^* = \argmax{\I_E(\tau)}$.
@@ -195,6 +197,7 @@ Defina $H(n_i \, | \, a), H(n_i \, |\,  b)$ como a entropia dos potenciais nodos
  \begin{align}
      \I_G(\tau) = \sum_{i = 1}^J p_i ( 1  - p_i) =  1 - \sum_{i = 1}^J p_i^2
  \end{align}
+
 
 
  \section{Construindo uma Floresta Aleatória}
