@@ -23,8 +23,6 @@ file.create("tabelas/tabela_arvore_reg.tex")
 tabela <- file("tabelas/tabela_arvore_reg.tex")
 
 
-
-
 houses %>%
   group_by(cidade) %>%
   summarise(across(c(everything(), -aceita_animal, - mobiliado, -vagas), 
