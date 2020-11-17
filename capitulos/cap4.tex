@@ -7,5 +7,27 @@ Os dados foram adquiridas via \textit{webscrapping} de um site nacional de alugu
 \section{Estimação, Validação e Otimização de Hiperparametros}
 
 
+Não existe uma única maneira de estimar uma floresta aleatória. De fato, como machine learning é um campo que cresceu muito às margens da academia, em laboratórios da indústria, as convenções são informais e há pouco escrito em pedra. Optei por usar a implementação em \citeonline{ranger}, que usa como gatilho de geração de folhas uma amostra abaixo da mínima chegar no nodo e aleatoriza quantas variáveis explicativas são usadas em cada árvore. Uma alternativa de alta confiabilidade seria \citeonline{randomForest}. Para a otimização de hiperparâmetros, validação cruzada e avaliação dos modelos foi usada a plataforma \texttt{tidymodels} \cite{tidymodels}, implementada em linguagem R \cite{R}.
+
+Decidida a implementação que irá realizar as computações, é preciso fazer uma escolha sobre os hiperparâmetros do modelo, no caso três: amostra mínima para criação de folha, número de árvores e número de variáveis a serem aleatoriamente escolhidas para cada árvore. A abordagem mais tradicional de \textit{random search} sugere gerar algumas combinações de hiperparâmetros aleatórias, estimar um modelo em cada e escolher o de melhor performance, que definiremos em detalhes brevemente. O dual dessa abordagem é \textit{grid search} em que ao invés de gerar combinações aleatórias se cobre o espaço de hiperparâmetros de vetores com distância regular, gerando uma grade. 
+
+Essas são ditas abordagens \textbf{caixa-preta livre de modelo} pois não fazem suposições sobre a forma funcional da função a ser maximizada ajustando os hiperparâmetros. Varremos o que acreditamos ser o seu domínio à força bruta.  
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale = .75]{imagens/random_}
+    \caption{As duas abordagens caixa-preta sem modelo. Elaboração própria.}
+\end{figure}
+
+
+
+Otimização de Hiperparâmetros é um campo grande. Um tratamento mais detalhado do estado da arte na área está disponível em \citeonline{feurer2019hyperparameter}.
+
+\subsection{Métricas de Qualidade}
+
+
+
+
 
 \section{Computação de Efeitos Marginais}
