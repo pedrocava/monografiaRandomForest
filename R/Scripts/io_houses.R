@@ -126,10 +126,11 @@ houses %>%
   geom_point(alpha = .3) +
   geom_smooth(method = "loess", size = 1.2) +
   theme_minimal() +
-  labs(title = "Quartos e Aluguéis por cidade",
-       subtitle = "Tendência estimada por GAM",
-       x = "Número de Quartos",
-       y = "Aluguel") +
+  labs(
+    title = "Quartos e Aluguéis por cidade",
+    subtitle = "Tendência estimada por GAM",
+    x = "Número de Quartos",
+    y = "Aluguel") +
   facet_wrap(~ cidade) +
   scale_x_discrete(limits = 1:6) + 
   scale_color_manual(values = pal) +

@@ -5,6 +5,7 @@ library(tidyverse)
 library(randomForest)
 library(magrittr)
 library(rpart)
+library(knitr)
 library("rpart.plot")
 
 set.seed(1234)
@@ -95,3 +96,27 @@ lm(aluguel ~ log(area) + log(quartos) + log(andar + 1) + mobiliado + banheiros,
 
 modelo %>%
   summary() 
+
+### tabular melhor modelo por métrica
+
+
+file.create("tabelas/hiper_metricas.tex")
+
+tabela <- file("tabelas/hiper_metricas.tex")
+
+c(
+  "rpiq",
+  "ccc",
+  "mae",
+  "mpe",
+  "rsq",
+  "rmse") %>%
+  map_dfr(~ select_best(tune_res, metric = .x) %>%
+            mutate(metrica = .x) %>%
+            select(-.config)) %>%
+  kable("latex") %>%
+  enc2utf8() %>%
+  writeLines(tabela, useBytes = TRUE)
+
+close(tabela)
+
