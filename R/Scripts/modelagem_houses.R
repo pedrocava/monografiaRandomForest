@@ -111,11 +111,13 @@ c(
   "mpe",
   "rsq",
   "rmse") %>%
-  map_dfr(~ select_best(tune_res, metric = .x) %>%
-            mutate(metrica = toupper(.x)) %>%
-            select(-.config)) %>%
-  rename(`Variáveis por Árvore` = mtry,
-         `Amostra Mínima para Folha` = min_n) %>%
+  map_dfr(
+    ~ select_by_one_std_err(tune_res, metric = .x, .x) %>%
+      mutate(metrica = toupper(.x)) %>%
+      select(-.config)) %>%
+  rename(
+    `Variáveis por Árvore` = mtry,
+    `Amostra Mínima para Folha` = min_n) %>%
   kable(
     "latex", 
     align = 'c',
@@ -125,4 +127,5 @@ c(
   writeLines(tabela, useBytes = TRUE)
 
 close(tabela)
+
 
