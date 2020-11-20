@@ -112,9 +112,15 @@ c(
   "rsq",
   "rmse") %>%
   map_dfr(~ select_best(tune_res, metric = .x) %>%
-            mutate(metrica = .x) %>%
+            mutate(metrica = toupper(.x)) %>%
             select(-.config)) %>%
-  kable("latex") %>%
+  rename(`Variáveis por Árvore` = mtry,
+         `Amostra Mínima para Folha` = min_n) %>%
+  kable(
+    "latex", 
+    align = 'c',
+    caption = 'Melhor modelo de acordo com cada métrica. Elaboração Própria.',
+    label = 'tabela_metricas') %>%
   enc2utf8() %>%
   writeLines(tabela, useBytes = TRUE)
 
