@@ -31,24 +31,41 @@ Na seção anterior optamos por escolher hiperparâmetros de forma a maximizar a
 
 \begin{itemize}
     \item \textbf{Razão Performance-Interquatil (RPIQ)} \newline
-    Definida como o desvio-padrão das previsões dividido pela amplitude interquartil da resposta. Mede principalmente a consistência do modelo, não a acurácia preditiva. 
+    Definida como o desvio-padrão das previsões dividido pela amplitude interquartil da resposta. Mede principalmente a consistência do modelo, não a acurácia preditiva. Quanto mais próximo de 1, melhor. 
     
     \item \textbf{Coeficiente de Concordância de Correlação (CCC)} \newline
-    Introduzido por \citeonline{lawrence1989concordance}, mede tanto consistência quanto acurácia. Calculada a partir da diferença entre a identidade e a reta de regressão dos valores preditos nos verdadeiros.
+    Introduzido por \citeonline{lawrence1989concordance}, mede tanto consistência quanto acurácia. Calculada a partir da diferença entre a identidade e a reta de regressão dos valores preditos nos verdadeiros. Quanto mais próximo de 1, melhor.
     
     \item \textbf{Erro Médio Absoluto (MAE)} \newline
-    A média das diferenças entre previsões e valores verdadeiros. Diretamente interpretável na unidade original da resposta. Indica acurácia.
+    A média das diferenças entre previsões e valores verdadeiros. Diretamente interpretável na unidade original da resposta. Indica acurácia. Menor é melhor, mas deve-se atentar à parcimônia.
     
     \item \textbf{Erro Médio Percentual (MPE)} \newline
-    A média das diferenças entre previsões e valores verdadeiros ponderada pela média da resposta. Lida em unidades relativas. Indica acurácia.
+    A média das diferenças entre previsões e valores verdadeiros ponderada pela média da resposta. Lida em unidades relativas. Indica acurácia. Menor é melhor, mas deve-se atentar à parcimônia.
     
     \item \textbf{Coeficiente de Determinação (R2)} \newline
-    Calcula-se a soma dos quadrados dos desvios das previsões à média da resposta. Dividi-se esse valor pela soma dos quadrados dos desvios as observações originais à média da resposta. O resultado está entre $0$ e $1$ e pode ser interpretado como a fração da variância que o modelo consegue explicar. Mede principalmente consistência, não acurácia. 
+    Calcula-se a soma dos quadrados dos desvios das previsões à média da resposta. Dividi-se esse valor pela soma dos quadrados dos desvios as observações originais à média da resposta. O resultado está entre $0$ e $1$ e pode ser interpretado como a fração da variância que o modelo consegue explicar. Mede principalmente consistência, não acurácia. Maior é melhor, mas deve-se atentar à parcimônia pois cresce monotonamente no número de variáveis explicativas.
     
     \item \textbf{Raiz do Erro Quadrático Médio (RMSE)} \newline
-    O Erro Quadrático Médio é a média dos quadrados dos desvios das previsões em relação aos valores verdadeiros. A raiz dá a métrica. Mede principalmente acurácia, embora seja muito sensível a outliers. 
+    O Erro Quadrático Médio é a média dos quadrados dos desvios das previsões em relação aos valores verdadeiros. A raiz dá a métrica. Mede principalmente acurácia, embora seja muito sensível a outliers. Menor é melhor.
     
 \end{itemize}
+
+Em um contexto de classificação precisamos de outras métricas. A título de exmeplo, algumas das mais comuns e fácil cálculo são:
+
+\begin{itemize}
+    \item \textbf{Sensitividade/ Recall} \newline
+    Em classificação binária, a Sensitividade é a proporção dos casos positivos que são corretamente identificados.
+    \item \textbf{Especificidade} \newline
+    Em classificação binária, a Especificidade é a proporção dos casos negativos que são corretamente identificados.
+    \item \textbf{Acurácia} \newline
+    A fração de casos corretamente identificados. 
+    \item \textbf{Precisão/ Valor Preditivo Positivo} \newline
+    O número de verdadeiros positivos dividido pelo número de preditos positivos.
+    \item \textbf{F1-Score} \newline
+    Média harmônia da Precisão e da Sensitividade
+    
+\end{itemize}
+
 
 \section{Validação Cruzada}
 

@@ -105,11 +105,17 @@ Agora quando tentamos recuperar os parâmetros obtemos estimativas estatisticame
 
 % Dadas as Condições de Gauss-Markov e uma amostra $(\mathbf{X}, \mathbf{y})$, se $(\mathbf{x}_i, \mathbf{y}_i)$ são i.i.d vale que $ \E[\epsilon_i^2\, |\, \mathbf{X} ] = \E[\epsilon_i^2\, |\, \mathbf{x}_i ]  $.
 
-\subsection{Regressores fixos e variáveis aleatórias}
 
-\section{Estimação de Modelos Lineares por Mínimos Quadrados Ordinários}
+\section{A álgebra dos Mínimos Quadrados Ordinários}
 
 
+\section{Efeitos Marginais em Modelos Lineares}
+
+A primeira hipótese, Linearidade, é a chave aqui. A resposta, supomos, varia linearmente nas entradas. Podemos introduzir algumas interações criando variáveis novas que são funções não-lineares das variáveis originais, adicionamos logaritmos, potências, indicadoras e outras tantas transformações para acomodar não-linearidades. Essa abordagem promissora, no entanto, quebra rapidamente sob presença de heterocedasticidade.
+
+E mesmo sob as condições que descrevemos, identificamos uma sombra dos verdadeiros efeitos marginais. Podemos falar com alguma confiança de elasticidades, semi-elasticidades, mas serão sempre aproximações que vão, na média, valer no suporte todo. Mas nem todos os efeitos de tratamento nasceram iguais e não é crível que sejam constantes em todo o espaço de mensuração $\X$. Essa sutileza pode ser adereçada com a adição de uma variável de interação entre explicativas e uma indicadora de pertencimento à alguma categoria, às custas de diminuir a precisão das estimativas à medida em que se aumenta o número de categorias.
+
+Com florestas aleatórias nenhum dos dois problemas anteriores está presente. Podemos até realizar inferência ao usar vários modelos diferentes para construir uma distribuição de efeitos marginais. 
 
 \section{Efeitos Marginais em Florestas Aleatórias}
 
