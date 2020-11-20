@@ -109,15 +109,15 @@ Agora quando tentamos recuperar os parâmetros obtemos estimativas estatisticame
 \section{A álgebra dos Mínimos Quadrados Ordinários}
 
 
-\section{Efeitos Marginais em Modelos Lineares}
-
+\section{Efeitos Marginais}
+\subsection{Em Modelos Lineares}
 A primeira hipótese, Linearidade, é a chave aqui. A resposta, supomos, varia linearmente nas entradas. Podemos introduzir algumas interações criando variáveis novas que são funções não-lineares das variáveis originais, adicionamos logaritmos, potências, indicadoras e outras tantas transformações para acomodar não-linearidades. Essa abordagem promissora, no entanto, quebra rapidamente sob presença de heterocedasticidade.
 
 E mesmo sob as condições que descrevemos, identificamos uma sombra dos verdadeiros efeitos marginais. Podemos falar com alguma confiança de elasticidades, semi-elasticidades, mas serão sempre aproximações que vão, na média, valer no suporte todo. Mas nem todos os efeitos de tratamento nasceram iguais e não é crível que sejam constantes em todo o espaço de mensuração $\X$. Essa sutileza pode ser adereçada com a adição de uma variável de interação entre explicativas e uma indicadora de pertencimento à alguma categoria, às custas de diminuir a precisão das estimativas à medida em que se aumenta o número de categorias.
 
 Com florestas aleatórias nenhum dos dois problemas anteriores está presente. Podemos até realizar inferência ao usar vários modelos diferentes para construir uma distribuição de efeitos marginais. 
 
-\section{Efeitos Marginais em Florestas Aleatórias}
+\subsection{Em Florestas Aleatórias}
 
 Suponha que temos uma árvore treinada $\A$ e uma observação $x$. Com alguma licença poética nos referimos à previsão dessa árvore para essa obervação como $\A(x)$, mas não temos uma função analítica em mãos. De maior incômodo para o econometrista é que não é claro o que exatamente é a derivada dessa função. Isso é um problema porque boa parte da utilidade de um modelo (linear) estimado é ter um vetor de parâmetros intuitivamente interpretáveis. 
 
@@ -125,3 +125,14 @@ A derivada de $\A(\cdot)$, seja lá como for, não é tão informativa. Uma pert
 
 O problema é atenuado com uma floresta aleatória. Uma pertubação pequena em $x$ pode alterar a previsão de uma fração das árvores da florestas. Com um número suficientemente grande de árvores uma variação arbitrariamente pequena em $x$ leva à uma variação arbitrariamente pequena em $\F(x)$.
 
+\section{Um Procedimento de Estimação}
+
+Suponha um modelo $\M : \X \to \Y$. Como computamos seus efeitos marginais de maneira agnóstica? Gostaríamos de aplicar um mesmo procedimento e identificar os efeitos marginais sem depender da mecânica particular de uma classe de modelos. Por trás dos panos cada classe opera um maquinário completamente diferente: redes neurais são composições sucessivas de transformações lineares, modelos lineares são polinômios, máquinas de vetores de suporte calculam distâncias de vetores a um hiperplano estimado com base nos dados. 
+
+Se as mecânicas internas de $\M$ variam demais para termos um procedimento uniforme, podemos olhar onde não há variação entre classes de modelos, $\X$ e $\Y$. Observando os valores que as predições do modelo dão para a resposta $Y$ em uma curva parametrizada $t \in \X$ basta computar a sua derivada (e isso sabemos fazer!) para achar os efeitos marginais na curva. Podemos avaliar as predições em uma vizinhança $V_r(x) \subset \X$. À medida que o raio diminui arbitrariamente temos uma aproximação do efeito de tratamento local. Com raios ''macroscópicos'' podemos estimar o efeito de tratamento médio em uma região de $\X$. 
+
+Como normalmente estamos interessados no efeito de tratamento individual de uma variável, talvez seu efeito conjunto com outra, o problema é limitado a avaliar o modelo ao longo de uma ou duas dimensões apenas. Isso é computacionalmente simples, barato e agnóstico ao método. Como exemplo ilustrativo, vamos recuperar os parâmetros de um modelo linear.
+
+\begin{exemplo}[Recuperando o Parâmetro de um Modelo Linear]
+
+\end{exemplo}
