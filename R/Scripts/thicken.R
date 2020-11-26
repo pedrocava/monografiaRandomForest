@@ -33,6 +33,8 @@ thicken <- function(
        select(- var) ->
        original)
     
+    
+    
     tibble({{var}} :=  seq(min, max, length.out = n - 1)) %>%
       cbind(original) %>%
       as_tibble() %>%

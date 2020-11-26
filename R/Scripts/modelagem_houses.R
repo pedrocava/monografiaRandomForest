@@ -99,7 +99,6 @@ modelo %>%
 
 ### tabular melhor modelo por métrica
 
-
 file.create("tabelas/hiper_metricas.tex")
 
 tabela <- file("tabelas/hiper_metricas.tex")
@@ -118,6 +117,7 @@ c(
   rename(
     `Variáveis por Árvore` = mtry,
     `Amostra Mínima para Folha` = min_n) %>%
+  select(-.metric, -.estimator, -mean, -n, -std_err, -.best, -.bound) %>%
   kable(
     "latex", 
     align = 'c',
