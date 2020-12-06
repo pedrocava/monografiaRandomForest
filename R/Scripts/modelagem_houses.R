@@ -111,13 +111,12 @@ c(
   "rsq",
   "rmse") %>%
   map_dfr(
-    ~ select_by_one_std_err(tune_res, metric = .x, .x) %>%
+    ~ select_best(tune_res, metric = .x, .x) %>%
       mutate(metrica = toupper(.x)) %>%
       select(-.config)) %>%
   rename(
     `Variáveis por Árvore` = mtry,
     `Amostra Mínima para Folha` = min_n) %>%
-  select(-.metric, -.estimator, -mean, -n, -std_err, -.best, -.bound) %>%
   kable(
     "latex", 
     align = 'c',
