@@ -8,6 +8,8 @@ library(rlang)
 library(patchwork)
 library(glue)
 
+set.seed(1234)
+
 ## helper ------------------------
 
 recover <- function(.data) {
@@ -93,6 +95,24 @@ cidades <- c("Rio de Janeiro", "São Paulo", "Belo Horizonte", "Campinas", "Port
   mutate(area = floor(area)) ->
   eval)
 
+(map(1:60, 
+    function(.x) lm(aluguel ~ ., data = sample_frac(treino, .7))) %>%
+  tibble(modelos = .,
+         grade = rep(list(grade), length(modelos))) %>%
+  mutate(
+    predito = map2(
+      .x = modelos, 
+      .y = grade,
+      ~ predict(.x, .y) %>%
+        tibble(predito = .)),
+    a_tirar = map2(grade, predito, ~ bind_cols(.x, .y))) %>%
+  select(a_tirar) %>%
+  unnest(a_tirar) ->
+  eval_lm)
+
+
+
+
 curva <- function(.data, var) {
   
   .data %>%
@@ -108,7 +128,7 @@ curva <- function(.data, var) {
 
 ## plotar ---------------------------------
 
-plot_curva <- function(.curva, type = "predito") {
+plot_curva <- function(.curva, type = "predito", x_label = as_string(var)) {
   
   var <- .curva %>%
     names() %>%
@@ -130,30 +150,33 @@ plot_curva <- function(.curva, type = "predito") {
     geom_col(alpha  = .7, fill = cor) +
     theme_minimal() +
     labs(
-      x = glue("{as_string(var)}"),
+      x = x_label,
       y = glue("Comportamento {ifelse(as_string(type) == 'predito', 'Variável Resposta', 'Efeitos Marginais')}"),
       title = glue("Comportamento {ifelse(as_string(type) == 'predito', 'da Predição Média', 'dos Efeitos Marginais')}")
     )
   
 }
 
-frame_marginal_effects <- function(.data, var) {
+frame_marginal_effects <- function(.data, var, x_label) {
   
-  eval %>%
+  .data %>%
     curva({{var}}) %>%
-    plot_curva("dif") +
-    eval %>%
+    plot_curva("dif", x_label = x_label) +
+    .data %>%
     curva({{var}}) %>%
-    plot_curva()
+    plot_curva(x_label = x_label)
   
   
 }
 
-frame_marginal_effects(eval, andar) /
-  frame_marginal_effects(eval, area)
+frame_marginal_effects(eval, andar, "Andar") /
+  frame_marginal_effects(eval, area, "Área (m^2)")
+
+frame_marginal_effects(eval_lm, andar, "Andar") /
+  frame_marginal_effects(eval_lm, area, "Logaritmo da área")
  
 
-curva_graf <- function(.data, var, subtitle = NULL) {
+curva_graf <- function(.data, var, x_label, subtitle = NULL) {
   
   .data %>%
     group_by({{var}}, id_modelo) %>%
@@ -162,7 +185,7 @@ curva_graf <- function(.data, var, subtitle = NULL) {
     geom_line(size = 1.2, alpha  = .7, color = cor) +
     theme_minimal() +
     labs(
-      x = "Área (m^2)",
+      x = x_label,
       y = "Aluguel Predito",
       title = glue("Curvas de Previsões"),
       subtitle = subtitle
@@ -170,7 +193,8 @@ curva_graf <- function(.data, var, subtitle = NULL) {
   
 }
 
-curva_graf(eval, andar) + curva_graf(eval, area) 
+curva_graf(eval, andar, x_label = "Andar") +
+  curva_graf(eval, area, x_label = "Área (M^2)") 
 
 
 
