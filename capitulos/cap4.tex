@@ -2,11 +2,11 @@
 
 \chapter{Aplicação do Procedimento}
 
-Os dados foram adquiridas via \textit{webscrapping} de um site nacional de aluguel de imóveis para 4 capitais brasileiras no dia 20 de Março de 2020, realizado pelo autor. Iremos estimar uma série de modelos com variadas configurações de hiperparametros, computar algumas métricas de sucesso e escolher os hiperparametros do modelo 'final' com base nisso. Essas métricas de sucesso serão computadas com dados omitidos no processo de treinamento, num processo chamado Validação Cruzada, e então aplicaremos o procedimento descrito no capítulo anterior.
+Neste capítulo o procedimento será ilustrado em um modelo de regressão de preços de imóveis. Os dados foram adquiridas via \textit{webscrapping} de um site nacional de aluguel de imóveis para 4 capitais brasileiras no dia 20 de Março de 2020, realizado pelo autor. Iremos estimar uma série de modelos com variadas configurações de hiperparametros e computar algumas métricas de sucesso para explorar como eles afetam performance do modelo. Essas métricas de sucesso serão computadas com dados omitidos no processo de treinamento, num processo chamado Validação Cruzada, e então aplicaremos o procedimento descrito no capítulo anterior.
 
 \section{Otimização de Hiperparametros}
 
-Não existe uma única maneira de estimar uma floresta aleatória. De fato, como machine learning é um campo que cresceu muito às margens da academia, em laboratórios da indústria, as convenções são informais e há pouco escrito em pedra. Optei por usar a implementação em \citeonline{ranger}, que usa como gatilho de geração de folhas uma amostra abaixo da mínima chegar no nodo e aleatoriza quantas variáveis explicativas são usadas em cada árvore. Uma alternativa de alta confiabilidade seria \citeonline{randomForest}. Para a otimização de hiperparâmetros, validação cruzada e avaliação dos modelos foi usada a plataforma \texttt{tidymodels} \cite{tidymodels}, implementada em linguagem R \cite{R}.
+Não existe uma única maneira de estimar uma floresta aleatória. De fato, como machine learning é um campo que cresceu muito às margens da academia, em laboratórios da indústria, as convenções são informais e há pouco escrito em pedra. Optei por usar a implementação em \citeonline{ranger}, que usa como gatilho de geração de folhas uma amostra abaixo da mínima chegar no nodo e aleatoriza quantas variáveis explicativas são usadas em cada árvore. Uma alternativa de alta confiabilidade seria \citeonline{randomForest}. Para a otimização de hiperparametros, validação cruzada e avaliação dos modelos foi usada a plataforma \texttt{tidymodels} \cite{tidymodels}, implementada em linguagem R \cite{R}.
 
 Decidida a implementação que irá realizar as computações, é preciso fazer uma escolha sobre os hiperparâmetros do modelo, no caso três: amostra mínima para criação de folha, número de árvores e número de variáveis a serem aleatoriamente escolhidas para cada árvore. Do ponto de vista do expectador desinteressado o problema é apenas:
 
@@ -101,3 +101,17 @@ E afinal qual seria o ''melhor'' modelo? A Regra do Um Desvio \cite{breiman1984c
 
 
 \section{Computação de Efeitos Marginais}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale = .70]{imagens/efeitos_marginais_rf.png}
+    \caption{ Elaboração própria.}
+\end{figure}
+
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale = .70]{imagens/efeitos_marginais_lm.png}
+    \caption{ Elaboração própria.}
+\end{figure}
