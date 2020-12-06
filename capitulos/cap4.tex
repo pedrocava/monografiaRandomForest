@@ -50,7 +50,7 @@ Na seção anterior optamos por escolher hiperparâmetros de forma a maximizar a
     
 \end{itemize}
 
-Em um contexto de classificação precisamos de outras métricas. A título de exmeplo, algumas das mais comuns e fácil cálculo são:
+Em um contexto de classificação precisamos de outras métricas. A título de exmeplo, algumas das mais amplamente utilizadas são:
 
 \begin{itemize}
     \item \textbf{Sensitividade/ Recall} \newline
@@ -91,9 +91,12 @@ Percorrendo o domínio de números de variáveis possíveis e mapeando o efeito 
     \caption{Resumo de métricas de performance variando a amostra mínima para criar uma folha. Elaboração própria.}
 \end{figure}
 
-Tabulando o melhor modelo de acordo com cada métrica temos:
 
-\input{tabelas/hiper_metricas}\label{}{}
+Variando a amostra mínima para geração de folhas vemos mais variação nas métricas de performance. Amostras mínimas maiores geram menos regras de previsão/classificação distintas e portanto aumentam erros de previsão mais ou menos monotonamente. Ocorre concavidade com métricas como RPIQ, R2 e RMSE, todas similares e com picos em torno de 60 observações. 
+
+E afinal qual seria o ''melhor'' modelo? A Regra do Um Desvio \cite{breiman1984classification} sugere escolher o modelo mais simples que esteja em até um desvio-padrão da performance do melhor modelo. Aplicando essa heurística em cada métrica temos seis sugestões distintas e melhor modelo:
+
+\input{tabelas/hiper_metricas}
 
 
 
