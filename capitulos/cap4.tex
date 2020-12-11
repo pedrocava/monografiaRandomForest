@@ -102,16 +102,20 @@ E afinal qual seria o ''melhor'' modelo? A Regra do Um Desvio \cite{breiman1984c
 
 \section{Computação de Efeitos Marginais}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[scale = .70]{imagens/efeitos_marginais_rf.png}
-    \caption{ Elaboração própria.}
-\end{figure}
-
-
+Ao aplicar o procedimento com um modelo linear, o que temos? Justamente o que modelos lineares deveriam devolver na ausência de termos com interações e funções não-lineares dos regressores originais, efeitos marginais constantes:
 
 \begin{figure}[H]
     \centering
     \includegraphics[scale = .70]{imagens/efeitos_marginais_lm.png}
     \caption{ Elaboração própria.}
 \end{figure}
+
+Já em modelos de floresta aleatória a não-linearidade do fenômeno fica evidente. Sair do térreo para o primeiro andar \textit{barateia} um apartamento, presumivelmente porque o benefício de uma vista é quase inexistente embora o custo de subir escada/elevador apareça. Sair do décimo segundo para o décimo terceiro tem um efeito nulo e por vezes negativo. Possivelmente por conta da superstição com o número.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale = .70]{imagens/efeitos_marginais_RF.png}
+    \caption{ Elaboração própria.}
+\end{figure}
+
+
