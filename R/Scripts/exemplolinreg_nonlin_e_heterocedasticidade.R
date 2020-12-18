@@ -45,7 +45,8 @@ tidy(modelo1) %>%
     p_valor = p.value) %>%
   kable(format = 'latex',
         caption = 'Modelo sem termo quadrático',
-        label = 'tabela1_exemplo4') %>%
+        label = 'tabela1_exemplo4',
+        digits = 2) %>%
   write_lines(tabela1_4)
 
 # close(tabela1_4)
@@ -61,7 +62,8 @@ tidy(modelo2) %>%
     p_valor = p.value) %>%
   kable(format = 'latex',
         caption = 'Modelo com termo quadrático',
-        label = 'tabela2_exemplo4') %>%
+        label = 'tabela2_exemplo4',
+        digits = 2) %>%
   write_lines(tabela2_4)
 
 
