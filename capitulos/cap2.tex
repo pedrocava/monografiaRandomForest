@@ -36,13 +36,13 @@ Um grafo $G$ é dito \textbf{conexo} se para qualquer par de vértices $x, y \in
 Um grafo $G$ é dito uma \textbf{árvore} se para quaisquer dois vértices de $G$ existe um caminho único os ligando. Podemos escolher um vértice arbitrário e defini-lo como a \textbf{raiz} da árvore. Os vértices que não são a raiz e têm grau unitário são ditos \textbf{folhas}. Os com grau maior que $1$ que não são a raiz são chamados \textbf{nodos}. Um conjunto disjunto de árvores é dito uma \textbf{floresta}.
 \end{defi}
 
-Se for de interesse modelar não só como certas variáveis explicativas se relacionam quantitativamente com um fenômeno, mas mais ainda a interação entre essas variáveis, existem algumas abordagens. Uma delas consistente em compor perguntas sobre os dados e para cada combinação possível de respostas atribuir alguma regra de previsão/classificação. Se as perguntas forem informativas - definiremos essa noção matematicamente mais à frente - então entende-se que grupos com respostas iguais terão resultados similares na variável explicativa, pelo menos em comparação com outros grupos. 
+Se for de interesse modelar não só como certas variáveis explicativas se relacionam quantitativamente com um fenômeno, mas mais ainda a interação entre essas variáveis, existem algumas abordagens. Uma delas consistente em compor perguntas sobre os dados e para cada combinação possível de respostas atribuir alguma regra de previsão/classificação. Se as perguntas forem informativas - definiremos essa noção matematicamente mais à frente - então entende-se que grupos com respostas iguais terão resultados similares na variável resposta, pelo menos em comparação com outros grupos. 
 
-Perguntar perguntas sucessivamente sugere uma série de bifurcações partindo de um ponto inicial. Exatamente o que é um grafo árvore. A figura \ref{fig:arvore} ilustra uma árvore de decisão, já enriquecida com testes e regras de previsão/classificação. 
+Fazer perguntas sucessivamente sugere uma série de bifurcações partindo de um ponto inicial. Exatamente o que é um grafo árvore. A figura \ref{fig:arvore} ilustra uma árvore de decisão, já enriquecida com testes e regras de previsão/classificação. 
 
-Árvores podem ser caracterizadas por duas propriedades, são conexas e acíclicas. Conexidade é importante porque garante que toda observação nova apresentada à árvore terá uma previsão garantida - afinal há sempre um caminho entre a raiz da árvore e uma folha, cada caminho representando uma regra de previsão/classificação.
+Árvores podem ser caracterizadas por duas propriedades, são conexas e acíclicas. Conexidade é importante porque garante que toda observação nova apresentada à árvore terá uma previsão garantida - afinal há sempre um caminho entre a raiz da árvore e uma folha, cada uma representando uma regra de previsão/classificação.
 
-A ausência de ciclos impõe que todo teste lógico que associaremos seja \textit{completo} no sentido de que toda observação pode ser avaliada e terá alguma resposta. Alguns exemplos de testes lógicos completos são: uma pessoa tem mais que $a$ cm de altura, um avião tem mais de $b$ metros de comprimento, uma pessoa ganha mais de $c$ reais por mês, o estado de nascimento de alguém é ou não o RJ, etc. Testes completos não "misturam" regras de previsão/classificação. Assim ao computar a previsão de uma observação dada, existe apenas uma regra a ser usada. Se existisse mais de uma regra de previsão para uma mesma observação então o grafo formaria ciclos. 
+A ausência de ciclos impõe que todo teste lógico que associaremos seja \textit{completo} no sentido de que toda observação pode ser avaliada e terá apenas uma resposta. Alguns exemplos de testes lógicos completos são: uma pessoa tem mais que $a$ cm de altura, um avião tem mais de $b$ metros de comprimento, uma pessoa ganha mais de $c$ reais por mês, o estado de nascimento de alguém é ou não o RJ, etc. Testes completos não "misturam" regras de previsão/classificação. Assim ao computar a previsão de uma observação dada, existe apenas uma regra a ser usada. Se existisse mais de uma regra de previsão para uma mesma observação então o grafo formaria ciclos. Podemos demonstrar isso:
 
 \begin{teo}
 $G$ é uma árvore se, e somente se, é conexo e acíclico.
@@ -94,12 +94,13 @@ Cada pergunta aqui pode ser lida como uma função. 'O cliente tem menos de $k$ 
 
 Ao compor perguntas sucessivamente chegamos em uma espécie de fluxograma de decisão. Uma boa previsão de perfil para um clientes com menos de 30 anos que comprou eletrônicos em 60\% das compras passadas e gastou 40\% a mais que a média por compra provavelmente é um usuário ávido de tecnologia. Ao passo que um usuário de 72 anos que teve 10\% das compras em eletrônicos e faz compras 40\% menores que a média provavelmente é um usuário relutante. Note que muito provavelmente um usuário de 72 anos que comprou apenas eletrônicos na plataforma é entusiasta. A composição das repostas é importante.
 
-Note que cada vértice pode ser associado à uma pergunta única. De fato, o processo de estimação de uma árvore é o de selecionar quais perguntas são feitas com quais parâmetros em quais vértices. 
+Note que cada vértice é associado à uma pergunta única. De fato, o processo de estimação de uma árvore é o de selecionar quais perguntas são feitas, com quais parâmetros, em quais vértices. 
 \end{exemplo}
 
-REESCREVER ESSE PARAGRAFO SEM REFERENCIAS AO CONCEITO DE TESTE, MAIS SIMPLES FALAR DE FUNÇÃO DEFINIDA POR TRECHOS
 
-O ponto importante é que podemos traduzir um grafo árvore $G$ ''enriquecido com perguntas'' em um modelo, basta associar a cada nodo alguma função representando um teste lógico parametrizado por $k \in K$ sobre uma variável contida em um subconjunto $x_j \in X \subset \X$ de uma observação $x \in \X$, para cada folha uma previsão $y \in \Y$ e por fim, uma raiz. Se a variável for categórica, $X$ é um subconjunto enumerável de $\X$, se for contínua é convexo. Para todo nodo $n_i \in G$ existe um teste $\tau_{n_i}(x_j, k) : X  \times K \to \{0, 1\}$. Por construção, para cada observação $x \in \X$ existe um único caminho com os nodos $ \{n_i \, | \, \tau_{n_i}(x, k) = 1\}$ e portanto uma única previsão $y \in \Y$. Isso pode ser traduzido em uma função definida por trechos em que cada trecho corresponde à uma regra de previsão. Isso gera uma espécie de partição do espaço de resposta, em que cada região é associada à uma regra de previsão/classificação.
+
+
+% O ponto importante é que podemos traduzir um grafo árvore $G$ ''enriquecido com perguntas'' em um modelo, basta associar a cada nodo alguma função representando um teste lógico parametrizado por $k \in K$ sobre uma variável contida em um subconjunto $x_j \in X \subset \X$ de uma observação $x \in \X$, para cada folha uma previsão $y \in \Y$ e por fim, uma raiz. Se a variável for categórica, $X$ é um subconjunto enumerável de $\X$, se for contínua é convexo. Para todo nodo $n_i \in G$ existe um teste $\tau_{n_i}(x_j, k) : X  \times K \to \{0, 1\}$. Por construção, para cada observação $x \in \X$ existe um único caminho com os nodos $ \{n_i \, | \, \tau_{n_i}(x, k) = 1\}$ e portanto uma única previsão $y \in \Y$. Isso pode ser traduzido em uma função definida por trechos em que cada trecho corresponde à uma regra de previsão. Isso gera uma espécie de partição do espaço de resposta, em que cada região é associada à uma regra de previsão/classificação.
 
 
 \begin{figure}
@@ -108,6 +109,8 @@ O ponto importante é que podemos traduzir um grafo árvore $G$ ''enriquecido co
     \caption{Um exemplo de árvore de decisão. Elaboração própria.}
     \label{fig:arvore}
 \end{figure}
+
+Recapitulando: a composição de perguntas e suas combinações distintas de respostas levam à uma partição do espaço de mensuração. Cada partição é associada à uma regra de previsão/ classificação. Podemos representar essa lógica com uma árvore e a computação das regras por uma função definida por trechos. Formalmente:
 
 
 \begin{defi}[Modelos de Árvore]
