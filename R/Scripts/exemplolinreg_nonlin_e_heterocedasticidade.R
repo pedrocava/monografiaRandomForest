@@ -37,6 +37,12 @@ lm(y ~ x + x2, data = data) -> modelo2
 tabela1_4 <- file('tabelas/tabela1_exemplo4.tex')
 
 tidy(modelo1) %>%
+  rename(
+    termo = term,
+    estimativa = estimate,
+    erro_padrao = std.error,
+    estatistica_t = statistic,
+    p_valor = p.value) %>%
   kable(format = 'latex',
         caption = 'Modelo sem termo quadrático',
         label = 'tabela1_exemplo4') %>%
@@ -47,6 +53,12 @@ tidy(modelo1) %>%
 tabela2_4 <- file('tabelas/tabela2_exemplo4.tex')
 
 tidy(modelo2) %>%
+  rename(
+    termo = term,
+    estimativa = estimate,
+    erro_padrao = std.error,
+    estatistica_t = statistic,
+    p_valor = p.value) %>%
   kable(format = 'latex',
         caption = 'Modelo com termo quadrático',
         label = 'tabela2_exemplo4') %>%
