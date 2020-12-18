@@ -6,6 +6,8 @@ library(tidyverse)
 library(magrittr)
 library(wesanderson)
 library(stargazer)
+library(broom)
+library(knitr)
 
 pal <- wes_palette("Cavalcanti1")
 cor <- wes_palette("Cavalcanti1") %>% 
@@ -17,7 +19,7 @@ cor <- wes_palette("Cavalcanti1") %>%
         y = 100 + 5*x - 2*x^2 + rnorm(length(x), sd = 20)) -> 
   data)
 
-png("imagens/exemplo3_dist.png", width = 940, height = 678, res = 120)
+png("imagens/exemplo4_dist.png", width = 940, height = 678, res = 120)
 data %>%
   ggplot(aes(x = x, y = y)) +
   geom_point(size = 2, color = cor, alpha = .4) +
@@ -31,7 +33,25 @@ dev.off()
 lm(y ~ x, data = data) -> modelo1
 lm(y ~ x + x2, data = data) -> modelo2
 
-stargazer(modelo1, modelo2, align = TRUE, out = "tabelas/exemplo3.tex")
+
+tabela1_4 <- file('tabelas/tabela1_exemplo4.tex')
+
+tidy(modelo1) %>%
+  kable(format = 'latex',
+        caption = 'Modelo sem termo quadrático',
+        label = 'tabela1_exemplo4') %>%
+  write_lines(tabela1_4)
+
+# close(tabela1_4)
+
+tabela2_4 <- file('tabelas/tabela2_exemplo4.tex')
+
+tidy(modelo2) %>%
+  kable(format = 'latex',
+        caption = 'Modelo com termo quadrático',
+        label = 'tabela2_exemplo4') %>%
+  write_lines(tabela2_4)
+
 
 ### ---------------------------
 
