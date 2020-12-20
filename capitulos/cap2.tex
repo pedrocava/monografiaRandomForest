@@ -184,7 +184,7 @@ Começando pelo contexto de classificação, suponha $J$ classes. Uma primeira m
 O vetor $P(n_i) = (p_1, p_2, ..., p_J)$ representa as probabilidades de que um elemento aleatoriamente escolhido do grupo que chegou no nodo $n_i$ seja da $i$-ésima classe. A entropia do nodo $n_i$ é:
 
 \begin{align}
-    H(n_i) = - \sum_{p_i \in P(n_i)} p_i \log_2 p_i, 
+    H(n_i) = - \sum_{p_j \in P(n_i)} p_j \log_2 p_j, 
 \end{align}
 
 Defina $H(n_i \, | \, a), H(n_i \, |\,  b)$ como a entropia dos potenciais nodos filhos de $n_i$, dado um teste $\tau$ que gere dois grupos $a$ e $b$. Defina $P_a(\tau), P_b(\tau)$ como a proporção de elementos do nodo pai que vai para cada filho dado um teste $\tau$. O ganho de informação por entropia $\I_E(\tau)$ é data abaixo. Em cada divisão, usando essa métrica, escolhemos $\tau^* = \argmax{\I_E(\tau)}$.
