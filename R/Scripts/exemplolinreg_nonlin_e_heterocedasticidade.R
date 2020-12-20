@@ -70,9 +70,9 @@ tidy(modelo2) %>%
 ### ---------------------------
 
 
-(tibble(x = runif(1000, -10, 10),
+(tibble(x = runif(1000, 0, 10),
         x2 = x^2,
-        y = 100 + 5*x - 2*x^2 + x*abs(rnorm(length(x), sd = 20))) -> 
+        y = 100 + 5*x - 2*x2 + x*abs(rnorm(length(x), sd = 20))) -> 
     data2)
 
 png("imagens/exemplo_heteroske.png", width = 940, height = 678, res = 120)
@@ -89,6 +89,24 @@ dev.off()
 
 lm(y ~ x, data = data2) -> modelo21
 lm(y ~ x + x2, data = data2) -> modelo22
+
+
+# close(tabela1_4)
+
+tabela_hetero <- file('tabelas/tabela_heteroskeda.tex')
+
+tidy(modelo22) %>%
+  rename(
+    termo = term,
+    estimativa = estimate,
+    erro_padrao = std.error,
+    estatistica_t = statistic) %>%
+  select(-p.value) %>%
+  kable(format = 'latex',
+        caption = 'Modelo com termo quadrático',
+        label = 'tabela2_exemplo4',
+        digits = 2) %>%
+  write_lines(tabela_hetero)
 
 stargazer(modelo21, modelo22, 
           align = TRUE, out = "tabelas/exemplo_heteroskeda.tex")
