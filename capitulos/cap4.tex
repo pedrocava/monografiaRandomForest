@@ -96,11 +96,13 @@ A varredura pelo hiperparâmetro do número de variáveis sugere que ele não é
 
 \section{Computação de Efeitos Marginais}
 
+Primeiro, vamos definir uma referência. Nosso apartamento imaginário tem 92 $m^2$, 3 quartos, 2 banheiros, uma vaga na garagem, fica no oitavo andar, não é mobiliado, fica no Rio de Janeiro e o dono aceita animais. O que seria dele se fosse maior, ou em um andar mais alto?
+
 Ao aplicar o procedimento com um modelo linear, o que temos? Justamente o que modelos lineares deveriam devolver na ausência de termos com interações e funções não-lineares dos regressores originais, efeitos marginais constantes:
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale = .70]{imagens/efeitos_marginais_lm.png}
+    \includegraphics[scale = .68]{imagens/efeitos_marginais_lm.png}
     \caption{A aplicação do procedimento em modelos lineares ilustra a primeira hipótese dos modelos. Elaboração própria.}
 \end{figure}
 
@@ -108,17 +110,25 @@ Já em modelos de floresta aleatória a não-linearidade do fenômeno fica evide
 
 Esse tipo de efeito poderia ser aproximado com regressões quantílicas, estando o quão finamente o suporte da variável explicativa pode ser mapeado limitado pelo tamanho da amostra. Mais quantis implicam em amostras sucessivamente menores. Essa limitação não está presente em florestas aleatórias. 
 
-Outra diferença é que modelos lineares são \textit{globais}. Os efeitos marginais independem dos níveis de outros regressores então o salto do térreo para o primeiro andar seria tido como igual para todo apartamento, em toda cidade, de qualquer tamanho. Esse tipo de nuance não é perdida em modelos de florestas aleatórias. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale = .60]{imagens/curvas_previsoes_rf.png}
+    \caption{Cada curva contém a previsão de uma floresta aleatória distinta. Elaboração própria.}
+\end{figure}
+
+
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale = .70]{imagens/efeitos_marginais_RF.png}
+    \includegraphics[scale = .60]{imagens/efeitos_marginais_RF.png}
     \caption{Em florestas aleatórias a heterogeneidade dos efeitos de tratamento fica evidente. Elaboração própria.}
 \end{figure}
 
-Os dados com as previsões médias para cada nível de regressor podem ser interpolados e assim gerar uma curva de efeitos marginais. É possível considerar interações entre regressores ao iterar o processo em regressores diferentes e construir funções multivariadas de efeitos marginais. A noção não é tão clara em um caso de classificação, mas é possível estende-la. 
 
-Afinal, cada árvore na floresta dá um voto contendo a sua classificação predita. A classe mais votada é dada como classe predita pela floresta. Podemos ler a fração dos votos que a classe mais votada levou como uma probabilidade predita e calcular os efeitos marginais da mesma maneira que faríamos em um caso de regressão, avaliando o efeito sobre a probabilidade predita. Essa mudança para que a saída do modelo seja em termos de probabilidade é trivial na maioria das implementações computacionais destes métodos e não leva a um aumento de complexidade da tarefa.
+
+Outra diferença é que modelos lineares são \textit{globais}. Os efeitos marginais independem dos níveis de outros regressores então o salto do térreo para o primeiro andar seria tido como igual para todo apartamento, em toda cidade, de qualquer tamanho. Esse tipo de nuance não é perdida em modelos de florestas aleatórias. 
+
+Embora o exemplo seja em um contexto de regressão, o procedimento não se perde em classificação. A classe predita por uma floresta é a apenas a que recebeu mais votos das árvores individuais. Podemos ler a fração dos votos que a classe mais votada levou como uma probabilidade predita e calcular os efeitos marginais da mesma maneira que faríamos em um caso de regressão, avaliando o efeito sobre a probabilidade predita. Essa mudança para que a saída do modelo seja em termos de probabilidade é trivial na maioria das implementações computacionais destes métodos e não leva a um aumento de complexidade da tarefa.
 
 
 

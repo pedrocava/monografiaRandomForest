@@ -1,4 +1,16 @@
 \chapter{Conclusões}
 \label{cap:conclusoes}
 
+Vimos como construir uma floresta aleatória partindo de primeiros princípios. Depois, em termos similares, como e o que são modelos lineares. A problemática de estimar efeitos marginais foi apresentada e um procedimento computacionalmente simples para isso em seguida, demonstrando como algumas nuances passavam batido por modelos lineares.
+
+O tema é relevante em dois sentidos. Pensando apenas do ponto de vista do aprendizado de máquina, é pois encaixa em uma agenda maior de pesquisa em \textit{interpretabilidade} de Machine Learning. O núcleo duro reduzido da disciplina abre espaço para uma série de más práticas disseminadas no uso dessas técnicas \cite{flach2019performance}.
+
+Há também, pelo mesmo motivo, dificuldade de comunicação de resultados de modelos e até mesmo responsabilização civil-criminal quanto aos resultados desses modelos sendo usados em ambiente de produção, sem supervisão humana \cite{lepri2018fair}. Interpretação de modelo, em particular antes de entrega para algum ambiente de produção em que seus resultados afetarão desde experiência de uso em aplicativos de jogos à possivelmente investigação criminal, é crucial. 
+
+Do ponto de vista do economista a interpretabilidade é essencial porque é, de certa maneira, a finalidade principal do trabalho aplicado. Estimar efeitos marginais, (semi)elasticidades e grandezas similares representa a esmagadora maioria das aplicações de econometria, salvo raros estudos como \citeonline{edison2020text} que usam técnicas não-supervisionadas vindas de Linguística Computacional.
+
+Uma limitação não-resolvida da técnica é a inferência dos efeitos marginais computados. É possível distingui-los estatisticamente de zero com algum teste de hipótese? Se florestas aleatórias têm distribuição normal e estimamos várias, então temos dados e podemos fazer inferência se conhecermos a variância da floresta. Não é um problema trivial, mas está ao alcance da pesquisa. Essa avenida de pesquisa é provavelmente a de maior interesse ao econometrista aplicado.
+
+
+
 
