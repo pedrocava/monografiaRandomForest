@@ -21,8 +21,8 @@ Essas são ditas abordagens \textbf{caixa-preta livre de modelo} pois não fazem
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale = .75]{imagens/random_grid.png}
-    \caption{Duas buscas de 100 modelos cada. Elaboração própria.}
+    
+    \captionbox{Duas buscas de 100 modelos cada. Elaboração própria.}{\includegraphics[scale = .75]{imagens/random_grid.png}}
 \end{figure}
 
 \section{Métricas de Qualidade}
@@ -77,8 +77,8 @@ Esse tempo de computação é melhor empregado procurando com uma grade fina mel
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale = .72]{imagens/cross_v_mtry.png}
-    \caption{Resumo de métricas de performance variando quantas variáveis alimentar para cada árvore. Elaboração própria.}
+    
+    \captionbox{Resumo de métricas de performance variando quantas variáveis alimentar para cada árvore. Elaboração própria.}{\includegraphics[scale = .72]{imagens/cross_v_mtry.png}}
 \end{figure}
 
 A varredura pelo hiperparâmetro do número de variáveis sugere que ele não é muito determinante para performance. Não há movimento claros entre as métricas de melhora ou piora. Poucas variáveis por árvore incluem tanto os melhores quanto os piores modelos! O que sugere que a amostra mínima para gerar folha é um hiperparâmetro mais relevante. De fato é:
@@ -86,8 +86,7 @@ A varredura pelo hiperparâmetro do número de variáveis sugere que ele não é
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale = .70]{imagens/crossv_min.png}
-    \caption{Resumo de métricas de performance variando a amostra mínima para criar uma folha. Elaboração própria.}
+    \captionbox{Resumo de métricas de performance variando a amostra mínima para criar uma folha. Elaboração própria.}{\includegraphics[scale = .70]{imagens/crossv_min.png}}
 \end{figure}
 
 \input{tabelas/hiper_metricas}
@@ -112,16 +111,15 @@ Esse tipo de efeito poderia ser aproximado com regressões quantílicas, estando
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale = .60]{imagens/curvas_previsoes_rf.png}
-    \caption{Cada curva contém a previsão de uma floresta aleatória distinta. Elaboração própria.}
+    \captionbox{Cada curva contém a previsão de uma floresta aleatória distinta. Elaboração própria.}{\includegraphics[scale = .60]{imagens/curvas_previsoes_rf.png}}
 \end{figure}
 
 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale = .60]{imagens/efeitos_marginais_RF.png}
-    \caption{Em florestas aleatórias a heterogeneidade dos efeitos de tratamento fica evidente. Elaboração própria.}
+    
+    \captionbox{Em florestas aleatórias a heterogeneidade dos efeitos de tratamento fica evidente. Elaboração própria.}{\includegraphics[scale = .60]{imagens/efeitos_marginais_RF.png}}
 \end{figure}
 
 
