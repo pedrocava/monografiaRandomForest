@@ -30,7 +30,8 @@ fake_data %>%
     X = "Regressor",
     Y = "Resposta",
     title = "Dados simulados",
-    subtitle = "Processo simulado: y_i = 10 + 1,5 * x_i + erro")
+    subtitle = "Processo simulado: y_i = 10 + 1,5 * x_i + erro") +
+  theme(legend.position = 'none')
 
 
 modelo <- randomForest(formula = Y ~ X, nodesize = 30, ntree = 100, data = fake_data)
