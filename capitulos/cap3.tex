@@ -1,54 +1,34 @@
 
 \chapter{Econometria Clássica e Efeitos Marginais}
 
-Introduzido o conceito de Floresta Aleatória, agora voltamos nossa atenção à Econometria Clássica e seu \textit{workhorse model}, o \textbf{modelo clássico de regressão linear}. Veremos uma maneira de estimar os parâmetros desse modelo, via Mínimos Quadrados Ordinários, como modelos de Floresta Aleatória não têm a mesma interpretabilidade e como podemos contornar essa problemática avaliando o modelo na vizinhança de algumas observações. 
+Introduzido o conceito de Floresta Aleatória, agora voltamos nossa atenção à Econometria Clássica e seu  modelo central. Veremos uma maneira de estimar os parâmetros desse modelo via Mínimos Quadrados Ordinários, como modelos de Floresta Aleatória não têm a mesma interpretabilidade e como podemos contornar essa problemática avaliando o modelo na vizinhança de algumas observações. A apresentação seguirá \citeonline{hayashi}. 
 
 
 
 \section{Teoria Clássica de Regressão Linear}
 
-Recuperando o conceito apresentado no início do capítulo interior, um \textbf{modelo} é um mapa entre um espaço de mensuração $\X$ (que neste contexto tem seus elementos chamados de \textbf{variáveis independentes}), com variáveis ditas explicativas do fenômeno representado no espaço de resposta $\Y$. \citeonline{hayashi} descreve modelos, em um linguajar mais estatístico como (i) um conjunto de restrições sobre a distribuição conjunta das variáveis e/ou (ii) um conjunto de distribuições conjuntas satisfazendo um conjunto de hipóteses. Iremos nos referir às variáveis medidas em $\X$ como \textbf{regressores}. Nesta seção iremos descrever uma família de modelos lineares, suas limitações e virtudes.
-
-
+Retornando um pouco, e apenas esse pouco, ao capítulo anterior, usaremos de novo os conceitos de variáveis explicativas (que aqui chamaremos de \textbf{regressores}) e de uma variável resposta. Suponha que observamos $n$ medidas. Então $y_i$ é a $i$-ésima observação da variável resposta e o vetor $(x_{i1}, x_{i2}, ..., x_{ik})$ a $i$-ésima observação dos $k$ regressores. Quando nos referimos a um modelo aqui, estamos nos referindo ao conjunto de restrições sobre a distribuição conjunta dos regressores e da resposta. A Teoria Clássica de Regressão Linear se apoia nas Hipóteses 1-4 a seguir.
 
 \begin{hipotese}[Linearidade]
-Nossos modelos $\mathcal{L} : \X \to \Y$ são funções lineares. Nos referimos ao valor da $i$-ésima observação na $j$-ésima variável como $x_{ij}$, sua resposta sendo $y_i$. O termo $\epsilon_i$ é o \textbf{resíduo}, uma variável aleatória que acomodará a parcela não-explicada pelas variáveis em $\X$ da resposta em $\Y$. Se $\X \subset \R^k$ então o vetor de parâmetros que estimaremos será $\boldsymbol{\beta} \in \R^k$ e nossos modelos terão a forma funcional:
+Nossos modelos têm a seguinte forma funcional, onde $\beta_j$ são os parâmetros a serem estimados e $\epsilon_i$ é o termo que chamamos de \textbf{resíduo}. 
+
 
 \begin{align}
-    y_i = \sum_{j = 1}^k \beta_j x_{ij} + \epsilon_i \label{mod_lin}
+    y_i = \sum_{j = 1}^k \beta_j x_{ij} + \epsilon_i \label{mod_lin};
 \end{align}
 
 Linearidade implica que o efeito de uma variação em um regressor particular na resposta não depende do seu nível, nem do de outros regressores. De fato:
 
 \begin{align}
-    \frac{\partial y}{\partial x_i} = \beta_i
+    \frac{\partial y_i}{\partial x_i} = \beta_i
 \end{align}
 \end{hipotese}
 
 
-Essa hipótese pode parecer muito restritiva a princípio, mas não é (tanto assim). O modelador pode usar de intuição para construir variáveis novas que são funções não-lineares das variáveis mensuradas originalmente. A relação entre salário e experiência ou escolaridade, por exemplo, tem retornos decrescentes. Os primeiros cinco anos no mercado de trabalho contribuem muito mais para um aumento salarial do que os últimos cinco anos de carreira. Essa relação pode ser captada introduzindo um termo com o quadrado da experiência no modelo ou uma variável discreta valendo $1$ nos primeiros anos de carreira e $0$ depois, por exemplo. 
-
-\begin{exemplo}[Estimando linearmente uma relação não-linear]
-
-Suponha que algum processo de interesse dependa de uma variável aleatória $x$ com a seguinte relação: $y(x) = 100 + 2x - 5x^2$. Observamos $y$ com um erro:
-
-\begin{figure}[H]
-    \centering
-    
-    \captionbox{Uma amostra simulada do processo. Elaboração própria.}{\includegraphics[scale = .75]{imagens/exemplo4_dist.png}}
-\end{figure}
-
-As tabelas \ref{tab:tabela1_exemplo4} e \ref{tab:tabela2_exemplo4} mostram as estimativas de dois modelos, um com $x$ e uma constante, outro com $x$, a constante e $x^2$. O segundo modelo recupera os parâmetros com erros da ordem de $1\%$, o primeiro errou por alguns desvios-padrão tanto a inclinação quanto o intercepto. 
-
-\input{tabelas/tabela1_exemplo4}
-\input{tabelas/tabela2_exemplo4}
-
-A introdução de novas variáveis, funções não-lineares das originais, expande o número de situações em que a aproximação linear não é uma simplificação exagerada da realidade. Isso ocorre, inclusive, sem perda de interpretabilidade. Para entender o efeito marginal de uma variável que tenha sido ''expandida'' com transformações não-lineares basta somar as derivadas da resposta em relação à original bem como às expansões.
+O modelador pode usar de intuição para construir variáveis novas que são funções não-lineares das variáveis mensuradas originalmente. A relação entre salário e experiência ou escolaridade, por exemplo, tem retornos decrescentes. Os primeiros cinco anos no mercado de trabalho contribuem muito mais para um aumento salarial do que os últimos cinco anos de carreira. Essa relação pode ser captada introduzindo um termo com o quadrado da experiência no modelo ou uma variável discreta valendo $1$ nos primeiros anos de carreira e $0$ depois, por exemplo. 
 
 
-\end{exemplo}
-
-Antes de prosseguir é importante apresentar a notação matricial dos modelos lineares. Uma maneira interessante de nos referir aos dados coletados de uma amostra - e como discutiremos estimação isso é importante - é associa-los à uma matriz. Notaremos uma \textbf{matriz de dados} como $\mathbf{X}$ em que $\mathbf{X}_{ij}$ é a medida da $i$-ésima observação na $j$-ésima variável. Também teremos $\mathbf{y}$, o vetor em que a $i$-ésima entrada é a medida da variável resposta da $i$-ésima observação, e $\mathbf{\epsilon}$, o vetor com o resíduo. A partir de agora usaremos $n$ para nos referir ao tamanho da amostra, o número de linhas em $\mathbf{X}$ e $\mathbf{y}$. Reescrevendo a equação \ref{mod_lin} em notação matricial:
+Antes de prosseguir é importante apresentar a notação matricial dos modelos lineares. Uma maneira interessante de nos referir aos dados coletados de uma amostra - e como discutiremos estimação isso é importante - é associa-los à uma matriz. Notaremos uma \textbf{matriz de dados} como $\mathbf{X}$, preenchida com a $i$-ésima observação da $j$-ésima variável. Também teremos $\mathbf{y}$, o vetor em que a $i$-ésima entrada é a medida da variável resposta da $i$-ésima observação, e $\mathbf{\epsilon}$, o vetor com o resíduo. A partir de agora usaremos $n$ para nos referir ao tamanho da amostra, o número de linhas em $\mathbf{X}$ e $\mathbf{y}$. Reescrevendo a equação \ref{mod_lin} em notação matricial:
 
 \begin{equation}
     \underset{n \times 1}{\mathbf{y}} = \underset{n \times k}{\mathbf{X}} \,\, \underset{k \times 1}{\boldsymbol{\beta}}   + \underset{n \times 1}{\boldsymbol{\epsilon}}
@@ -57,13 +37,13 @@ Antes de prosseguir é importante apresentar a notação matricial dos modelos l
 
 
 \begin{hipotese}[Exogeneidade Estrita]
-A média condicional do resíduo é nula.
+A média condicional do erro é nula.
 
 \begin{align}
     \E[\epsilon_i \, | \, \mathbf{X}] = 0
 \end{align}
 
-Enquanto função dos dados, a média condicional dos resíduos não necessariamente é linear. Podemos nos livrar desse problema supondo que, no entanto, assume o valor constante de zero. Essa hipótese não é restritiva se, entre as variáveis explicativas, houver uma com valor constante igual à média incondicional dos resíduos. É assim de trás para frente que encontraremos o valor constante do modelo no processo de estimação, inclusive. 
+Essa hipótese não é restritiva se, entre as variáveis explicativas, houver uma com valor constante igual à média incondicional dos resíduos do modelo sem o valor constante. É assim de trás para frente que encontraremos o intercepto do modelo no processo de estimação, inclusive. 
 
 \end{hipotese}
 
@@ -71,12 +51,10 @@ Enquanto função dos dados, a média condicional dos resíduos não necessariam
 O posto da matriz de dados $\mathbf{X}_{n \times k}$ é $k$ com probabilidade 1.
 \end{hipotese}
 
-Em termos práticos, supomos que as variáveis dadas para um modelo linear são linearmente independentes umas das outras. Se os valores de uma variável podem ser inteiramente determinados por combinações lineares de outras, qualquer informação que possa trazer já está contida nas outras.
-
-Também supomos que nosso modelo erra de maneira consistente:
+Em termos práticos, supomos que as variáveis dadas para um modelo linear são linearmente independentes umas das outras. Se os valores de uma variável podem ser inteiramente determinados por combinações lineares de outras, qualquer informação que possa trazer já está contida nas outras. Também supomos que nosso modelo erra de maneira consistente:
 
 \begin{hipotese}[Homocedasticidade]
-A variância dos erros independe do nível dos regressores:
+A variância dos resíduos independe do nível dos regressores:
 
 \begin{align}
     \E[\epsilon_i^2\, |\, \mathbf{X} ] = \sigma^2
@@ -96,7 +74,7 @@ A variância dos erros independe do nível dos regressores:
 
 \input{tabelas/tabela_heteroskeda}
 
-Agora quando tentamos recuperar os parâmetros obtemos estimativas estatisticamente significantes, como informa a tabela \ref{tab:tabela_hetero}. Os parâmetros estimados, no entanto, estão à dezenas de desvios-padrão dos verdadeiros.
+Agora quando tentamos recuperar os parâmetros obtemos estimativas estatisticamente significantes, como informa a Tabela \ref{tab:tabela_hetero}. Os parâmetros estimados, no entanto, estão à dezenas de desvios-padrão dos verdadeiros.
 
 
 \end{exemplo}
@@ -108,15 +86,9 @@ Agora quando tentamos recuperar os parâmetros obtemos estimativas estatisticame
 
 \section{Efeitos Marginais}
 \subsection{Em Modelos Lineares}
-A primeira hipótese, Linearidade, é a chave aqui. A resposta, supomos, varia linearmente nos regressores. Podemos introduzir algumas interações criando variáveis novas que são funções não-lineares das variáveis originais, adicionamos logaritmos, potências, indicadoras e outras tantas transformações para acomodar não-linearidades. Essa abordagem promissora, no entanto, quebra rapidamente sob presença de heterocedasticidade. Mesmo que não haja heterocedasticidade, adicionar regressores diminui a precisão da estimativa.
+A primeira hipótese, Linearidade, é a chave aqui. A resposta, supomos, varia linearmente nos regressores. Podemos introduzir algumas interações criando variáveis novas que são funções não-lineares das variáveis originais, adicionamos logaritmos, potências, indicadoras e outras tantas transformações para acomodar não-linearidades. Essa abordagem promissora, no entanto, necessariamente diminui a precisão da estimativa de todos os parâmetros.
 
-E mesmo sob as condições que descrevemos, identificamos a média dos modelos marginais. Podemos falar com alguma confiança de elasticidades, semi-elasticidades, mas serão sempre aproximações para o suporte inteiro da variável. Nem todos os efeitos marginais nasceram iguais e não é crível que sejam constantes em todo o espaço de mensuração $\X$. Uma maneira de contornar o problema é regressão quantílica, que vem ao custo de cada fatia no domínio diminuir a amostra que cada modelo poderá receber.
-
-
-
-
-
-Com florestas aleatórias nenhum dos dois problemas anteriores está presente. Podemos até realizar inferência ao usar vários modelos diferentes para construir uma distribuição de efeitos marginais. 
+Mesmo que essa perda de precisão seja tolerável, esbarramos em um problema embutido na construção desses modelos. Estimamos um escalar para descrever o efeito marginal de uma variável sobre a resposta e apenas isso. Estamos supondo por definição que os efeitos marginais são iguais em todo o suporte e para qualquer nível dos outros regressores. Essa hipótese, no entanto, não está presente em florestas aleatórias.
 
 \subsection{Em Florestas Aleatórias}
 

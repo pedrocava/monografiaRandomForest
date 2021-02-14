@@ -2,11 +2,22 @@
 
 \chapter{Aplicação do Procedimento}
 
-Neste capítulo o procedimento será ilustrado em um modelo de regressão de preços de imóveis. Os dados foram adquiridas via \textit{webscrapping} de um site nacional de aluguel de imóveis para 4 capitais brasileiras no dia 20 de Março de 2020, realizado pelo autor. Iremos estimar uma série de modelos com variadas configurações de hiperparametros e computar algumas métricas de sucesso para explorar como eles afetam performance do modelo. Essas métricas de sucesso serão computadas com dados omitidos no processo de treinamento, num processo chamado Validação Cruzada, e então aplicaremos o procedimento descrito no capítulo anterior.
+Neste capítulo o procedimento será ilustrado em um modelo de regressão de preços de imóveis. Os dados foram adquiridas via \textit{webscrapping} de um site nacional de aluguel de imóveis (https://www.quintoandar.com.br) para 4 capitais brasileiras no dia 20 de Março de 2020, realizado pelo autor. Iremos realizar análise exploratória para entender melhor os dados de alugueis, estimar uma série de modelos com variadas configurações de hiperparâmetros e computar algumas métricas de sucesso para explorar como eles afetam performance do modelo. Essas métricas de sucesso serão computadas com dados omitidos no processo de treinamento, num processo chamado Validação Cruzada, e então aplicaremos o procedimento descrito no capítulo anterior. 
 
-\section{Otimização de Hiperparametros}
 
-Não existe uma única maneira de estimar uma floresta aleatória. De fato, como machine learning é um campo que cresceu muito às margens da academia, em laboratórios da indústria, as convenções são informais e há pouco escrito em pedra. Optei por usar a implementação em \citeonline{ranger}, que usa como gatilho de geração de folhas uma amostra abaixo da mínima chegar no nodo e aleatoriza quantas variáveis explicativas são usadas em cada árvore. Uma alternativa de alta confiabilidade seria \citeonline{randomForest}. Para a otimização de hiperparametros, validação cruzada e avaliação dos modelos foi usada a plataforma \texttt{tidymodels} \cite{tidymodels}, implementada em linguagem R \cite{R}.
+Antes, no entanto, veremos o procedimento ser aplicado em um contexto laboratorial. Simularemos dados aleatórios a partir de um modelo linear e recuperaremos o parâmetro estimado com florestas aleatórias e uma aplicação do procedimento. 
+
+\section{Verificação Laboratorial}
+
+
+
+
+
+
+
+\section{Otimização de hiperparâmetros}
+
+Não existe uma única maneira de estimar uma floresta aleatória. De fato, como machine learning é um campo que cresceu muito às margens da academia, em laboratórios da indústria, as convenções são informais e há pouco escrito em pedra. Optei por usar a implementação em \citeonline{ranger}, que usa como gatilho de geração de folhas uma amostra abaixo da mínima chegar no nodo e aleatoriza quantas variáveis explicativas são usadas em cada árvore. Uma alternativa de alta confiabilidade seria \citeonline{randomForest}. Para a otimização de hiperparâmetros, validação cruzada e avaliação dos modelos foi usada a plataforma \texttt{tidymodels} \cite{tidymodels}, implementada em linguagem R \cite{R}.
 
 Decidida a implementação que irá realizar as computações, é preciso fazer uma escolha sobre os hiperparâmetros do modelo, no caso três: amostra mínima para criação de folha, número de árvores e número de variáveis a serem aleatoriamente escolhidas para cada árvore. Do ponto de vista do expectador desinteressado o problema é apenas:
 
@@ -27,26 +38,26 @@ Essas são ditas abordagens \textbf{caixa-preta livre de modelo} pois não fazem
 
 \section{Métricas de Qualidade}
 
-Na seção anterior optamos por escolher hiperparâmetros de forma a maximizar alguma função que entendemos representar a qualidade de um modelo. Precisamos agora definir como mensura-la. Métricas de performance de modelo são sempre arbitrárias então a boa prática recomenda usar uma cesta delas. As opções para regressão são inúmeras. Serão avaliadas seis:
+Na seção anterior optamos por escolher hiperparâmetros de forma a maximizar alguma função que entendemos representar a qualidade de um modelo. Precisamos agora definir como mensura-la. Métricas de performance de modelo são sempre arbitrárias então a boa prática recomenda usar uma cesta delas. As opções para regressão são inúmeras. Serão avaliadas seis: 
 
 \begin{itemize}
     \item \textbf{Razão Performance-Interquatil (RPIQ)} \newline
-    Definida como o desvio-padrão das previsões dividido pela amplitude interquartil da resposta. Mede principalmente a consistência do modelo, não a acurácia preditiva. Quanto mais próximo de 1, melhor. 
+    Definida como o desvio-padrão das previsões dividido pela amplitude interquartil observada da resposta. Mede a capacidade do modelo de gerar previsões parcimoniosas. Quanto mais próximo de 1, melhor. Um tratamento mais detalhado está disponível em \citeonline{botchkarev2018performance}.
     
     \item \textbf{Coeficiente de Concordância de Correlação (CCC)} \newline
-    Introduzido por \citeonline{lawrence1989concordance}, mede tanto consistência quanto acurácia. Calculada a partir da diferença entre a identidade e a reta de regressão dos valores preditos nos verdadeiros. Quanto mais próximo de 1, melhor.
+    Introduzido por \citeonline{lawrence1989concordance}, mede acurácia. Calculada a partir da diferença entre a identidade e a reta de regressão dos valores preditos nos observados. Quanto mais próximo de 1, melhor.
     
     \item \textbf{Erro Médio Absoluto (MAE)} \newline
-    A média das diferenças entre previsões e valores verdadeiros. Diretamente interpretável na unidade original da resposta. Indica acurácia. Menor é melhor, mas deve-se atentar à parcimônia.
+    A média das diferenças entre previsões e valores observados. Diretamente interpretável na unidade original da resposta. Indica acurácia. Menor é melhor, mas deve-se atentar à parcimônia.
     
     \item \textbf{Erro Médio Percentual (MPE)} \newline
-    A média das diferenças entre previsões e valores verdadeiros ponderada pela média da resposta. Lida em unidades relativas. Indica acurácia. Menor é melhor, mas deve-se atentar à parcimônia.
+    A média das diferenças entre previsões e valores observados ponderada pela média da resposta. Lida em unidades relativas. Indica acurácia. Menor é melhor, mas deve-se atentar à parcimônia.
     
     \item \textbf{Coeficiente de Determinação (R2)} \newline
-    Calcula-se a soma dos quadrados dos desvios das previsões à média da resposta. Dividi-se esse valor pela soma dos quadrados dos desvios as observações originais à média da resposta. O resultado está entre $0$ e $1$ e pode ser interpretado como a fração da variância que o modelo consegue explicar. Mede principalmente consistência, não acurácia. Maior é melhor, mas deve-se atentar à parcimônia pois cresce monotonamente no número de variáveis explicativas.
+    Calcula-se a soma dos quadrados dos desvios das previsões à média da resposta. Dividi-se esse valor pela soma dos quadrados dos desvios as observações originais à média da resposta. O resultado está entre $0$ e $1$ e pode ser interpretado como a fração da variância que o modelo consegue explicar. Maior é melhor, mas deve-se atentar à parcimônia pois cresce monotonamente no número de variáveis explicativas.
     
     \item \textbf{Raiz do Erro Quadrático Médio (RMSE)} \newline
-    O Erro Quadrático Médio é a média dos quadrados dos desvios das previsões em relação aos valores verdadeiros. A raiz dá a métrica. Mede principalmente acurácia, embora seja muito sensível a outliers. Menor é melhor.
+    O Erro Quadrático Médio é a média dos quadrados dos desvios das previsões em relação aos valores observados. A raiz dá a métrica. Mede principalmente acurácia, embora seja muito sensível a outliers. Menor é melhor.
     
 \end{itemize}
 
@@ -60,7 +71,7 @@ Em um contexto de classificação precisamos de outras métricas. A título de e
     \item \textbf{Acurácia} \newline
     A fração de casos corretamente identificados. 
     \item \textbf{Precisão/ Valor Preditivo Positivo} \newline
-    O número de verdadeiros positivos dividido pelo número de preditos positivos.
+    O número de observados positivos dividido pelo número de preditos positivos.
     \item \textbf{F1-Score} \newline
     Média harmônia da Precisão e da Sensitividade
 \end{itemize}
