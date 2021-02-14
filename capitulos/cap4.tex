@@ -7,13 +7,19 @@ Neste capítulo o procedimento será ilustrado em um modelo de regressão de pre
 
 Antes, no entanto, veremos o procedimento ser aplicado em um contexto laboratorial. Simularemos dados aleatórios a partir de um modelo linear e recuperaremos o parâmetro estimado com florestas aleatórias e uma aplicação do procedimento. 
 
+
+
 \section{Verificação Laboratorial}
 
+Para uma primeira verificação da sanidade da técnica apresentada, o seguinte procedimento será feito. Primeiro dados aleatórios serão gerados a partir de uma normal. Esse será nosso regressor. Depois serão simulados outros dados de uma normal, que serão os erros. Depois, um cálculo determinístico irá gerar a nossa resposta simulada com um parâmetro conhecido. 
+
+Será treinada uma floresta aleatória nessa amostra falsificada e suas previsões serão computadas para variados valores do regressor imaginário. Iremos, então, estimar uma regressão linear do regressor simulado original nas predições da floresta aleatória. Caso a floresta de fato tenha conseguido recuperar o parâmetro, o $\beta$ que escolhemos para o cálculo determinístico da resposta deverá ser o mesmo que encontraremos na segunda regressão.
 
 
 
 
 
+\section{Análise Exploratória dos Dados de Imóveis}
 
 \section{Otimização de hiperparâmetros}
 
