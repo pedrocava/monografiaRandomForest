@@ -2,7 +2,7 @@
 
 \chapter{Aplicação do Procedimento}
 
-Neste capítulo o procedimento será ilustrado em um modelo de regressão de preços de imóveis. Os dados foram adquiridas via \textit{webscrapping} de um site nacional de aluguel de imóveis (https://www.quintoandar.com.br) para 4 capitais brasileiras no dia 20 de Março de 2020, realizado pelo autor. Iremos realizar análise exploratória para entender melhor os dados de alugueis, estimar uma série de modelos com variadas configurações de hiperparâmetros e computar algumas métricas de sucesso para explorar como eles afetam performance do modelo. Essas métricas de sucesso serão computadas com dados omitidos no processo de treinamento, num processo chamado Validação Cruzada, e então aplicaremos o procedimento descrito no capítulo anterior. 
+Neste capítulo o procedimento será ilustrado em um modelo de regressão de preços de imóveis. Os dados foram adquiridas via \textit{webscrapping} de um site nacional de aluguel de imóveis (https://www.quintoandar.com.br) para quatro capitais brasileiras no dia 20 de Março de 2020, realizado pelo autor. Iremos realizar análise exploratória para entender melhor os dados de alugueis, estimar uma série de modelos com variadas configurações de hiperparâmetros e computar algumas métricas de sucesso para explorar como eles afetam performance do modelo. Essas métricas de sucesso serão computadas com dados omitidos no processo de treinamento, num processo chamado Validação Cruzada, e então aplicaremos o procedimento descrito no capítulo anterior. 
 
 
 Antes, no entanto, veremos o procedimento ser aplicado em um contexto laboratorial. Simularemos dados aleatórios a partir de um modelo linear e recuperaremos o parâmetro estimado com florestas aleatórias e uma aplicação do procedimento. 
@@ -13,14 +13,23 @@ Antes, no entanto, veremos o procedimento ser aplicado em um contexto laboratori
 
 Para uma primeira verificação da sanidade da técnica apresentada, o seguinte procedimento será feito. Primeiro dados aleatórios serão gerados a partir de uma normal. Esse será nosso regressor. Depois serão simulados outros dados de uma normal, que serão os erros. Depois, um cálculo determinístico irá gerar a nossa resposta simulada com um parâmetro conhecido. 
 
-Será treinada uma floresta aleatória nessa amostra falsificada e suas previsões serão computadas para variados valores do regressor imaginário. Iremos, então, estimar uma regressão linear do regressor simulado original nas predições da floresta aleatória. Caso a floresta de fato tenha conseguido recuperar o parâmetro, o $\beta$ que escolhemos para o cálculo determinístico da resposta deverá ser o mesmo que encontraremos na segunda regressão.
+Será treinada uma floresta aleatória nessa amostra falsificada e suas previsões serão computadas para variados valores do regressor imaginário. Iremos, então, estimar uma regressão linear do regressor simulado original nas predições da floresta aleatória. Caso a floresta de fato tenha conseguido recuperar o parâmetro, o $\beta$ que escolhemos para o cálculo determinístico da resposta deverá ser o mesmo que encontraremos na segunda regressão. 
+
+Antes de apresentar a tabela com os resultados deste experimento, abaixo estão três gráficos. Eles, em ordem, descrevem: a distribuição conjunta dos dados simulados, o resultado da aplicação do procedimento de computação de efeitos marginais ao lado da curva de predição média e finalmente a distribuição conjunta dos valores preditos pelo modelo de floresta aleatória e os verdadeiros. Há uma relação aparentemente 1 para 1, o que é um sinal muito positivo já antes de verificar a tabela com os resultados.
+
+
+\begin{figure}[H]
+    \centering
+    
+    \captionbox{Dados simulados. Elaboração própria.}{\includegraphics[scale = .75]{imagens/exemplo_freddy_fake_data.png}}
+\end{figure}
 
 
 
 \begin{figure}[H]
     \centering
     
-    \captionbox{Comportamento dos efeitos marginais, que lembra um ruído branco, e a curva de predições. Elaboração própria.}{\includegraphics[scale = .45]{imagens/exemplo_freddy_efeitos marginais.png}}
+    \captionbox{Comportamento dos efeitos marginais, que lembra um ruído branco, e a curva de predições. Elaboração própria.}{\includegraphics[scale = .50]{imagens/exemplo_freddy_efeitos_marginais.png}}
 \end{figure}
 
 
@@ -30,10 +39,29 @@ Será treinada uma floresta aleatória nessa amostra falsificada e suas previsõ
     \captionbox{Comparação das predições com os valores verdadeiros. Elaboração própria.}{\includegraphics[scale = .55]{imagens/exemplo_freddy_predito_vs_verdade.png}}
 \end{figure}
 
+Na tabela abaixo estão os resultados para a segunda regressão do experimento. Ao gerar a resposta simulada, escolhemos um $\beta$ de exatamente $1.5$. Nosso procedimento recuperou esse parâmetro com um erro de cerca de $2,5\%$.
+
+\input{tabelas/verif_lab}
+
 
 
 
 \section{Análise Exploratória dos Dados de Imóveis}
+
+Nesta seção algumas visualizações de dados úteis serão apresentadas, bem como uma descrição dos dados. Foram mensuradas as seguintes variáveis:
+
+\begin{itemize}
+    \item \textbf{Cidade:} a cidade onde está o apartamento.
+    \item \textbf{Área:} a área em metros quadrados
+    \item \textbf{Quartos:} o número de quartos
+    \item \textbf{Banheiros:} o número de banheiros
+    \item \textbf{Vagas:} o número de vagas
+    \item \textbf{Andar:} em qual andar do prédio está o apartamento (0 para térreo ou casas)
+    \item \textbf{Mobiliado:} variável categórica indicando se o apartamento é mobiliado
+    \item \textbf{Aluguel:} valor do aluguel em reais por mês
+\end{itemize}
+
+
 
 \section{Otimização de hiperparâmetros}
 
