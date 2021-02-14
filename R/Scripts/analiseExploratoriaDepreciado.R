@@ -38,5 +38,6 @@ data %>%
   geom_boxplot()
 
 
-
+curva(eval_verif, X) %>%
+  plot_curva()
 

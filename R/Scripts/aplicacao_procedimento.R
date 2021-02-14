@@ -157,11 +157,11 @@ plot_curva <- function(.curva, type = "predito", x_label = as_string(var)) {
   
 }
 
-frame_marginal_effects <- function(.data, var, x_label) {
+frame_marginal_effects <- function(.data, var, x_label = "") {
   
   .data %>%
     curva({{var}}) %>%
-    plot_curva("dif", x_label = x_label) +
+    plot_curva(type = "dif", x_label = x_label) +
     .data %>%
     curva({{var}}) %>%
     plot_curva(x_label = x_label)
