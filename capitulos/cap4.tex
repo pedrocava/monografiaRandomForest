@@ -1,12 +1,10 @@
 
-
 \chapter{Aplicação do Procedimento}
 
-Neste capítulo o procedimento será ilustrado em um modelo de regressão de preços de imóveis. Os dados foram adquiridas via \textit{webscrapping} de um site nacional de aluguel de imóveis (https://www.quintoandar.com.br) para quatro capitais brasileiras no dia 20 de Março de 2020, realizado pelo autor. Iremos realizar análise exploratória para entender melhor os dados de alugueis, estimar uma série de modelos com variadas configurações de hiperparâmetros e computar algumas métricas de sucesso para explorar como eles afetam performance do modelo. Essas métricas de sucesso serão computadas com dados omitidos no processo de treinamento, num processo chamado Validação Cruzada, e então aplicaremos o procedimento descrito no capítulo anterior. 
+Neste capítulo o procedimento será ilustrado em um modelo de regressão de preços de imóveis. Todos os dados e código de implementação estão disponíveis sob a licensa MIT no repositório https://github.com/pedrocava/monografiaRandomForest. Os dados foram adquiridas via \textit{webscrapping} de um site nacional de aluguel de imóveis (https://www.quintoandar.com.br) para quatro capitais brasileiras no dia 20 de Março de 2020, realizado pelo autor. Iremos realizar análise exploratória para entender melhor os dados de alugueis, estimar uma série de modelos com variadas configurações de hiperparâmetros e computar algumas métricas de sucesso para explorar como eles afetam performance do modelo. Essas métricas de sucesso serão computadas com dados omitidos no processo de treinamento, num processo chamado Validação Cruzada, e então aplicaremos o procedimento descrito no capítulo anterior. 
 
 
 Antes, no entanto, veremos o procedimento ser aplicado em um contexto laboratorial. Simularemos dados aleatórios a partir de um modelo linear e recuperaremos o parâmetro estimado com florestas aleatórias e uma aplicação do procedimento. 
-
 
 
 \section{Verificação Laboratorial}
@@ -15,13 +13,13 @@ Para uma primeira verificação da sanidade da técnica apresentada, o seguinte 
 
 Será treinada uma floresta aleatória nessa amostra falsificada e suas previsões serão computadas para variados valores do regressor imaginário. Iremos, então, estimar uma regressão linear do regressor simulado original nas predições da floresta aleatória. Caso a floresta de fato tenha conseguido recuperar o parâmetro, o $\beta$ que escolhemos para o cálculo determinístico da resposta deverá ser o mesmo que encontraremos na segunda regressão. 
 
-Antes de apresentar a tabela com os resultados deste experimento, abaixo estão três gráficos. Eles, em ordem, descrevem: a distribuição conjunta dos dados simulados, o resultado da aplicação do procedimento de computação de efeitos marginais ao lado da curva de predição média e finalmente a distribuição conjunta dos valores preditos pelo modelo de floresta aleatória e os verdadeiros. Há uma relação aparentemente 1 para 1, o que é um sinal muito positivo já antes de verificar a tabela com os resultados.
+As Figuras 6, 7 e 8 descrevem, respectivamente: a distribuição conjunta dos dados simulados, o resultado da aplicação do procedimento de computação de efeitos marginais ao lado da curva de predição média e a distribuição conjunta dos valores preditos pelo modelo de floresta aleatória com os verdadeiros. Há uma relação aparentemente 1 para 1, o que é um sinal muito positivo já antes de verificar os resultados.
 
 
 \begin{figure}[H]
     \centering
-    
-    \captionbox{Dados simulados. Elaboração própria.}{\includegraphics[scale = .75]{imagens/exemplo_freddy_fake_data.png}}
+    \captionbox{Dados simulados.  }{\includegraphics[scale = .75]{imagens/exemplo_freddy_fake_data.png}}
+\fonte{Elaboração própria.}
 \end{figure}
 
 
@@ -29,24 +27,24 @@ Antes de apresentar a tabela com os resultados deste experimento, abaixo estão 
 \begin{figure}[H]
     \centering
     
-    \captionbox{Comportamento dos efeitos marginais, que lembra um ruído branco, e a curva de predições. Elaboração própria.}{\includegraphics[scale = .50]{imagens/exemplo_freddy_efeitos_marginais.png}}
+    \captionbox{Comportamento dos efeitos marginais, que lembra um ruído branco, e a curva de predições.  }{\includegraphics[scale = .50]{imagens/exemplo_freddy_efeitos_marginais.png}}
+    \fonte{Elaboração própria.}
 \end{figure}
 
 
 \begin{figure}[H]
     \centering
     
-    \captionbox{Comparação das predições com os valores verdadeiros. Elaboração própria.}{\includegraphics[scale = .55]{imagens/exemplo_freddy_predito_vs_verdade.png}}
+    \captionbox{Comparação das predições com os valores verdadeiros.  }{\includegraphics[scale = .55]{imagens/exemplo_freddy_predito_vs_verdade.png}}
+\fonte{Elaboração própria.}
 \end{figure}
 
-Na tabela abaixo estão os resultados para a segunda regressão do experimento. Ao gerar a resposta simulada, escolhemos um $\beta$ de exatamente $1.5$. Nosso procedimento recuperou esse parâmetro com um erro de cerca de $2,5\%$.
+Na Tabela \ref{tabela_verif} estão os resultados para a segunda regressão do experimento. Ao gerar a resposta simulada, escolhemos um $\beta$ de exatamente $1.5$. Nosso procedimento recuperou esse parâmetro com um erro de cerca de $2,5\%$.
 
 \input{tabelas/verif_lab}
 
 
-
-
-\section{Análise Exploratória dos Dados de Imóveis}
+\section{Exploração dos Dados de Imóveis}
 
 Nesta seção algumas visualizações de dados úteis serão apresentadas, bem como uma descrição dos dados. Foram mensuradas as seguintes variáveis:
 
@@ -61,6 +59,31 @@ Nesta seção algumas visualizações de dados úteis serão apresentadas, bem c
     \item \textbf{Aluguel:} valor do aluguel em reais por mês
 \end{itemize}
 
+Na Tabela \ref{tab:exploratoria} algumas estatísticas descritivas importantes por cidade e alguns gráficos descrevendo as variáveis chaves.
+
+\input{tabelas/exploratoria_cidades}
+
+
+\begin{figure}[H]
+    \centering
+    
+    \captionbox{Distribuição dos aluguéis.  }{\includegraphics[scale = .65]{imagens/exploratoria_alugueis.png}}
+    \fonte{Cálculos do autor com dados raspados do site https://quintoandar.com.br.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    
+    \captionbox{Distribuição dos andares dos apartamentos.  }{\includegraphics[scale = .55]{imagens/exploratoria_andares.png}}
+        \fonte{Cálculos do autor com dados raspados do site https://quintoandar.com.br.}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    
+    \captionbox{Distribuição da metragem dos apartamentos.  }{\includegraphics[scale = .65]{imagens/exploratoria_metragens.png}}
+        \fonte{Cálculos do autor com dados raspados do site https://quintoandar.com.br.}
+\end{figure}
 
 
 \section{Otimização de hiperparâmetros}
@@ -81,7 +104,8 @@ Essas são ditas abordagens \textbf{caixa-preta livre de modelo} pois não fazem
 \begin{figure}[H]
     \centering
     
-    \captionbox{Duas buscas de 100 modelos cada. Elaboração própria.}{\includegraphics[scale = .75]{imagens/random_grid.png}}
+    \captionbox{Duas buscas de 100 modelos cada.  }{\includegraphics[scale = .75]{imagens/random_grid.png}}
+        \fonte{Elaboração própria.}
 \end{figure}
 
 \section{Métricas de Qualidade}
@@ -103,6 +127,9 @@ Na seção anterior optamos por escolher hiperparâmetros de forma a maximizar a
     
     \item \textbf{Coeficiente de Determinação (R2)} \newline
     Calcula-se a soma dos quadrados dos desvios das previsões à média da resposta. Dividi-se esse valor pela soma dos quadrados dos desvios as observações originais à média da resposta. O resultado está entre $0$ e $1$ e pode ser interpretado como a fração da variância que o modelo consegue explicar. Maior é melhor, mas deve-se atentar à parcimônia pois cresce monotonamente no número de variáveis explicativas.
+    
+    Uma variante dessa métrica, especialmente apropriada para comparar modelos com os mesmos hiperparâmetros (ou que não dependam deles, como regressão linear) e variáveis explicativas diferentes é o R2 ajustado. Seu cálculo é muito similar, mas introduz um mecanismo de punição à adição de variáveis, refletindo os benefícios da parcimônia na métrica.
+    
     
     \item \textbf{Raiz do Erro Quadrático Médio (RMSE)} \newline
     O Erro Quadrático Médio é a média dos quadrados dos desvios das previsões em relação aos valores observados. A raiz dá a métrica. Mede principalmente acurácia, embora seja muito sensível a outliers. Menor é melhor.
@@ -129,7 +156,7 @@ Em um contexto de classificação precisamos de outras métricas. A título de e
 
 Para dar uma chance melhor a cada combinação podemos testa-la em amostras diferentes. Fazemos isso com validação $k$-cruzada. Dividimos a amostra em $k$ grupos aproximadamente iguais e para cada combinação de hiperparâmetros estimamos o modelo em $k-1$ combinações, excluindo um grupo de cada vez. Como medida de performance para cada combinação específica de hiperparâmetros usamos então a média das métricas de performance nas $k-1$ validações. 
 
-Um pouco de sabedoria popular com florestas aleatórias sugere que o número de árvores não é um bom hiperparâmetro para se validar. Os ganhos de performance são pequenos, o custo computacional, no entanto, variante. Note que o custo de estimar uma floresta cresce linearmente, um para um, com o número de árvores. Validar $k$ combinações cada uma com $a*b$ árvores é $a$ vezes mais caro que validar $k$ combinações com $b$ árvores. 
+A literatura da área sugere que o número de árvores não é um bom hiperparâmetro para se validar  \cite{claesen2015hyperparameter}. Os ganhos de performance são pequenos, o custo computacional, no entanto, variante. Note que o custo de estimar uma floresta cresce linearmente, um para um, com o número de árvores. Validar $k$ combinações cada uma com $a*b$ árvores é $a$ vezes mais caro que validar $k$ combinações com $b$ árvores. 
 
 Esse tempo de computação é melhor empregado procurando com uma grade fina melhores combinações de amostra única e número de variáveis por árvore. Árvores com menos variáveis tem menos variância, o que ajuda a diminuir a variância da floresta, e menor poder preditivo. Árvores com menor amostra mínima têm mais folhas, criando respostas mais finas, mas têm mais variância também. 
 
@@ -137,15 +164,17 @@ Esse tempo de computação é melhor empregado procurando com uma grade fina mel
 \begin{figure}[H]
     \centering
     
-    \captionbox{Resumo de métricas de performance variando quantas variáveis alimentar para cada árvore. Elaboração própria.}{\includegraphics[scale = .72]{imagens/cross_v_mtry.png}}
+    \captionbox{Resumo de métricas de performance variando quantas variáveis alimentar para cada árvore.  }{\includegraphics[scale = .72]{imagens/cross_v_mtry.png}}
+    \fonte{Elaboração própria.}
 \end{figure}
 
-A varredura pelo hiperparâmetro do número de variáveis sugere que ele não é muito determinante para performance. Não há movimento claros entre as métricas de melhora ou piora. Poucas variáveis por árvore incluem tanto os melhores quanto os piores modelos! O que sugere que a amostra mínima para gerar folha é um hiperparâmetro mais relevante. De fato é:
+A varredura pelo hiperparâmetro do número de variáveis sugere que ele não é muito determinante para performance. Não há movimento claros entre as métricas de melhora ou piora, como mostramos na Figura 13. Poucas variáveis por árvore incluem tanto os melhores quanto os piores modelos, como mostramos na Tabela 4. Isso sugere que a amostra mínima para gerar folha é um hiperparâmetro mais relevante. De fato é:
 
 
 \begin{figure}[H]
     \centering
-    \captionbox{Resumo de métricas de performance variando a amostra mínima para criar uma folha. Elaboração própria.}{\includegraphics[scale = .70]{imagens/crossv_min.png}}
+    \captionbox{Resumo de métricas de performance variando a amostra mínima para criar uma folha.  }{\includegraphics[scale = .70]{imagens/crossv_min.png}}
+    \fonte{Elaboração própria.}
 \end{figure}
 
 \input{tabelas/hiper_metricas}
@@ -156,21 +185,24 @@ A varredura pelo hiperparâmetro do número de variáveis sugere que ele não é
 
 Primeiro, vamos definir uma referência. Nosso apartamento imaginário tem 92 $m^2$, 3 quartos, 2 banheiros, uma vaga na garagem, fica no oitavo andar, não é mobiliado, fica no Rio de Janeiro e o dono aceita animais. O que seria dele se fosse maior, ou em um andar mais alto?
 
-Ao aplicar o procedimento com um modelo linear, o que temos? Justamente o que modelos lineares deveriam devolver na ausência de termos com interações e funções não-lineares dos regressores originais, efeitos marginais constantes:
+Ao aplicar o procedimento com um modelo linear, o que temos? Justamente o que modelos lineares deveriam devolver na ausência de termos com interações e funções não-lineares dos regressores originais, efeitos marginais constantes, mostrado na Figura 15.
 
 \begin{figure}[H]
+    \label{ols_marg}
     \centering
-    \includegraphics[scale = .68]{imagens/efeitos_marginais_lm.png}
-    \caption{A aplicação do procedimento em modelos lineares ilustra a primeira hipótese dos modelos. Elaboração própria.}
+    
+    \captionbox{A aplicação do procedimento em modelos lineares ilustra a primeira hipótese dos modelos.}{\includegraphics[scale = .68]{imagens/efeitos_marginais_lm.png}}
+    \fonte{Elaboração própria.}
 \end{figure}
 
 Já em modelos de floresta aleatória a não-linearidade do fenômeno fica evidente. Sair do térreo para o primeiro andar \textit{barateia} um apartamento, presumivelmente porque o benefício de uma vista é quase inexistente embora o custo de subir escada/elevador apareça. Sair do décimo segundo para o décimo terceiro tem um efeito nulo e por vezes negativo. Possivelmente por conta da superstição com o número.
 
-Esse tipo de efeito poderia ser aproximado com regressões quantílicas, estando o quão finamente o suporte da variável explicativa pode ser mapeado limitado pelo tamanho da amostra. Mais quantis implicam em amostras sucessivamente menores. Essa limitação não está presente em florestas aleatórias. 
+Esse tipo de efeito poderia ser aproximado com regressões pseudo-quantílicas, em que estimamos por OLS um modelo por quantil da amostra ao invés de seguir o procedimento de minimização de valor absoluto da regressão quantílica 'verdadeira'. Uma limitação dessa abordagem é que envolve fatiar a amostra. Mais quantis implicam em amostras sucessivamente menores. Essa limitação não está presente em florestas aleatórias. 
 
 \begin{figure}[H]
     \centering
-    \captionbox{Cada curva contém a previsão de uma floresta aleatória distinta. Elaboração própria.}{\includegraphics[scale = .60]{imagens/curvas_previsoes_rf.png}}
+    \captionbox{Cada curva contém a previsão de uma floresta aleatória distinta.  }{\includegraphics[scale = .60]{imagens/curvas_previsoes_rf.png}}
+    \fonte{Elaboração própria.}
 \end{figure}
 
 
@@ -178,7 +210,8 @@ Esse tipo de efeito poderia ser aproximado com regressões quantílicas, estando
 \begin{figure}[H]
     \centering
     
-    \captionbox{Em florestas aleatórias a heterogeneidade dos efeitos de tratamento fica evidente. Elaboração própria.}{\includegraphics[scale = .60]{imagens/efeitos_marginais_RF.png}}
+    \captionbox{Em florestas aleatórias a heterogeneidade dos efeitos de tratamento fica evidente.  }{\includegraphics[scale = .60]{imagens/efeitos_marginais_RF.png}}
+    \fonte{Elaboração própria.}
 \end{figure}
 
 

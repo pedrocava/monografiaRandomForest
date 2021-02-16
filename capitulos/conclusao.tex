@@ -1,15 +1,17 @@
-\chapter{Conclusões}
+\chapter{Considerações Finais}
 \label{cap:conclusoes}
 
-Foi demonstrado como construir uma floresta aleatória partindo de primeiros princípios. Depois, através de notação matricial clássica no campo, como e o que são modelos lineares. A problemática de estimar efeitos marginais foi apresentada e um procedimento computacionalmente simples para isso em seguida, demonstrando como algumas nuances passavam batido por modelos lineares.
+Este trabalho se compromete com reprodutibilidade e ciência aberta. Todo o código de estimação de modelos, preparação dos dados, tabelas, imagens e implementação do procedimento está disponível no repositório https://github.com/pedrocava/monografiaRandomForest. 
 
-O tema é relevante em dois sentidos. Do ponto de vista do aprendizado de máquina, porque encaixa em uma agenda maior de pesquisa em \textit{interpretabilidade} de Machine Learning. O núcleo duro reduzido da disciplina abre espaço para uma série de más práticas disseminadas no uso dessas técnicas \cite{flach2019performance}. Avaliar efeitos marginais pode ser usado como uma forma de validação qualitativa também. Relações com sinais inversos ao esperado podem ser evidência de problemas na estimação, entendimento do problema ou preparação dos dados.
 
-Há também, pelo mesmo motivo, dificuldade de comunicação de resultados de modelos e até mesmo responsabilização civil-criminal quanto às consequências de seu uso em ambiente de produção, sem supervisão humana \cite{lepri2018fair}. Interpretação de modelo, em particular antes de entrega para algum ambiente de produção em que seus resultados afetarão desde experiência de uso em aplicativos de jogos à possivelmente investigação criminal, é crucial. O economista se preocupa com interpretabilidade porque é, de certa maneira, a finalidade principal do trabalho aplicado de métodos quantitativos. Estimar efeitos marginais, (semi)elasticidades e grandezas similares representa a esmagadora maioria das aplicações de econometria, salvo raros estudos como \citeonline{edison2020text} que usam técnicas não-supervisionadas vindas de Linguística Computacional.
+Foi demonstrado como construir uma floresta aleatória partindo de primeiros princípios. Depois, através de notação matricial clássica no campo, como e o que são modelos lineares. A problemática de estimar efeitos marginais foi apresentada e um procedimento computacionalmente simples para isso em seguida, demonstrando como algumas nuances passavam por cima dos modelos lineares.
 
-Uma limitação não-resolvida da técnica é a inferência dos efeitos marginais computados. É possível distingui-los estatisticamente de zero com algum teste de hipótese? Isso equivale a estabelecer uma ponte entre as duas culturas de \citeonline{breiman2001statistical}. Não parece um problema intratável. Se florestas aleatórias têm distribuição normal e estimamos várias, então temos dados e podemos fazer inferência se conhecermos a variância da floresta. Não é um problema trivial, mas está ao alcance da pesquisa. Essa avenida de pesquisa é provavelmente a de maior interesse ao econometrista aplicado e parte diretamente dos princípios elaborados nesta monografia.
 
-Por fim, este trabalho se compromete com reprodutibilidade e ciência aberta. Todo o código de estimação de modelos, preparação dos dados, tabelas, imagens e implementação do procedimento está disponível no repositório https://github.com/pedrocava/monografiaRandomForest.
+Uma limitação não-resolvida da técnica é a inferência dos efeitos marginais computados. É possível distingui-los estatisticamente de zero com algum teste de hipótese? Isso equivale a estabelecer uma ponte entre as duas culturas de \citeonline{breiman2001statistical}. A técnica aqui desenvolvida pode ser estendida para aceitar testes apropriados, aproximando as duas abordagens.
+
+
+Não parece um problema intratável. Se florestas aleatórias têm distribuição normal e estimamos várias, então temos dados e podemos fazer inferência se conhecermos a variância da floresta. Não é um problema trivial, mas está ao alcance da pesquisa. Essa avenida de pesquisa é provavelmente a de maior interesse ao econometrista aplicado e parte diretamente dos princípios elaborados nesta monografia.
+
 
 
 

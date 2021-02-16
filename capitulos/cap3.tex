@@ -20,7 +20,7 @@ Nossos modelos têm a seguinte forma funcional, onde $\beta_j$ são os parâmetr
 Linearidade implica que o efeito de uma variação em um regressor particular na resposta não depende do seu nível, nem do de outros regressores. De fato:
 
 \begin{align}
-    \frac{\partial y_i}{\partial x_i} = \beta_i
+    \frac{\partial y_i}{\partial x_{ij}} = \beta_j
 \end{align}
 \end{hipotese}
 
@@ -28,10 +28,10 @@ Linearidade implica que o efeito de uma variação em um regressor particular na
 O modelador pode usar de intuição para construir variáveis novas que são funções não-lineares das variáveis mensuradas originalmente. A relação entre salário e experiência ou escolaridade, por exemplo, tem retornos decrescentes. Os primeiros cinco anos no mercado de trabalho contribuem muito mais para um aumento salarial do que os últimos cinco anos de carreira. Essa relação pode ser captada introduzindo um termo com o quadrado da experiência no modelo ou uma variável discreta valendo $1$ nos primeiros anos de carreira e $0$ depois, por exemplo. 
 
 
-Antes de prosseguir é importante apresentar a notação matricial dos modelos lineares. Uma maneira interessante de nos referir aos dados coletados de uma amostra - e como discutiremos estimação isso é importante - é associa-los à uma matriz. Notaremos uma \textbf{matriz de dados} como $\mathbf{X}$, preenchida com a $i$-ésima observação da $j$-ésima variável. Também teremos $\mathbf{y}$, o vetor em que a $i$-ésima entrada é a medida da variável resposta da $i$-ésima observação, e $\mathbf{\epsilon}$, o vetor com o resíduo. A partir de agora usaremos $n$ para nos referir ao tamanho da amostra, o número de linhas em $\mathbf{X}$ e $\mathbf{y}$. Reescrevendo a equação \ref{mod_lin} em notação matricial:
+Antes de prosseguir é importante apresentar a notação matricial dos modelos lineares. Uma maneira interessante de nos referir aos dados coletados de uma amostra - e como discutiremos estimação isso é importante - é associa-los à uma matriz. Notaremos uma \textbf{matriz de dados} como $\mathbf{X}$, preenchida com a $i$-ésima observação da $j$-ésima variável. Também teremos $\mathbf{y}$, o vetor em que a $i$-ésima entrada é a medida da variável resposta da $i$-ésima observação, e $\mathbf{\epsilon}$, o vetor com o resíduo. Finalmente, os parâmetros $\beta_j$ estarão no vetor $\boldsymbol{\beta}$. A partir de agora usaremos $n$ para nos referir ao tamanho da amostra, o número de linhas em $\mathbf{X}$ e $\mathbf{y}$. Reescrevendo a equação \ref{mod_lin} em notação matricial:
 
 \begin{equation}
-    \underset{n \times 1}{\mathbf{y}} = \underset{n \times k}{\mathbf{X}} \,\, \underset{k \times 1}{\boldsymbol{\beta}}   + \underset{n \times 1}{\boldsymbol{\epsilon}}
+    \underset{n \times 1}{\mathbf{y}} = \underset{n \times k}{\mathbf{X}} \,\, \underset{k \times 1}{\boldsymbol{\beta}}   + \underset{n \times 1}{\boldsymbol{\epsilon}} .
 \end{equation}
 
 
@@ -40,7 +40,7 @@ Antes de prosseguir é importante apresentar a notação matricial dos modelos l
 A média condicional do erro é nula.
 
 \begin{align}
-    \E[\epsilon_i \, | \, \mathbf{X}] = 0
+    \E[\epsilon_i \, | \, \mathbf{X}] = 0;
 \end{align}
 
 Essa hipótese não é restritiva se, entre as variáveis explicativas, houver uma com valor constante igual à média incondicional dos resíduos do modelo sem o valor constante. É assim de trás para frente que encontraremos o intercepto do modelo no processo de estimação, inclusive. 
@@ -54,27 +54,29 @@ O posto da matriz de dados $\mathbf{X}_{n \times k}$ é $k$ com probabilidade 1.
 Em termos práticos, supomos que as variáveis dadas para um modelo linear são linearmente independentes umas das outras. Se os valores de uma variável podem ser inteiramente determinados por combinações lineares de outras, qualquer informação que possa trazer já está contida nas outras. Também supomos que nosso modelo erra de maneira consistente:
 
 \begin{hipotese}[Homocedasticidade]
-A variância dos resíduos independe do nível dos regressores:
+Seja $\E$ o operador de esperança:
 
 \begin{align}
-    \E[\epsilon_i^2\, |\, \mathbf{X} ] = \sigma^2
+    \E[\epsilon_i^2\, |\, \mathbf{X} ] = \sigma^2;
 \end{align}
 
+A variância dos resíduos independe do nível dos regressores.
 
 \end{hipotese}
 
 \begin{exemplo}[Heterocedasticidade]
-É fácil quebrar o exemplo anterior, basta tornar o componente não-observado uma função de alguma variável explicativa. Adicionando esse comportamento no processo simulado temos:
+É simples violar a hipótese 4, basta tornar o componente não-observado uma função de alguma variável explicativa. Adicionando esse comportamento no processo simulado temos:
 
 \begin{figure}[H]
     \centering
     
-    \captionbox{Uma amostra simulada do processo. Elaboração própria.}{\includegraphics[scale = .75]{imagens/exemplo_heteroske.png}}
+    \captionbox{Uma amostra simulada do processo.}{\includegraphics[scale = .75]{imagens/exemplo_heteroske.png}}
+    \fonte{Elaboração própria.}
 \end{figure}
 
 \input{tabelas/tabela_heteroskeda}
 
-Agora quando tentamos recuperar os parâmetros obtemos estimativas estatisticamente significantes, como informa a Tabela \ref{tab:tabela_hetero}. Os parâmetros estimados, no entanto, estão à dezenas de desvios-padrão dos verdadeiros.
+Agora quando tentamos recuperar os parâmetros obtemos estimativas estatisticamente significantes, como informa a Tabela \ref{tab:tabela_hetero}. Os parâmetros estimados, no entanto, estão à dezenas de desvios-padrão dos verdadeiros, como mostramos na Figura 6.
 
 
 \end{exemplo}
@@ -86,7 +88,7 @@ Agora quando tentamos recuperar os parâmetros obtemos estimativas estatisticame
 
 \section{Efeitos Marginais}
 \subsection{Em Modelos Lineares}
-A primeira hipótese, Linearidade, é a chave aqui. A resposta, supomos, varia linearmente nos regressores. Podemos introduzir algumas interações criando variáveis novas que são funções não-lineares das variáveis originais, adicionamos logaritmos, potências, indicadoras e outras tantas transformações para acomodar não-linearidades. Essa abordagem promissora, no entanto, necessariamente diminui a precisão da estimativa de todos os parâmetros.
+A primeira hipótese, Linearidade, é a chave aqui. A resposta, supomos, varia linearmente nos regressores. Podemos introduzir algumas interações criando variáveis novas que são funções não-lineares das variáveis originais, adicionamos logaritmos, potências, indicadoras e outras tantas transformações para acomodar não-linearidades. Essa abordagem promissora, no entanto, necessariamente diminui a precisão da estimativa de todos os parâmetros e seus graus de liberdade, impondo restrições.
 
 Mesmo que essa perda de precisão seja tolerável, esbarramos em um problema embutido na construção desses modelos. Estimamos um escalar para descrever o efeito marginal de uma variável sobre a resposta e apenas isso. Estamos supondo por definição que os efeitos marginais são iguais em todo o suporte e para qualquer nível dos outros regressores. Essa hipótese, no entanto, não está presente em florestas aleatórias.
 
@@ -104,6 +106,6 @@ Esse caminho sugere uma estratégia promissora. Podemos perturbar uma observaç�
 
 Suponha um modelo $\M : \X \to \Y$. Como computamos seus efeitos marginais de maneira agnóstica? Gostaríamos de aplicar um mesmo procedimento e identificar os efeitos marginais sem depender da mecânica particular de uma classe de modelos. Por trás dos panos cada classe opera um maquinário completamente diferente: redes neurais são composições sucessivas de transformações lineares, modelos lineares são polinômios, máquinas de vetores de suporte calculam distâncias de vetores a um hiperplano estimado com base nos dados. 
 
-Se as mecânicas internas de $\M$ variam demais para termos um procedimento uniforme, podemos olhar onde não há variação entre classes de modelos, $\X$ e $\Y$. Observando os valores que as predições do modelo dão para a resposta $Y$ em uma curva parametrizada $t \in \X$ basta computar a sua derivada (e isso sabemos fazer!) para achar os efeitos marginais na curva. 
+Se as mecânicas internas de $\M$ variam demais para termos um procedimento uniforme, podemos olhar onde não há variação entre classes de modelos, $\X$ e $\Y$. Observando os valores que as predições do modelo dão para a resposta $Y$ em uma curva parametrizada $t \in \X$ basta computar a sua derivada para achar os efeitos marginais na curva. 
 
 Como normalmente estamos interessados no efeito de tratamento individual de uma variável, talvez seu efeito conjunto com outra, o problema é limitado a avaliar o modelo ao longo de uma ou duas dimensões apenas. Avaliar o efeito marginal de mais variáveis implica apenas repetir o procedimento, não sofrer da maldição da dimensionalidade. Esse procedimento é computacionalmente simples, barato e agnóstico ao modelo.

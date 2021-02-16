@@ -9,17 +9,17 @@ Neste capítulo desenvolvemos o modelo de floresta aleatória partindo de primei
 
 \section{Noções de Aprendizado de Máquina Supervisionado}
 
-Primeiro precisamos de algumas definições caras ao contexto de Aprendizado Supervisionado. Uma \textbf{observação} é um par de realizações de duas variáveis aleatórias. O par consiste de $x \in \R^k$, contendo $k$ \textbf{variáveis explicativas} e $y \in \R$ que chamaremos de \textbf{variável resposta}. Com algumas convenções é possível representar dados não-numéricos. Variáveis binárias podem ser representadas por pares $0$ e $1$, então usar "apenas" números reais não é uma grande limitação. O conjunto de vetores possíveis de serem medidos, o produto cartesiano de todos os espaços amostrais das variáveis aleatórias contidas no vetor com variáveis explicativas, é o \textbf{Espaço de Mensuração} $\mathcal{X}$ e $\mathcal{Y}$ o \textbf{Espaço de Resposta}, equivalente ao espaço amostral da variável resposta. Por exemplo: se uma dimensão deste espaço representa idade, entendemos que seu suporte está nos inteiros positivos entre $0$ e, digamos, $120$. Se uma variável é uma categoria binária, então seu suporte está em $0$ e $1$. 
+Primeiro precisamos de algumas definições caras ao contexto de Aprendizado Supervisionado. Uma \textbf{observação} é um par de realizações de duas variáveis aleatórias. O par consiste de $x \in \R^k$, contendo $k$ \textbf{variáveis explicativas} e $y \in \R$ que chamaremos de \textbf{variável resposta}. Com algumas convenções é possível representar dados não-numéricos. Variáveis binárias podem ser representadas por pares $0$ e $1$, então usar 'apenas' números reais não é uma grande limitação. O conjunto de vetores possíveis de serem medidos, o produto cartesiano de todos os espaços amostrais das variáveis aleatórias contidas no vetor com variáveis explicativas, é o \textbf{Espaço de Mensuração} $\mathcal{X}$ e $\mathcal{Y}$ o \textbf{Espaço de Resposta}, equivalente ao espaço amostral da variável resposta. Por exemplo: se uma dimensão deste espaço representa idade, entendemos que seu suporte está nos inteiros positivos entre $0$ e, digamos, $120$. Se uma variável é uma categoria binária, então seu suporte está em $0$ e $1$. 
 
 Munido de dados relacionando mensurações de variáveis e explicativas e com uma resposta a ser estudada, um modelador está interessado em um algoritmo que relacione medidas dentro de $\X$ com previsões para valores plausíveis de $\Y$. Essa representação matemática representando regras de previsão é o objeto fundamental do Aprendizado de Máquinas.
 
 \begin{defi}[Modelos]
-Um \textbf{modelo} é uma função $f: \mathcal{X} \to \mathcal{Y}$. Se $\mathcal{Y}$ é enumerável dizemos que é um modelo de \textbf{Classificação}, se for um subconjunto convexo da reta real dizemos que é de \textbf{Regressão} e, em particular no caso em que $\Y = [0, \,1]$, dizemos ser de \textbf{Risco}. A grandeza $\frac{\partial f}{\partial x}, \, x \in \mathcal{X}$ é dita o \textbf{efeito marginal} da variável em relação a que se diferencia $f$.
+Um \textbf{modelo} é uma função $f: \mathcal{X} \to \mathcal{Y}$. Se $\mathcal{Y}$ é enumerável dizemos que é um modelo de \textbf{Classificação}, se for um subconjunto convexo da reta real dizemos que é de \textbf{Regressão} e, em particular no caso em que $\Y = [0, \,1]$, dizemos ser de \textbf{Risco}. A derivada $\frac{\partial f}{\partial x}, \, x \in \mathcal{X}$, se existir, é dita o \textbf{efeito marginal} da variável em relação a que se diferencia $f$.
 \end{defi} 
 
 Classificar um paciente como sendo ou não portador de uma doença é  um problema de classificação binária. Classificar o tipo de câncer a partir de medidas de um tumor é um problema de classificação multiclasse. Estimar o preço de um imóvel com base em suas características é um problema de regressão. Estimar a \textit{probabilidade de default}  de um empréstimo é um problema de risco, embora estimar se o empréstimo irá ou não entrar em default seja, novamente, um problema de classificação binária. 
 
-Ao definir um modelo não fizemos hipóteses sobre $f$. Temos infinitos modelos para qualquer problema de modelagem não-trivial, todos candidatos válidos. Dentro dessa enorme variedade de modelos alguns são florestas aleatórias, outros são de regressões lineares. O que se faz ao estimar um modelo é escolher, dentro da classe de modelos que o procedimento de estimação comporta, o mais apropriado aos dados. Ao estimar uma árvore de decisão jamais obteremos um modelo de regressão linear, e vice-versa. Exatamente o que configura um modelo apropriado aos dados é uma questão que será discutida mais à frente.
+Ao definir um modelo não fizemos grandes hipóteses sobre $f$, apenas que se for diferenciável, sua derivada é uma grandeza de interesse. Temos infinitos modelos para qualquer problema de modelagem não-trivial, todos candidatos válidos. Dentro dessa enorme variedade de modelos alguns são florestas aleatórias, outros são de regressões lineares. O que se faz ao estimar um modelo é escolher, dentro da classe de modelos que o procedimento de estimação comporta, o mais apropriado aos dados. Ao estimar uma árvore de decisão jamais obteremos um modelo de regressão linear, e vice-versa. Exatamente o que configura um modelo apropriado aos dados é uma questão que será discutida mais à frente.
 
 Algumas propriedades interessantes de um modelo, como por exemplo , são trivialmente obtidas em modelos de regressão linear. Basta diferenciar um polinômio. Essa propriedade não vale em funções definidas em trechos, como veremos que uma Floresta Aleatória é. Efeitos parciais são centrais para várias aplicações de econometria e demandam uma maneira de aproxima-los em outras classes, potencialmente mais interessantes que os lineares, de modelos. 
 
@@ -45,14 +45,14 @@ Um grafo $G$ é dito uma \textbf{árvore} se para quaisquer dois vértices de $G
 \end{defi}
 
 
-\begin{figure}
+\begin{figure}[H]
     \centering
-    \includegraphics[scale = .55]{imagens/grafos.png}
-    \caption{Da esquerda para a direita: grafo conexo, um desconexo e uma árvore. Elaboração própria.}
-    \label{fig:arvore}
+    \captionbox{Da esquerda para a direita: grafo conexo, um desconexo e uma árvore.}{ \includegraphics[scale = .55]{imagens/grafos.png}}
+       \label{fig:grafos}
+    \fonte{Elaboração Própria}
 \end{figure}
 
-O resultado a seguir é interessante para nossa aplicação porque ilustra duas propriedades úteis de árvores.
+A Figura 1 ilustra algumas das definições anteriores. O resultado a seguir é interessante para nossa aplicação porque ilustra duas propriedades úteis de árvores.
 
 \begin{teo}
 $G$ é uma árvore se, e somente se, é conexo e acíclico.
@@ -69,7 +69,7 @@ Seja $G$ uma árvore. $G$ é trivialmente conexo pois por definição existe um 
 \end{itemize}
 
 
-Agora a volta. Tome $G$ conexo e acíclico, escolha dois vértices $v$ e $u$. Suponha por absurdo que exista mais de um caminho entre $v$ e $u$. Então necessariamente existe ciclo no grafo $G$, basta "ir" por um caminho e "voltar" por outro. $G$ é uma árvore.
+Agora a volta. Tome $G$ conexo e acíclico, escolha dois vértices $v$ e $u$. Suponha por absurdo que exista mais de um caminho entre $v$ e $u$. Então necessariamente existe ciclo no grafo $G$, basta 'ir' por um caminho e 'voltar' por outro. $G$ é uma árvore.
 $\blacksquare$
 \end{prova}
 
@@ -108,14 +108,14 @@ Cada pergunta aqui pode ser lida como uma função. 'O cliente tem menos de $k$ 
 
 Ao compor perguntas sucessivamente chegamos em uma espécie de fluxograma de decisão. Uma boa previsão de perfil para clientes, por exemplo, com menos de 30 anos que compram eletrônicos em 60\% das compras passadas e gastam 40\% a mais que a média por compra provavelmente é que são usuários ávidos de tecnologia. Ao passo que um usuário de 72 anos que teve 10\% das compras em eletrônicos e faz compras 40\% menores que a média provavelmente não. Note, no entanto, que um usuário idoso que compra apenas eletrônicos na plataforma muito provavelmente é entusiasta. A composição das repostas é importante.
 
-Supondo que toda pergunta seja sim ou não e que toda observação tenha uma resposta para toda pergunta, acabamos com uma estrutura recursiva. Nenhuma resposta individual altera as outras. Podemos elaborar com isso um fluxograma que tem a estrutura de um grafo árvore.
+Supondo que toda pergunta seja sim ou não e que toda observação tenha uma resposta para toda pergunta, acabamos com uma estrutura recursiva. Nenhuma resposta individual altera as outras. Podemos elaborar com isso um fluxograma que tem a estrutura de um grafo árvore, representado graficamente na Figura 2. 
 
 
-\begin{figure}
+\begin{figure}[H]
     \centering
-    \includegraphics[scale = .55]{imagens/arvore.png}
-    \caption{Um exemplo de árvore de decisão. Elaboração própria.}
-    \label{fig:arvore}
+    \captionbox{Um exemplo de árvore de decisão.}{ \includegraphics[scale = .55]{imagens/arvore.png}}
+        \label{fig:arvore}
+    \fonte{Elaboração Própria}
 \end{figure}
 
 Recapitulando: a composição de perguntas e suas combinações distintas de respostas levam à uma partição do espaço de mensuração. Cada partição é associada à uma regra de previsão/ classificação. Podemos representar essa lógica com uma árvore. O modelo resultante é a função definida por trechos que atribui a cada região do espaço de mensuração uma regra de previsão. Formalmente:
@@ -130,24 +130,21 @@ Seja $\X, \Y$ um par de espaços de mensuração e resposta. Uma \textbf{Árvore
 
 Uma empresa de tecnologia no setor imobiliário quer trabalhar em um modelo de precificação de aluguel. A ideia é que donos de imóveis recebam um valor sugerido compatível com o mercado e embutir isso no serviço.
  
- Um analista coletou dados de aluguel e algumas informações básicas do apartamento. Área, número de quartos, de banheiros, se aceita animais, se é mobiliado e em qual cidade está localizado. A média de algumas variáveis, por cidade, é:
+ Um analista coletou dados de aluguel e algumas informações básicas do apartamento. Área, número de quartos, de banheiros, se aceita animais, se é mobiliado e em qual cidade está localizado. A Tabela 1 contém médias para as variáveis mais relevantes, por cidade.
  
- \begin{center}
-      \input{tabelas/tabela_arvore_reg}
+ \input{tabelas/tabela_arvore_reg}
 
- \end{center}
+
+
  
-Abaixo, a árvore de regressão estimada. As porcentagens se referem à fração da amostra original que passa pelos testes até ali, o número é a média da variável resposta no grupo. 
- 
- \begin{figure}[H]
+\begin{figure}[H]
     \centering
-    \includegraphics[scale = .75]{imagens/arvore_decisao_houses.png}
-    \caption{Um exemplo de árvore de regressão. Elaboração própria.}
-    \label{fig:arvore_reg}
+    \captionbox{Um exemplo de árvore de regressão.}{\includegraphics[scale = .70]{imagens/arvore_decisao_houses.png}}
+        \label{fig:arvore_reg}
+    \fonte{Elaboração Própria}
 \end{figure}
 
-
-Um apartamento com mais de 127m$^2$ e mais de 4 banheiros tem aluguel presumido de 5812 reais. Já o aluguel de um com área menor, menos de 2 banheiros e sem mobília é presumido em 1594 reais.
+A Figura 3 mostra a árvore de regressão estimada. As porcentagens se referem à fração da amostra original que passa pelos testes até ali, o número é a média da variável resposta no grupo. Com as regras de previsão que estimamos, um apartamento com mais de 127m$^2$ e mais de 4 banheiros tem aluguel presumido de 5812 reais. Já o aluguel de um com área menor, menos de 2 banheiros e sem mobília é presumido em 1594 reais.
  
  
 \section{Noções de Estimação de uma Árvore de Decisão}
@@ -200,12 +197,13 @@ Essa troca entre viés e variância é uma espécie de restrição fundamental d
 
 Podemos realizar uma simulação de Monte Carlo para por esse problema em perspectiva. No próximo capítulo exploraremos melhor modelos lineares e sua estimação por Mínimos Quadrados Ordinários (OLS). Agora, vamos ilustrar dois comportamentos desagradáveis dos modelos de árvore disponíveis até aqui, é para mitiga-los que vamos dar o próximo passo. 
 
-Voltando ao exemplo da árvore de regressão para preços de casas. Vamos agora selecionar aleatoriamente várias amostras de apartamentos e treinar uma árvore e um modelo linear (estimado por OLS) em cada. Como comparativo, vamos prever o aluguel de um apartamento de $82m^2$, $2$ quartos, $1$ banheiro, no Rio de Janeiro, não-mobiliado e que aceite animais com cada um dos modelos e observar como as previsões se distribuem. 
+Voltando ao exemplo da árvore de regressão para preços de casas. Vamos agora selecionar aleatoriamente várias amostras de apartamentos e treinar uma árvore e um modelo linear (estimado por OLS) em cada. Como comparativo, vamos prever o aluguel de um apartamento de $82m^2$, $2$ quartos, $1$ banheiro, no Rio de Janeiro, não-mobiliado e que aceite animais com cada um dos modelos e observar como as previsões se distribuem, como mostramos na Figura 4.
 
 \begin{figure}[H]
     \centering
-    \captionbox{A distribuição das previsões por classe de modelo. Elaboração própria.}{\includegraphics[scale = .60]{imagens/exemplo_var_arvores.png}}
+    \captionbox{A distribuição das previsões por classe de modelo.}{\includegraphics[scale = .60]{imagens/exemplo_var_arvores.png}}
         \label{fig:arvore_var_ols}
+    \fonte{Elaboração Própria}
 \end{figure}
 
 
