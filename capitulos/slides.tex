@@ -18,6 +18,7 @@
 \setbeamertemplate{itemize item}{\color{red}$\blacksquare$}
 \usepackage{hyperref}
 \title{avance1}
+\bibliographystyle{plainnat}
 
 
 \newtheorem{defi}{Definição}
@@ -40,7 +41,9 @@
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\V}{\mathbb{V}}
 \newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Tau}{\mathrm{T}}
 \newcommand{\1}{\mathbb{I}}
+
 
 \title{Computação de Efeitos Marginais em Florestas Aleatórias}
 \institute[]{Universidade Federal Fluminense}
@@ -61,26 +64,31 @@
 %------------------------------------------------------
 
 
-
 \begin{frame}
-A previsão $\hat{y}$ é a constante  $\beta_0$ e o produto interno entre o vetor com explicativas e o de parâmetros estimados.
 
-\begin{align}
-    \hat{y} = \beta_0 + \sum_{i=1}^{k} \beta_i \mathbf{x}_i 
-\end{align}
+Uma breve e direcionada história do Machine Learning:
 
-Implicando que o efeito marginal de uma variável é constante na própria variável e independe do nível das outras.
-\end{frame}
-
-
-
-\begin{frame}
 \begin{itemize}
-    \item É possível adicionar funções não-lineares dos regressores originais para remediar esse problema
-    \item Ao custo de perder precisão na estimação dos parâmetros proporcionalmente ao número de adições
-    \item Algumas classes de modelos contornam esse tipo de limitação
-    \item Árvores de Decisão, por exemplo
+    \item McCulloch e Pitts (1943), o primeiro trabalho com circuitos de funções lineares
+    \item Rosenblatt (1958), funções lineares formando uma rede neural
+    \item Vapnik (1974), encontrar hiperplanos que minimizem alguma noção de distância
+    \item Breiman (1984), fatiar o domínio e atribuir regras de previsão
 \end{itemize}
+
+O ultimo modelo é nosso alvo.
+
+\end{frame}
+
+
+\begin{frame}
+
+As duas culturas de Breiman (2001):
+
+\begin{itemize}
+    \item O processo estocástico pode ser aproximado e inferência serve para ponderar a crença na aproximação
+    \item O processo estocástico pode ou não ser complexo demais para aproximar, use algoritmos que emulam processos de decisão inteligentes
+\end{itemize}
+    
 \end{frame}
 
 
@@ -88,13 +96,69 @@ Implicando que o efeito marginal de uma variável é constante na própria vari�
 
 
 \begin{frame}
-Pode-se elaborar uma série de perguntas sobre a observações em questão e designar à cada possível combinação de respostas uma regra de previsão ou classificação. 
 
-\BlankLine
-\BlankLine
-\BlankLine
+Vamos construir do chão uma árvore de decisão:
 
-Isso pode ser representado por uma série de bifurcações conectadas, um \textbf{grafo árvore.}
+\begin{defi}[Grafos]
+Um \textbf{grafo} é um par $G = (V, E)$, onde $V$ é um conjunto de elementos que chamamos de \textbf{vértices} e os de $E$, \textbf{arestas}. Se uma aresta conecta dois vértices, dizemos que é aresta incidente aos vértices. Notamos o conjunto de vértices incidentes a uma aresta $h$ pela função $\phi(h)$. O número de arestas que se liga a um vértice $v$ é chamado de seu \textbf{grau}.
+\end{defi}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{defi}[Traversabilidade]
+Um \textbf{passeio} é qualquer sequência de arestas $(h_1, h_2, ..., h_{n-1})$ para os quais há uma sequência de vértices $(v_1, v_2, ..., v_n)$ de forma que $\phi(h_i) = \{v_i, v_{i+1}\}$. Uma \textbf{trilha} é um passeio em que toda aresta é distinta. Um \textbf{caminho} é uma trilha em que todo vértice é distinto. Um \textbf{ciclo} é qualquer trilha que comece e termine no mesmo vértice. Um grafo que não admite ciclos é dito \textbf{acíclico}.
+\end{defi}
+\end{frame}
+
+\begin{frame}
+\begin{defi}[Conexidade]
+Um grafo $G$ é dito \textbf{conexo} se para qualquer par de vértices $x, y \in V \subset G$ há pelo menos um caminho cujo vértice inicial é $x$ e o terminal é $y$. Um subconjunto de vértices de um grafo desconexo em que vale esta propriedade é dito um \textbf{componente}.
+\end{defi}
+    
+\end{frame}
+
+
+
+\begin{frame}
+
+\begin{defi}[Árvores]
+Um grafo $G$ é dito uma \textbf{árvore} se para quaisquer dois vértices de $G$ existe um caminho único os ligando. Podemos escolher um vértice arbitrário e defini-lo como a \textbf{raiz} da árvore. Os vértices que não são a raiz e têm grau unitário são ditos \textbf{folhas}. Os com grau maior que $1$ que não são a raiz são chamados \textbf{nodos}. Um conjunto disjunto de árvores é dito uma \textbf{floresta}.
+\end{defi}
+
+    
+\end{frame}
+
+\begin{frame}
+    \begin{figure}[H]
+    \centering
+    \captionbox{Da esquerda para a direita: grafo conexo, um desconexo e uma árvore.}{ \includegraphics[scale = .45]{imagens/grafos.png}}
+       \label{fig:grafos}
+    \fonte{Elaboração Própria}
+\end{figure}
+\end{frame}
+
+
+\begin{frame}
+    \begin{teo}
+$G$ é uma árvore se, e somente se, é conexo e acíclico.
+\end{teo}
+\end{frame}
+
+
+
+\begin{frame}
+
+
+\begin{itemize}
+    \item Fazemos uma série de perguntas verdadeiro/falso em sequência 
+    \\
+    \\
+    e.g. Um cliente tem mais de $x$ anos de idade, compra mais de $y$ reais por mês, um tomador de crédito tem menos de $z\%$ de alavancagem etc
+    \item Representamos isso como uma série de bifurcações partindo de uma origem, graficamente temos uma \textbf{árvore}
+
+\end{itemize}
 \end{frame}
 
 
@@ -103,7 +167,7 @@ Isso pode ser representado por uma série de bifurcações conectadas, um \textb
 \begin{figure}[H]
     \centering
     \includegraphics[scale = .55]{imagens/arvore_decisao_houses.png}
-    \caption{Um exemplo de árvore de regressão. Elaboração própria.}
+    \caption{Um exemplo de árvore de regressão.}
     \label{fig:arvore_reg}
 \end{figure}
 \end{frame}
@@ -124,7 +188,24 @@ Basta repetir o processo da partilha até que algum dos nodos filhos tenha menos
 
 \end{frame}
 
+\begin{frame}
+\begin{itemize}
+    \item \textbf{Nenhum teste cumpre um valor mínimo para a métrica de qualidade} \newline Cada pergunta respondida diminui a informação disponível, tornando o ganho de informação cada vez menor. Alguma hora, a cargo do modelador definir, uma pergunta adicional provavelmente custa mais em parcimônia e computação do que devolve em acurácia de previsão. É hora de gerar uma folha.
+    
+    \item \textbf{O número de perguntas feitas chegou ao máximo} \newline
+    Uma maneira de forçar parcimônia do modelo é limitar o número de perguntas. Algumas implementações diferenciam o número total de perguntas do número de perguntas sucessivas.  
+\end{itemize}
+    
+\end{frame}
 
+\begin{frame} 
+\begin{itemize}
+   \item \textbf{O número de observações do nodo não cumpre um mínimo} \newline 
+ 
+    A amostra que chegou no nodo está abaixo de um mínimo. Por ser um dos mais simples e ter uma relação diretamente proporcional com o número de regras de previsão/classificação distintos é um dos mais comuns na literatura.
+\end{itemize}
+    
+\end{frame}
 
 \begin{frame}
 
@@ -138,16 +219,23 @@ Basta repetir o processo da partilha até que algum dos nodos filhos tenha menos
     \I_E(\tau) = H(n_i) - P(a\, |\, \tau) \,H(n_i \, |\,  a) - P(b \,| \,\tau)\, H(n_i \, |\,  b)
 \end{align}
 
-\textbf{Impureza de Gini}, definida como:
+Escolhemos, dentro do conjunto de testes $\mathcal{T}$:
+
+\begin{align}
+    \tau^*(n_i) = \underset{\tau \in \mathcal{T}}{\text{arg max}} \, \, \I_E(\tau)
+\end{align}
+
+
+\textbf{Impureza de Gini}:
  
  \begin{align}
-     \I_G(\tau) = \sum_{i = 1}^J p_i ( 1  - p_i) =  1 - \sum_{i = 1}^J p_i^2
+     G(n_i) = \sum_{i = 1}^J p_i ( 1  - p_i) =  1 - \sum_{i = 1}^J p_i^2
  \end{align}
 
 
 \end{frame}
 
-
+% FALAR DOS GATILHOS DE TRAVA AQUI
 
 \begin{frame}
 \textbf{Problema:} árvores de decisão performam bem com poucas classes e muito mal em regressão. A variância cresce não-linearmente no número de regras de classificação. 
@@ -156,7 +244,7 @@ Basta repetir o processo da partilha até que algum dos nodos filhos tenha menos
 \begin{figure}[H]
     \centering
     \includegraphics[scale = .40]{imagens/exemplo_var_arvores.png}
-    \caption{A distribuição das previsões por classe de modelo. Elaboração própria.}
+    \caption{A distribuição das previsões por classe de modelo.}
     \label{fig:arvore_var_ols}
 \end{figure}
 \end{frame}
@@ -176,8 +264,6 @@ Seja $(\textbf{X}_1, ..., \textbf{X}_n)$ uma amostra independente e identicament
 \end{frame}
 
 
-
-
 \begin{frame}
 Maneiras de mitigar a variância da floresta:
 
@@ -193,21 +279,58 @@ Maneiras de mitigar a variância da floresta:
 \begin{frame}
 O que ainda não temos? Interpretabilidade. O modelo não entrega os efeitos marginais como em modelos lineares.
 
+\begin{align}
+    \hat{y}_i = \beta_0 + \sum_{j=1}^{k} \beta_j \mathbf{x}_{ij} 
+\end{align}
 
 
 \begin{align}
-    \frac{\partial \hat{y}}{\partial x_i} = \beta_i
+    \frac{\partial \hat{y}_i}{\partial \mathbf{x}_{ij} } = \beta_j
 \end{align}
+\end{frame}
+
+\begin{frame}
+
+A forma funcional de uma árvore de decisão é de pouco interesse. Tendo uma regra de previsão $\hat{y}_i$ para cada grupo possivel de $k$ opções:
+
+\[
+    \hat{y}(\mathbf{x}) = \left.
+    \begin{cases}
+    \hat{y}_1  ,\,\mathbf{x} \in \text{Grupo 1} \\
+    \hat{y}_2  , \,\mathbf{x} \in \text{Grupo 2} \\
+    ...\\
+    \hat{y}_k  ,\, \mathbf{x} \in \text{Grupo $k$}\\
+    \end{cases}
+    
+\]
+   
 \end{frame}
 
 
 \begin{frame}
-Uma abordagem é simular uma observação de referência e criar cópias adicionando pequenas variações na variável de interesse. Podemos treinar várias florestas e construir curvas de previsões. 
 
-\begin{figure}[H]
+\textbf{Desejo:} Ter uma curva que em caso de um processo verdadeiramente linear seja constante no mesmo nível de $\beta_j$ e, caso não, aproxime o efeito marginal localmente.
+\newline
+
+\textbf{Proposta:} Simular uma observação de referência e uma grade de observações ao seu redor para computar as previsões de uma floresta treinada nessa grade.
+
+
+\end{frame}
+
+\begin{frame}
+Em um experimento controlado onde sabemos que os efeitos marginais são constantes, o que acontece?
+
+\includegraphics[scale = .50]{imagens/exemplo_freddy_fake_data.png}
+    
+\end{frame}
+
+
+\begin{frame}
+    \begin{figure}[H]
     \centering
-    \includegraphics[scale = .25]{imagens/curvas_previsoes_rf.png}
-    \caption{Curvas de previsões, uma para cada modelo. Elaboração própria.}
+    
+    \includegraphics[scale = .35]{imagens/exemplo_freddy_efeitos_marginais.png}
+
 \end{figure}
 
 \end{frame}
@@ -217,12 +340,99 @@ Uma abordagem é simular uma observação de referência e criar cópias adicion
 
 
 
-
 \begin{frame}
+E em um ambiente não-controlado? 
 
 \end{frame}
 
+\begin{frame}
+    \begin{itemize}
+    \item \textbf{Razão Performance-Interquatil (RPIQ)} \newline
+    Definida como o desvio-padrão das previsões dividido pela amplitude interquartil observada da resposta.
+    
+    \item \textbf{Coeficiente de Concordância de Correlação (CCC)} \newline
+    Diferença entre a identidade e a reta de regressão dos valores preditos nos observados. 
+    
+    \item \textbf{Erro Médio Absoluto (MAE)} \newline
+    A média das diferenças entre previsões e valores observados. 
+    
 
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize} 
+    \item \textbf{Erro Médio Percentual (MPE)} \newline
+    A média das diferenças entre previsões e valores observados ponderada pela média da resposta.
+    
+    \item \textbf{Coeficiente de Determinação (R2)} \newline
+    Quadrado da correlação entre valores preditos e observados.
+    
+    \item \textbf{Raiz do Erro Quadrático Médio (RMSE)} \newline
+    Raiz da média dos quadrados dos desvios das previsões em relação aos valores observados.
+    
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\begin{itemize}
+    \item \textbf{Sensitividade/ Recall} \newline
+    Em classificação binária, a Sensitividade é a proporção dos casos positivos que são corretamente identificados.
+    \item \textbf{Especificidade} \newline
+    Em classificação binária, a Especificidade é a proporção dos casos negativos que são corretamente identificados.
+    \item \textbf{Acurácia} \newline
+    A fração de casos corretamente identificados. 
+    \item \textbf{Precisão/ Valor Preditivo Positivo} \newline
+    O número de observados positivos dividido pelo número de preditos positivos.
+    \item \textbf{F1-Score} \newline
+    Média harmônia da Precisão e da Sensitividade
+\end{itemize}
+    
+\end{frame}
+
+\begin{frame}
+\includegraphics[scale = .60]{imagens/random_grid.png}
+    
+\end{frame}
+
+
+\begin{frame}
+
+\includegraphics[scale = .50]{imagens/cross_v_mtry.png}
+    
+\end{frame}
+
+
+\begin{frame}
+
+\includegraphics[scale = .45]{imagens/crossv_min.png}
+    
+\end{frame}
+
+
+\begin{frame}
+
+\begin{figure}[H]
+    \label{ols_marg}
+    \centering
+    
+    \includegraphics[scale = .45]{imagens/efeitos_marginais_lm.png}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+\begin{figure}[H]
+    \centering
+    
+  \includegraphics[scale = .45]{imagens/efeitos_marginais_RF.png}
+\end{figure}
+\end{frame}
+
+
+\bibliography{referencias.bib}
 
 
 

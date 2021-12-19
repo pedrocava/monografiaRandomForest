@@ -4,13 +4,16 @@
 Este trabalho se compromete com reprodutibilidade e ciência aberta. Todo o código de estimação de modelos, preparação dos dados, tabelas, imagens e implementação do procedimento está disponível no repositório https://github.com/pedrocava/monografiaRandomForest. 
 
 
-Foi demonstrado como construir uma floresta aleatória partindo de primeiros princípios. Depois, através de notação matricial clássica no campo, como e o que são modelos lineares. A problemática de estimar efeitos marginais foi apresentada e um procedimento computacionalmente simples para isso em seguida, demonstrando como algumas nuances passavam por cima dos modelos lineares.
+Foi demonstrado como construir uma floresta aleatória partindo de primeiros princípios. Usando conceitos simples de Teoria dos Grafos, construímos uma representação matemática para processos de decisão e exploramos alguns procedimentos de escolha dessas regras a partir de dados. Tendo um processo de estimação, vimos como algums propriedades estatísticas de árvores de decisão, como sua alta variância, inibiam o uso aplicado. Para adereçar isso, agregamos várias árvores em uma floresta aleatória.
+
+
+Partindo daí, foi ilustrada a Teoria Clássica de Regressão Linear. Vimos como encontrar os efeitos marginais nessa classe de modelos era muito simples, assim como era problemático recuperar essas grandezas de um modelo de floresta aleatória. Um procedimento computacionalmente simples para isso foi apresentado. Aplicamos o procedimento em um experimento controlado e em dados coletados do mundo real, para notar que não só o procedimento aproxima os mesmos efeitos marginais de um modelo linear com razoável precisão, bem como capturou nuances nos preços de alugueis que eram perdidas por modelos lineares.
 
 
 Uma limitação não-resolvida da técnica é a inferência dos efeitos marginais computados. É possível distingui-los estatisticamente de zero com algum teste de hipótese? Isso equivale a estabelecer uma ponte entre as duas culturas de \citeonline{breiman2001statistical}. A técnica aqui desenvolvida pode ser estendida para aceitar testes apropriados, aproximando as duas abordagens.
 
 
-Não parece um problema intratável. Se florestas aleatórias têm distribuição normal e estimamos várias, então temos dados e podemos fazer inferência se conhecermos a variância da floresta. Não é um problema trivial, mas está ao alcance da pesquisa. Essa avenida de pesquisa é provavelmente a de maior interesse ao econometrista aplicado e parte diretamente dos princípios elaborados nesta monografia.
+Não parece um problema intratável. Se florestas aleatórias têm distribuição normal e estimamos várias, então temos dados e podemos fazer inferência se conhecermos a variância da floresta. Não é um problema trivial, mas está ao alcance da pesquisa. Essa avenida de pesquisa é provavelmente a de maior interesse ao econometrista aplicado e parte diretamente dos princípios elaborados nesta monografia.S
 
 
 

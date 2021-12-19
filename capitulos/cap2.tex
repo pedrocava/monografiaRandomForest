@@ -9,7 +9,7 @@ Neste capítulo desenvolvemos o modelo de floresta aleatória partindo de primei
 
 \section{Noções de Aprendizado de Máquina Supervisionado}
 
-Primeiro precisamos de algumas definições caras ao contexto de Aprendizado Supervisionado. Uma \textbf{observação} é um par de realizações de duas variáveis aleatórias. O par consiste de $x \in \R^k$, contendo $k$ \textbf{variáveis explicativas} e $y \in \R$ que chamaremos de \textbf{variável resposta}. Com algumas convenções é possível representar dados não-numéricos. Variáveis binárias podem ser representadas por pares $0$ e $1$, então usar 'apenas' números reais não é uma grande limitação. O conjunto de vetores possíveis de serem medidos, o produto cartesiano de todos os espaços amostrais das variáveis aleatórias contidas no vetor com variáveis explicativas, é o \textbf{Espaço de Mensuração} $\mathcal{X}$ e $\mathcal{Y}$ o \textbf{Espaço de Resposta}, equivalente ao espaço amostral da variável resposta. Por exemplo: se uma dimensão deste espaço representa idade, entendemos que seu suporte está nos inteiros positivos entre $0$ e, digamos, $120$. Se uma variável é uma categoria binária, então seu suporte está em $0$ e $1$. 
+Primeiro precisamos de algumas definições caras ao contexto de Aprendizado Supervisionado. Uma \textbf{observação} é um par de realizações de duas variáveis aleatórias. O par consiste em $x \in \R^k$, contendo $k$ \textbf{variáveis explicativas} e $y \in \R$ que chamaremos de \textbf{variável resposta}. Com algumas convenções é possível representar dados não-numéricos. Variáveis binárias podem ser representadas por pares $0$ e $1$, então usar 'apenas' números reais não é uma grande limitação. O conjunto de vetores possíveis de serem medidos, o produto cartesiano de todos os espaços amostrais das variáveis aleatórias contidas no vetor com variáveis explicativas, é o \textbf{Espaço de Mensuração} $\mathcal{X}$ e $\mathcal{Y}$ o \textbf{Espaço de Resposta}, equivalente ao espaço amostral da variável resposta. Por exemplo: se uma dimensão deste espaço representa idade, entendemos que seu suporte está nos inteiros positivos entre $0$ e, digamos, $120$. Se uma variável é uma categoria binária, então seu suporte está em $0$ e $1$. 
 
 Munido de dados relacionando mensurações de variáveis e explicativas e com uma resposta a ser estudada, um modelador está interessado em um algoritmo que relacione medidas dentro de $\X$ com previsões para valores plausíveis de $\Y$. Essa representação matemática representando regras de previsão é o objeto fundamental do Aprendizado de Máquinas.
 
@@ -19,16 +19,16 @@ Um \textbf{modelo} é uma função $f: \mathcal{X} \to \mathcal{Y}$. Se $\mathca
 
 Classificar um paciente como sendo ou não portador de uma doença é  um problema de classificação binária. Classificar o tipo de câncer a partir de medidas de um tumor é um problema de classificação multiclasse. Estimar o preço de um imóvel com base em suas características é um problema de regressão. Estimar a \textit{probabilidade de default}  de um empréstimo é um problema de risco, embora estimar se o empréstimo irá ou não entrar em default seja, novamente, um problema de classificação binária. 
 
-Ao definir um modelo não fizemos grandes hipóteses sobre $f$, apenas que se for diferenciável, sua derivada é uma grandeza de interesse. Temos infinitos modelos para qualquer problema de modelagem não-trivial, todos candidatos válidos. Dentro dessa enorme variedade de modelos alguns são florestas aleatórias, outros são de regressões lineares. O que se faz ao estimar um modelo é escolher, dentro da classe de modelos que o procedimento de estimação comporta, o mais apropriado aos dados. Ao estimar uma árvore de decisão jamais obteremos um modelo de regressão linear, e vice-versa. Exatamente o que configura um modelo apropriado aos dados é uma questão que será discutida mais à frente.
+Ao definir um modelo não fizemos grandes hipóteses sobre $f$, apenas que se for diferenciável, sua derivada é uma grandeza de interesse. Temos infinitos modelos para qualquer problema de modelagem não-trivial, todos candidatos válidos. Dentro dessa enorme variedade de modelos alguns são florestas aleatórias, outros são de regressões lineares. O que se faz ao estimar um modelo é escolher, na classe de modelos que o procedimento de estimação comporta, o mais apropriado aos dados. Ao estimar uma árvore de decisão jamais obteremos um modelo de regressão linear, e vice-versa. Exatamente o que configura um modelo apropriado aos dados é uma questão que será discutida mais à frente.
 
-Algumas propriedades interessantes de um modelo, como por exemplo , são trivialmente obtidas em modelos de regressão linear. Basta diferenciar um polinômio. Essa propriedade não vale em funções definidas em trechos, como veremos que uma Floresta Aleatória é. Efeitos parciais são centrais para várias aplicações de econometria e demandam uma maneira de aproxima-los em outras classes, potencialmente mais interessantes que os lineares, de modelos. 
+Algumas propriedades interessantes de um modelo, como, por exemplo, são trivialmente obtidas em modelos de regressão linear. Basta diferenciar um polinômio. Essa propriedade não vale em funções definidas em trechos, como veremos que uma Floresta Aleatória é. Efeitos parciais são centrais para várias aplicações de econometria e demandam uma maneira de aproxima-los em outras classes, potencialmente mais interessantes que os lineares, de modelos. 
 
 \section{Um pouco de Teoria dos Grafos}
 
 Vamos estabelecer alguns fatos básicos de Teoria dos Grafos, caracterizar árvores nesse contexto e oferecer um resultado com duas condições razoavelmente fracas e suficientes para estabelecer que um grafo é uma árvore. A apresentação seguirá \citeonline{chartrand2013first}. Para um tratamento alternativo e mais amplo de Teoria dos Grafos o leitor pode verificar \citeonline{bollobas2013modern}.
 
 \begin{defi}[Grafos]
-Um \textbf{grafo} é um par $G = (V, E)$, onde $V$ é um conjunto de elementos que chamamos de \textbf{vértices} e os de $E$, \textbf{arestas}. Se uma aresta conecta dois vértices, dizemos que é aresta incidente aos vértices. Notamos o conjunto de vértices incidentes a uma aresta $h$ pela função $\phi(h)$. O número de arestas que se liga a um vértice $v$ é chamado de seu \textbf{grau}.
+Um \textbf{grafo} é um par $G = (V, E)$, onde $V$ é um conjunto de elementos que chamamos \textbf{vértices} e os de $E$, \textbf{arestas}. Se uma aresta conecta dois vértices, dizemos ser aresta incidente aos vértices. Notamos o conjunto de vértices incidentes a uma aresta $h$ pela função $\phi(h)$. O número de arestas que se liga a um vértice $v$ é chamado de seu \textbf{grau}.
 \end{defi}
 
 \begin{defi}[Rotas em Grafos]
@@ -60,12 +60,12 @@ $G$ é uma árvore se, e somente se, é conexo e acíclico.
 
 \begin{prova}
 
-Seja $G$ uma árvore. $G$ é trivialmente conexo pois por definição existe um caminho entre qualquer par de vértices. Suponha por absurdo que $G$ admita um ciclo. Então existe uma trilha começando e terminando em um vértice $v$ de $G$. Escolha um vértice qualquer $u$ desse ciclo. Então existe um caminho $v \to u $ e uma trilha (possivelmente um caminho) $u \to v$. Dois casos ocorrem:
+Seja $G$ uma árvore. $G$ é trivialmente conexo, pois por definição existe um caminho entre qualquer par de vértices. Suponha por absurdo que $G$ admita um ciclo. Então existe uma trilha começando e terminando em um vértice $v$ de $G$. Escolha um vértice qualquer $u$ desse ciclo. Então existe um caminho $v \to u $ e uma trilha (possivelmente um caminho) $u \to v$. Dois casos ocorrem:
 
 \begin{itemize}
-    \item Se $u \to v$ é uma trilha, então podemos entende-la como a união de dois caminhos $u \to w$ e $w \to v$. Note que nesse caso podemos truncar o caminho $v \to u$ em $w$ e estabelecemos dois caminhos distintos entre $v$ e $w$. Em contradição com $G$ ser uma árvore.
+    \item Se $u \to v$ é uma trilha, é também a união de dois caminhos $u \to w$ e $w \to v$. Note que nesse caso podemos truncar o caminho $v \to u$ em $w$ e estabelecemos dois caminhos distintos entre $v$ e $w$. Em contradição com $G$ ser uma árvore.
 
-    \item Se $u \to v$ é um caminho então a contradição é imediata pois existiriam dois caminhos entre $u$ e $v$.
+    \item Se $u \to v$ é um caminho então a contradição é imediata, pois existiriam dois caminhos entre $u$ e $v$.
 \end{itemize}
 
 
@@ -90,13 +90,13 @@ Vamos agora cobrir duas situações hipotéticas que ilustram como essas defini�
 
 \subsection{Classificação Binária}
 
- A unidade de email marketing de uma grande empresa de e-commerce quer segmentar clientes entre entusiastas de tecnologia, que engajarão felizmente com campanhas de aparelhos novos, e usuários relutantes de tecnologia, que não precisam receber esse contato nas suas caixa de email. Uma equipe selecionou algumas centenas de clientes aleatoriamente e manualmente os classificou usando entrevistas e análise de histórico de compras, um processo caro, demorado e de profundidade. Cabe agora a um analista tentar reproduzir os esforços manuais e não-escaláveis da equipe em um modelo preditivo que pode ser aplicado na base verdadeira de clientes usando os resultados do estudo.
+ A unidade de email marketing de uma grande empresa de e-commerce quer segmentar clientes entre entusiastas de tecnologia, que engajarão felizmente com campanhas de aparelhos novos, e usuários relutantes de tecnologia, que não precisam receber esse contato nas suas caixas de email. Uma equipe selecionou algumas centenas de clientes aleatoriamente e manualmente os classificou usando entrevistas e análise de histórico de compras, um processo caro, demorado e de profundidade. Cabe agora a um analista tentar reproduzir os esforços manuais e não-escaláveis da equipe em um modelo preditivo que pode ser aplicado na base verdadeira de clientes usando os resultados do estudo.
 
 O analista consultou o banco de dados da empresa e montou uma amostra contendo os seguintes dados: idade do cliente, percentual das compras em eletrônicos, valor médio da compra. Estamos falando de um espaço de mensuração $\X \subset \R^3$. Como a variável resposta é binária, $\Y = \{0, 1\}$. 
 
-Um procedimento possível seria primeiro estimar por mínimos quadrados generalizados um modelo para probabilidade uma observação pertencer à uma classe $f: \R^3 \to [0, \, 1]$ e depois alguma maneira de traduzir uma probabilidade presumida pelo modelo à uma classe $g: [0, \, 1] \to \{0, 1\}$. O modelo final, neste caso, seria a composição $g \circ f: \R^3 \to \{0, 1\} $.
+Um procedimento possível seria primeiro estimar por mínimos quadrados generalizados um modelo para probabilidade uma observação pertencer a uma classe $f: \R^3 \to [0, \, 1]$ e depois alguma maneira de traduzir uma probabilidade presumida pelo modelo a uma classe $g: [0, \, 1] \to \{0, 1\}$. O modelo final, neste caso, seria a composição $g \circ f: \R^3 \to \{0, 1\} $.
 
-Modelos têm hipóteses. Nesse caso uma delas é que as variáveis explicativas são independentes, no sentido de que sua distribuição conjunta é apenas o produto de suas distribuições marginais. A intuição do analista diz que, na verdade, há sim interações entre renda e idade por exemplo. Um público mais velho que faz grandes compras em eletrônicos provavelmente é tão entusiasta quanto estudantes universitários que compram quase exclusivamente eletrônicos. O analista então pode seguir por outro caminho e enumerar uma série de perguntas sobre cada observação antes de emitir um julgamento:
+Modelos têm hipóteses. Nesse caso uma delas é que as variáveis explicativas são independentes, no sentido de que sua distribuição conjunta é apenas o produto de suas distribuições marginais. A intuição do analista diz haver interações entre renda e idade, por exemplo. Um público mais velho que faz grandes compras em eletrônicos provavelmente é tão entusiasta quanto estudantes universitários que compram quase exclusivamente eletrônicos. O analista então pode seguir por outro caminho e enumerar uma série de perguntas sobre cada observação antes de emitir um julgamento:
 
 \begin{itemize}
     \item O cliente tem menos de 30 anos?
@@ -104,9 +104,9 @@ Modelos têm hipóteses. Nesse caso uma delas é que as variáveis explicativas 
     \item A compra média desse cliente é maior que 250 reais?
 \end{itemize}
 
-Cada pergunta aqui pode ser lida como uma função. 'O cliente tem menos de $k$ anos de idade?' é, computacionalmente,  $f: \R^2_+ \to \{0, 1\}$. Algumas perguntas são mais informativas que outras. Afinal, um usuário teve mais de 90\% das compras em eletrônicos é quase certamente um entusiasta de tecnologia, enquanto saber que um usuário tem mais de 20 anos provavelmente não é tão informativo. 
+Cada pergunta aqui pode ser lida como uma função. 'O cliente tem menos de $k$ anos?' é, computacionalmente,  $f: \R^2_+ \to \{0, 1\}$. Algumas perguntas são mais informativas que outras. Afinal, um usuário teve mais de 90\% das compras em eletrônicos é quase certamente um entusiasta de tecnologia, enquanto saber que um usuário tem mais de 20 anos provavelmente não é tão informativo. 
 
-Ao compor perguntas sucessivamente chegamos em uma espécie de fluxograma de decisão. Uma boa previsão de perfil para clientes, por exemplo, com menos de 30 anos que compram eletrônicos em 60\% das compras passadas e gastam 40\% a mais que a média por compra provavelmente é que são usuários ávidos de tecnologia. Ao passo que um usuário de 72 anos que teve 10\% das compras em eletrônicos e faz compras 40\% menores que a média provavelmente não. Note, no entanto, que um usuário idoso que compra apenas eletrônicos na plataforma muito provavelmente é entusiasta. A composição das repostas é importante.
+Ao compor perguntas sucessivamente chegamos a uma espécie de fluxograma de decisão. Uma boa previsão de perfil para clientes, por exemplo, com menos de 30 anos que compram eletrônicos em 60\% das compras passadas e gastam 40\% a mais que a média por compra provavelmente é que são usuários ávidos de tecnologia. Ao passo que um usuário de 72 anos que teve 10\% das compras em eletrônicos e faz compras 40\% menores que a média provavelmente não. Note, no entanto, que um usuário idoso que compra apenas eletrônicos na plataforma muito provavelmente é entusiasta. A composição das repostas é importante.
 
 Supondo que toda pergunta seja sim ou não e que toda observação tenha uma resposta para toda pergunta, acabamos com uma estrutura recursiva. Nenhuma resposta individual altera as outras. Podemos elaborar com isso um fluxograma que tem a estrutura de um grafo árvore, representado graficamente na Figura 2. 
 
@@ -118,11 +118,11 @@ Supondo que toda pergunta seja sim ou não e que toda observação tenha uma res
     \fonte{Elaboração Própria}
 \end{figure}
 
-Recapitulando: a composição de perguntas e suas combinações distintas de respostas levam à uma partição do espaço de mensuração. Cada partição é associada à uma regra de previsão/ classificação. Podemos representar essa lógica com uma árvore. O modelo resultante é a função definida por trechos que atribui a cada região do espaço de mensuração uma regra de previsão. Formalmente:
+Recapitulando: a composição de perguntas e suas combinações distintas de respostas levam a uma partição do espaço de mensuração. Cada partição é associada a uma regra de previsão/ classificação. Podemos representar essa lógica com uma árvore. O modelo resultante é a função definida por trechos que atribui a cada região do espaço de mensuração uma regra de previsão. Formalmente:
 
 
 \begin{defi}[Modelos de Árvore]
-Seja $\X, \Y$ um par de espaços de mensuração e resposta. Uma \textbf{Árvore de Decisão} é uma função definida por trechos $\A: \X \to \Y$, onde $\Y$ é enumerável. No caso em que $\Y$ ao, ao invés de enumerável, um subconjunto convexo da reta chamamos de \textbf{Árvore de Regressão}. Se $\Y = [0, 1]$ é comum se referir à uma \textbf{Árvore de Risco}.
+Seja $\X, \Y$ um par de espaços de mensuração e resposta. Uma \textbf{Árvore de Decisão} é uma função definida por trechos $\A: \X \to \Y$, onde $\Y$ é enumerável. No caso em que $\Y$ ao, ao invés de enumerável, um subconjunto convexo da reta chamamos \textbf{Árvore de Regressão}. Se $\Y = [0, 1]$ é comum se referir a uma \textbf{Árvore de Risco}.
 \end{defi}
 
 
@@ -144,7 +144,7 @@ Uma empresa de tecnologia no setor imobiliário quer trabalhar em um modelo de p
     \fonte{Elaboração Própria}
 \end{figure}
 
-A Figura 3 mostra a árvore de regressão estimada. As porcentagens se referem à fração da amostra original que passa pelos testes até ali, o número é a média da variável resposta no grupo. Com as regras de previsão que estimamos, um apartamento com mais de 127m$^2$ e mais de 4 banheiros tem aluguel presumido de 5812 reais. Já o aluguel de um com área menor, menos de 2 banheiros e sem mobília é presumido em 1594 reais.
+A Figura 3 mostra a árvore de regressão estimada. As porcentagens se referem à fração da amostra original que passa pelos testes até ali, o número é a média da variável resposta no grupo. Com as regras de previsão que estimamos, um apartamento com mais de 127 m$^2$ e mais de 4 banheiros tem aluguel presumido de 5812 reais. Já o aluguel de um com área menor, menos de 2 banheiros e sem mobília é presumido em 1594 reais.
  
  
 \section{Noções de Estimação de uma Árvore de Decisão}
@@ -157,10 +157,10 @@ Um algoritmo de divisão de conjuntos que opere dividindo em subconjuntos os res
 
 Cada sequência de perguntas pode ser entendida como uma sequência de testes $\tau_i$, a partição induzida pelas perguntas sendo representada por uma árvore $\A$ onde todo vértice que não seja uma folha tem um $\tau_i$ associado. Estimar a árvore é encontrar quais são as perguntas mais apropriadas, dado uma amostra. 
 
-Começamos com a amostra completa e enunciamos uma série de perguntas sobre ela - um procedimento computacionalmente intensivo por isso a estimação é quase sempre estocástica. Um subconjunto aleatório das perguntas possíveis é testado. Escolhemos a pergunta que melhor performa e partimos para os nodos ''filhos''. Repetimos o processo em cada um até algum gatilho ser ativado, então usamos o grupo para definir a regra de classificação/previsão. Em classificação podemos usar a classe mais comum no grupo, em regressão podemos usar a média ou mediana da variável resposta dentro do grupo. Três gatilhos usuais:
+Começamos com a amostra completa e enunciamos uma série de perguntas sobre ela — um procedimento computacionalmente intensivo por isso a estimação é quase sempre estocástica. Um subconjunto aleatório das perguntas possíveis é testado. Escolhemos a pergunta que melhor performa e partimos para os nodos ''filhos''. Repetimos o processo em cada um até algum gatilho ser ativado, então usamos o grupo para definir a regra de classificação/previsão. Em classificação podemos usar a classe mais comum no grupo, em regressão podemos usar a média ou mediana da variável resposta no grupo. Três gatilhos usuais:
 
 \begin{itemize}
-    \item \textbf{Nenhum teste cumpre um valor mínimo para a métrica de qualidade} \newline Cada pergunta respondida diminui a informação disponível, tornando o ganho de informação cada vez menor. Alguma hora, a cargo do modelador definir, uma pergunta adicional provavelmente custa mais em parcimônia e computação do que devolve em acurácia de previsão. É hora de gerar uma folha.
+    \item \textbf{Nenhum teste cumpre um valor mínimo para a métrica de qualidade} \newline Cada pergunta respondida diminui a informação disponível, tornando o ganho de informação decrescente. Alguma hora, a cargo do modelador definir, uma pergunta adicional provavelmente custa mais em parcimônia e computação do que devolve em acurácia de previsão. É hora de gerar uma folha.
     
     \item \textbf{O número de perguntas feitas chegou ao máximo} \newline
     Uma maneira de forçar parcimônia do modelo é limitar o número de perguntas. Algumas implementações diferenciam o número total de perguntas do número de perguntas sucessivas.  
@@ -174,7 +174,7 @@ Começamos com a amostra completa e enunciamos uma série de perguntas sobre ela
 
 \subsection{Métricas de Informação}
 
-Voltando ao primeiro exemplo, a pergunta ''usuário tem mais de 90\% das compras em eletrônicos?'' provavelmente segrega muito bem as classes. É difícil conceber que um usuário assim não seja entusiasta de eletrônicos, ou pelo menos sustente alguém que é. Ela não é, no entanto, parcimoniosa. O tamanho do grupo de clientes que retorna positivo para essa pergunta dificilmente será relevante e por isso essa pergunta provavelmente não será um bom insumo para uma regra de classificação. Pense também no grupo que \textbf{não} retorna positivo. Ele é provavelmente pouco segregado. Uma pergunta ''melhor'', espera-se, renderia dois grupos bem segregados e de tamanhos não muito díspares. 
+Voltando ao primeiro exemplo, a pergunta ''usuário tem mais de 90\% das compras em eletrônicos?'' provavelmente segrega muito bem as classes. É difícil conceber que um usuário assim não seja entusiasta de eletrônicos, ou pelo menos sustente alguém que é. Ela não é, no entanto, parcimoniosa. O tamanho do grupo de clientes que retorna positivo para essa pergunta dificilmente será relevante por isso essa pergunta provavelmente não será um bom insumo para uma regra de classificação. Pense também no grupo que \textbf{não} retorna positivo. Ele é provavelmente pouco segregado. Uma pergunta ''melhor'', espera-se, renderia dois grupos bem segregados e de tamanhos não muito díspares. 
 
 Começando pelo contexto de classificação, suponha $J$ classes. Uma primeira métrica que respeita esse equilíbrio entre divisão e parcimônia é o \textbf{Ganho de Informação} \cite{kullback1951information}. Podemos expressa-lo como a diferença entre a entropia do nodo ''pai'' da divisão e a soma ponderada da entropia nos nodos filhos. 
 
@@ -197,7 +197,7 @@ Essa troca entre viés e variância é uma espécie de restrição fundamental d
 
 Podemos realizar uma simulação de Monte Carlo para por esse problema em perspectiva. No próximo capítulo exploraremos melhor modelos lineares e sua estimação por Mínimos Quadrados Ordinários (OLS). Agora, vamos ilustrar dois comportamentos desagradáveis dos modelos de árvore disponíveis até aqui, é para mitiga-los que vamos dar o próximo passo. 
 
-Voltando ao exemplo da árvore de regressão para preços de casas. Vamos agora selecionar aleatoriamente várias amostras de apartamentos e treinar uma árvore e um modelo linear (estimado por OLS) em cada. Como comparativo, vamos prever o aluguel de um apartamento de $82m^2$, $2$ quartos, $1$ banheiro, no Rio de Janeiro, não-mobiliado e que aceite animais com cada um dos modelos e observar como as previsões se distribuem, como mostramos na Figura 4.
+Voltando ao exemplo da árvore de regressão para preços de casas. Vamos agora selecionar aleatoriamente várias amostras de apartamentos e treinar uma árvore e um modelo linear (estimado por OLS) em cada. Como comparativo, vamos prever o aluguel de um apartamento de $82m^2$, $2$ quartos, $1$ banheiro, no Rio de Janeiro, não-mobiliado e aceite animais com cada um dos modelos e observar como as previsões se distribuem, como mostramos na Figura 4.
 
 \begin{figure}[H]
     \centering
@@ -207,7 +207,7 @@ Voltando ao exemplo da árvore de regressão para preços de casas. Vamos agora 
 \end{figure}
 
 
-O que acontece se ao invés de treinarmos \textbf{uma} árvore, treinar \textbf{várias} e usar a alguma agregação das previsões individuais como previsão final? Em caso de classificação basta usar a moda, em caso de regressão basta usar a média. Sabemos pelo Teorema do Limite Central que a distribuição desse modelo seria normal, ao contrário do que acontece com a distribuição das previsões de uma árvore individual, normal. 
+O que acontece se ao invés de treinarmos \textbf{uma} árvore, treinar \textbf{várias} e usar a alguma agregação das previsões individuais como previsão final? Em caso de classificação basta usar a moda, em caso de regressão basta usar a média. Sabemos pelo Teorema do Limite Central que a distribuição desse modelo seria normal, ao contrário do que acontece com a distribuição das previsões de uma árvore individual. 
 
 \begin{teo}[Lindenberg-Lévy]
 Seja $(\textbf{X}_1, ..., \textbf{X}_n)$ uma amostra independente e identicamente distribuída com $\E[\textbf{X}_i] = \mu$ e $\V[\textbf{X}_i] = \sigma^2 < \infty$. Então:

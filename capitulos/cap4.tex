@@ -126,7 +126,7 @@ Na seção anterior optamos por escolher hiperparâmetros de forma a maximizar a
     A média das diferenças entre previsões e valores observados ponderada pela média da resposta. Lida em unidades relativas. Indica acurácia. Menor é melhor, mas deve-se atentar à parcimônia.
     
     \item \textbf{Coeficiente de Determinação (R2)} \newline
-    Calcula-se a soma dos quadrados dos desvios das previsões à média da resposta. Dividi-se esse valor pela soma dos quadrados dos desvios as observações originais à média da resposta. O resultado está entre $0$ e $1$ e pode ser interpretado como a fração da variância que o modelo consegue explicar. Maior é melhor, mas deve-se atentar à parcimônia pois cresce monotonamente no número de variáveis explicativas.
+    Calcula-se a soma dos quadrados dos desvios das previsões à média da resposta. Dividi-se esse valor pela soma dos quadrados dos desvios as observações originais à média da resposta. O resultado está entre $0$ e $1$ e pode ser interpretado como a fração da variância que o modelo consegue explicar. Maior é melhor, mas deve-se atentar à parcimônia, pois cresce monotonamente no número de variáveis explicativas.
     
     Uma variante dessa métrica, especialmente apropriada para comparar modelos com os mesmos hiperparâmetros (ou que não dependam deles, como regressão linear) e variáveis explicativas diferentes é o R2 ajustado. Seu cálculo é muito similar, mas introduz um mecanismo de punição à adição de variáveis, refletindo os benefícios da parcimônia na métrica.
     
@@ -168,7 +168,7 @@ Esse tempo de computação é melhor empregado procurando com uma grade fina mel
     \fonte{Elaboração própria.}
 \end{figure}
 
-A varredura pelo hiperparâmetro do número de variáveis sugere que ele não é muito determinante para performance. Não há movimento claros entre as métricas de melhora ou piora, como mostramos na Figura 13. Poucas variáveis por árvore incluem tanto os melhores quanto os piores modelos, como mostramos na Tabela 4. Isso sugere que a amostra mínima para gerar folha é um hiperparâmetro mais relevante. De fato é:
+A varredura pelo hiperparâmetro do número de variáveis sugere que ele não é muito determinante para performance. Não há movimentos claros entre as métricas de melhora ou piora, como mostramos na Figura 13. Poucas variáveis por árvore incluem tanto os melhores quanto os piores modelos, como mostramos na Tabela 4. Isso sugere que a amostra mínima para gerar folha é um hiperparâmetro mais relevante. De fato é:
 
 
 \begin{figure}[H]
@@ -218,7 +218,7 @@ Esse tipo de efeito poderia ser aproximado com regressões pseudo-quantílicas, 
 
 Outra diferença é que modelos lineares são \textit{globais}. Os efeitos marginais independem dos níveis de outros regressores então o salto do térreo para o primeiro andar seria tido como igual para todo apartamento, em toda cidade, de qualquer tamanho. Esse tipo de nuance não é perdida em modelos de florestas aleatórias. 
 
-Embora o exemplo seja em um contexto de regressão, o procedimento não se perde em classificação. A classe predita por uma floresta é a apenas a que recebeu mais votos das árvores individuais. Podemos ler a fração dos votos que a classe mais votada levou como uma probabilidade predita e calcular os efeitos marginais da mesma maneira que faríamos em um caso de regressão, avaliando o efeito sobre a probabilidade predita. Essa mudança para que a saída do modelo seja em termos de probabilidade é trivial na maioria das implementações computacionais destes métodos e não leva a um aumento de complexidade da tarefa.
+Embora o exemplo seja em um contexto de regressão, o procedimento não se perde em classificação. A classe predita por uma floresta é a apenas a que recebeu mais votos das árvores individuais. Podemos ler a fração dos votos que a classe mais votada levou como uma probabilidade predita e calcular os efeitos marginais da mesma maneira que faríamos em um caso de regressão, avaliando o efeito sobre a probabilidade predita. Essa mudança para que a saída do modelo seja em probabilidade é trivial na maioria das implementações computacionais destes métodos e não leva a um aumento de complexidade da tarefa.
 
 
 
